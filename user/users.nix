@@ -1,5 +1,11 @@
 { config, pkgs, ... }:
 {
+  imports =
+    [
+      # load home-manager configuration
+      <home-manager/nixos>
+    ];
+
 
   home-manager.useUserPackages = true;
   home-manager.useGlobalPkgs = true;
