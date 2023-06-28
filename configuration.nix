@@ -7,13 +7,16 @@
 {
   imports =
     [
-
-      ./system/devices/serv1.nix
+      # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
 
+      # use device specific configuration
+      ./system/devices/serv1.nix
+
+      # fix vs code server
       ./system/vscode-server.nix
 
-      <home-manager/nixos>
+
 
       ./user/users.nix
     ];
