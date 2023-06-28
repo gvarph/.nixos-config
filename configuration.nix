@@ -16,58 +16,19 @@
       # fix vs code server
       ./system/vscode-server.nix
 
+      # set locale
+      ./system/locale.nix
 
-
+      # set user and enable home-manager
       ./user/users.nix
+
+      # set up ssh server
+      ./system/ssh.nix
     ];
 
 
+  # Enable flake support
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-
-  # Set your time zone.
-  time.timeZone = "Europe/Prague";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "cs_CZ.UTF-8";
-    LC_IDENTIFICATION = "cs_CZ.UTF-8";
-    LC_MEASUREMENT = "cs_CZ.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "cs_CZ.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "cs_CZ.UTF-8";
-    LC_TELEPHONE = "cs_CZ.UTF-8";
-    LC_TIME = "en_CA.UTF-8";
-  };
-
-  # Configure keymap in X11
-  services.xserver = {
-    layout = "us";
-    xkbVariant = "";
-    enable = true;
-  };
-
-  services.openssh = {
-    enable = true;
-    settings.PermitRootLogin = "no";
-    settings.PasswordAuthentication = true;
-    #enable x11 forwarding
-    settings.X11Forwarding = true;
-  };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -82,8 +43,8 @@
     direnv
     rnix-lsp
     git
+    git-crypt
     nixpkgs-fmt
-    xorg.xeyes
   ];
 
   system.stateVersion = "23.05"; # Did you read the comment
