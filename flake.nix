@@ -12,7 +12,7 @@
       templates = rec {
 
         python = {
-          path = ./python;
+          path = ./dev/python;
           description = "Python development environment";
         };
 
