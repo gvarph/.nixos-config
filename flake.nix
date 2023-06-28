@@ -10,8 +10,6 @@
   outputs = { self, flake-utils, nixpkgs }:
     {
       templates = rec {
-        # Aliases
-        rt = rust-toolchain;
 
         python = {
           path = ./python;
