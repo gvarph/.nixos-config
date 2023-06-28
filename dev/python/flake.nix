@@ -37,9 +37,8 @@
               (python.withPackages (ps: with ps; [
                 virtualenv # Virtualenv
                 pip # The pip installer
+                black # Code formatter
               ]))
-              # black fornatter
-              pkgs.black
             ];
           };
       });
