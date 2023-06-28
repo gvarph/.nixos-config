@@ -45,9 +45,8 @@
       la = "exa --color=auto -a";
       lla = "exa --color=auto -la";
 
-      no-rebuild-fast = " sudo nixos-rebuild switch --fast -I nixos-config=\"/home/gvarph/.nixos-config/configuration.nix\"";
 
-      no-rebuild-fast-default = "sudo nixos-rebuild switch --fast";
+      no-rebuild-fast = "sudo nixos-rebuild switch --fast";
 
 
       "cd." = "cd ..";
