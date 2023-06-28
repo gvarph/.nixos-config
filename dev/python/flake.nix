@@ -1,5 +1,5 @@
 {
-  description = "Example Python development environment for Zero to Nix";
+  description = "Python development environment template";
 
   # Flake inputs
   inputs = {
@@ -38,6 +38,8 @@
                 virtualenv # Virtualenv
                 pip # The pip installer
               ]))
+              # black fornatter
+              pkgs.black
             ];
           };
       });
