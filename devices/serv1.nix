@@ -3,6 +3,12 @@
 
 {
 
+  imports = [
+    ../common.nix
+    ../system/docker.nix
+  ];
+
+
   networking.hostName = "serv1";
   networking.networkmanager.enable = true;
 

@@ -33,24 +33,21 @@
           pkgs.mkShell {
             # The Nix packages provided in the environment
             packages = [
+              # gcc is needed to compile Python packages
+              pkgs.gcc
+
+
+
               # Python plus helper tools
               (python.withPackages (ps: with ps; [
                 virtualenv # Virtualenv
                 pip # The pip installer
                 black # Code formatter
+
               ]))
             ];
 
-            shellHook = ''
-              # Create a virtual environment
-              virtualenv venv
 
-              # Activate the virtual environment
-              source venv/bin/activate
-
-              # Install the project dependencies
-              pip install -r requirements.txt
-            '';
           };
       });
     };
