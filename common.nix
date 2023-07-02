@@ -10,9 +10,6 @@
       # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
 
-      # use device specific configuration
-      ./system/devices/serv1.nix
-
       # fix vs code server
       ./system/vscode-server.nix
 
@@ -24,6 +21,8 @@
 
       # set up ssh server
       ./system/ssh.nix
+
+      ./system/features/direnv.nix
     ];
 
 
@@ -40,7 +39,6 @@
     curl
     tmux
     openssh
-    direnv
     rnix-lsp
     git
     git-crypt

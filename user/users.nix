@@ -26,9 +26,10 @@
 
   programs.fish.enable = true;
   users.users.gvarph = {
+
     isNormalUser = true;
     description = "Filip Krul";
-    extraGroups = [ "networkmanager" "wheel" "nixeditors" ];
+    extraGroups = [ "networkmanager" "wheel" "nixeditors" "docker" ];
     packages = with pkgs; [ ];
     shell = pkgs.fish;
     home = "/home/gvarph";
