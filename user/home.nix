@@ -4,6 +4,7 @@
   imports = [
     ./shell/fish.nix
     ./shell/starship.nix
+    ./shell/starship-symbols.nix
   ];
 
   home.packages = with pkgs; [

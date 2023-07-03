@@ -1,9 +1,6 @@
 { config, pkgs, ... }:
 
-let
-  exa_args = " --icons --color=auto";
 
-in
 
 {
 
@@ -17,7 +14,7 @@ in
   programs.fish = {
     enable = true;
     shellInit = ''
-      set fish_greeting # no greeting
+      set fish_greeting
     '';
 
 
@@ -45,22 +42,6 @@ in
       direnv hook fish | source
     '';
 
-    shellAliases = {
-      ls = "exa" + exa_args;
-      ll = "exa -l" + exa_args;
-      la = "exa -a" + exa_args;
-      lla = "exa -l -a" + exa_args;
-
-
-      no-rebuild-fast = "sudo nixos-rebuild switch --fast";
-
-
-      "cd." = "cd ..";
-      "cd.." = "cd ../..";
-      "cd..." = "cd ../../..";
-      "cd...." = "cd ../../../..";
-      "cd....." = "cd ../../../../..";
-
-    };
+    shellAliases = import ./aliases.nix;
   };
 }
