@@ -1,22 +1,17 @@
-{ ... }:
-
-let
-  exa_args = " --icons --color=auto";
-in
+{ config, pkgs, ... }:
 
 {
-  ls = "exa" + exa_args;
-  ll = "exa -l" + exa_args;
-  la = "exa -a" + exa_args;
-  lla = "exa -l -a" + exa_args;
+  home.shellAliases = {
+    sudo = "sudo ";
 
+    #nix stuff
+    gc-check = "nix-store --gc --print-roots | egrep -v \"^(/nix/var|/run/\w+-system|\{memory|/proc)\"";
+    no-rebuild-fast = "sudo nixos-rebuild switch --fast";
 
-  no-rebuild-fast = "sudo nixos-rebuild switch --fast";
-
-
-  "cd." = "cd ..";
-  "cd.." = "cd ../..";
-  "cd..." = "cd ../../..";
-  "cd...." = "cd ../../../..";
-  "cd....." = "cd ../../../../..";
+    "cd." = "cd ..";
+    "cd.." = "cd ../..";
+    "cd..." = "cd ../../..";
+    "cd...." = "cd ../../../..";
+    "cd....." = "cd ../../../../..";
+  };
 }

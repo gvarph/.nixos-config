@@ -1,7 +1,5 @@
 { config, pkgs, ... }:
 
-
-
 {
 
   home.packages = with pkgs; [
@@ -42,6 +40,5 @@
       direnv hook fish | source
     '';
 
-    shellAliases = import ./aliases.nix;
   };
 }
