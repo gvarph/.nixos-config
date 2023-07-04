@@ -8,12 +8,12 @@
     ./shell/starship-symbols.nix
 
     ./shell/exa.nix
+    ./shell/bat.nix
 
     ./shell/aliases.nix
   ];
 
   home.packages = with pkgs; [
-    bat
     fd
     ripgrep
     tokei
