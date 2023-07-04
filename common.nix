@@ -32,8 +32,7 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # List packages installed in system profile.
   environment.systemPackages = with pkgs; [
     wget
     curl
@@ -44,6 +43,10 @@
     git-crypt
     nixpkgs-fmt
   ];
+
+  # may break 16-bit apps
+  boot.kernel.sysctl = { "vm.max_map_count" = 2147483642; };
+
 
   system.stateVersion = "23.05"; # Did you read the comment
 }
