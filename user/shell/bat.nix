@@ -19,9 +19,8 @@ in
     bata = "bat -A";
     batp = "bat --paging=always";
     bat = "bat --paging=never";
-
+    cat = "bat --paging=never --plain";
     man = "batman";
-
     batg = "batgrep";
   };
 }
