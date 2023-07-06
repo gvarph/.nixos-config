@@ -17,7 +17,7 @@
       ./user/users.nix
 
       # set up ssh server
-      ./system/ssh.nix
+      ./system/features/ssh.nix
 
       ./system/features/direnv.nix
     ];

@@ -40,5 +40,17 @@
       direnv hook fish | source
     '';
 
+
+    /* functions =
+      {
+        mcd = {
+          body = ''
+            mkdir -p $argv[1]; and cd $argv[1]
+          '';
+          description = "Create a directory and change to it";
+        };
+      }; */
   };
 }
+
+
