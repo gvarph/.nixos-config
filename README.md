@@ -7,8 +7,8 @@ To enable this config, replace the contents of your `configuration.nix` with the
 
 {
   imports = [
-      ./hardware-configuration.nix
-      /home/gvarph/.nixos-config/configuration.nix
+        /home/gvarph/.nixos-config/devices/serv1.nix
+        ./hardware-configuration.nix
     ];
 }
 ```
