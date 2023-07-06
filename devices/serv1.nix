@@ -5,7 +5,8 @@
 
   imports = [
     ../common.nix
-    ../system/docker.nix
+    ../system/features/docker.nix
+    ../system/filesystem/nas.nix
   ];
 
 
