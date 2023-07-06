@@ -7,9 +7,6 @@
 {
   imports =
     [
-      # Include the results of the hardware scan.
-      /etc/nixos/hardware-configuration.nix
-
       # fix vs code server
       ./system/vscode-server.nix
 
@@ -42,6 +39,8 @@
     git
     git-crypt
     nixpkgs-fmt
+    gdu
+    grc
   ];
 
   # may break 16-bit apps
