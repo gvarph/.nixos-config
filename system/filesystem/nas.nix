@@ -7,7 +7,7 @@
     device = "//192.168.31.7/Multimedia";
     fsType = "cifs";
     options = [
-      "username=..."
+      "username=media-server"
       "password=..."
       "uid=1000"
       "x-systemd.automount" # auto-mount on access
