@@ -21,6 +21,11 @@
     cmkdir = "mkdir -p \"$1\" && cd \"$1\"";
     mcd = "cmkdir";
 
+    docker-tail-newest = "docker logs -f $(docker ps -q --format '{{.CreatedAt}}\t{{.ID}}' | sort -r | head -n 1 | cut -f 2)";
+
+    # fzf a directory and cd into it
+    fzcd = "cd (fd -t d | fzf)";
+
     # go up by number of dots
     "cd.." = "cd .."; # go up one directory
     "cd..." = "cd ../.."; # go up two directories
