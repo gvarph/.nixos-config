@@ -34,7 +34,7 @@
     "cd......" = "cd ../../../../.."; # go up five directories
     "cd......." = "cd ../../../../../.."; # go up six directories
 
-    # go up by a number 
+    # go up by a number
     "cd.2" = "cd ../.."; # go up two directories
     "cd.3" = "cd ../../.."; # go up three directories
     "cd.4" = "cd ../../../.."; # go up four directories
