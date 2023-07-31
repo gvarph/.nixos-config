@@ -15,7 +15,7 @@
   services.openssh = {
     enable = true; # enable ssh server
     settings.PermitRootLogin = "no"; # prevent root login via ssh
-    settings.PasswordAuthentication = false; # allow only key based authentication
+    # settings.PasswordAuthentication = false; # allow only key based authentication
     settings.X11Forwarding = true; #enable x11 forwarding
   };
 

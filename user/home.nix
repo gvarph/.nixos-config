@@ -11,6 +11,7 @@
     ./shell/bat.nix
 
     ./shell/aliases.nix
+
   ];
 
   home.packages = with pkgs; [
@@ -28,6 +29,12 @@
     neofetch
     tree
   ];
+
+
+
+
+
+
 
   home.stateVersion = "23.05";
 

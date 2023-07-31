@@ -1,14 +1,15 @@
 { config, pkgs, ... }:
 
+let
+  login = import ./nas_login.nix;
+in
 {
-
-
   fileSystems."media-server" = {
     device = "//192.168.31.7/Multimedia";
     fsType = "cifs";
     options = [
-      "username=media-server"
-      "password=..."
+      "username=${login.username}"
+      "password=${login.password}"
       "uid=1000"
       "x-systemd.automount" # auto-mount on access
       "noauto" # don't mount on boot

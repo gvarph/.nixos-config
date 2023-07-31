@@ -12,3 +12,4 @@
 # Built Visual Studio Code Extensions
 *.vsix
 
+system/filesystem/nas_login.nix
