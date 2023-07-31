@@ -1,13 +1,16 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
 
   imports = [
     ./sound.nix
+    #./waybar.nix
   ];
-  
-  programs.hyprland= {
+
+  programs.hyprland = {
     enable = true;
     nvidiaPatches = true;
     xwayland.enable = true;
+
+
   };
 
   environment.sessionVariables = {
@@ -24,13 +27,14 @@
     pkgs.rofi-wayland
     pkgs.firefox
     pkgs.networkmanagerapplet
-    pkgs.wl-clipboard 
+    pkgs.wl-clipboard
     pkgs.grim #screenshot
     pkgs.slurp #select part of screen
 
   ];
 
+
   xdg.portal.enable = true;
-  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk ];
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
 }
