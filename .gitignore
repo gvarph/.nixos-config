@@ -13,3 +13,4 @@
 *.vsix
 
 system/filesystem/nas_login.nix
+system/filesystem/nas/login.nix

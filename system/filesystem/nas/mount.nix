@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let
-  login = import ./nas_login.nix;
+  login = import ./login.nix;
 in
 {
   fileSystems."media-server" = {
