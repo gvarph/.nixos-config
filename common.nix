@@ -20,6 +20,8 @@
       ./system/features/ssh.nix
 
       ./system/features/direnv.nix
+
+      ./system/fonts.nix
     ];
 
 
