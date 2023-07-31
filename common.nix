@@ -8,7 +8,7 @@
   imports =
     [
       # fix vs code server
-      ./system/vscode-server.nix
+      #./system/vscode-server.nix
 
       # set locale
       ./system/locale.nix
@@ -29,7 +29,7 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # List packages installed in system profile.
+  #cd List packages installed in system profile.
   environment.systemPackages = with pkgs; [
     wget
     curl
@@ -42,6 +42,8 @@
     gdu
     grc
   ];
+
+  programs.nix-ld.enable = true;
 
   # may break 16-bit apps
   boot.kernel.sysctl = { "vm.max_map_count" = 2147483642; };
