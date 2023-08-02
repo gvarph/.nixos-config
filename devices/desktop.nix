@@ -1,13 +1,18 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, username, ... }:
 
-
+let
+  username = "gvarph";
+in
 {
 
   imports = [
-    ../common.nix
+    (import ../common.nix
+      { inherit config pkgs username; })
     ../system/features/docker.nix
     # TODO:  ../system/filesystem/nas/mount.nix
-    ../hypr/enable.nix
+    #../hypr/enable.nix
+    (import ../home/ui { inherit config pkgs username; })
+
   ];
 
   hardware.opengl = {
@@ -27,5 +32,6 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
 
 }
