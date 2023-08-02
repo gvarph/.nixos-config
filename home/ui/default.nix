@@ -31,7 +31,7 @@ in
   };
 
   xdg.portal.enable = true;
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-hyprland ];
   environment.sessionVariables =
     {
       WLR_NO_HARDWARE_CURSORS = "1";
@@ -51,32 +51,19 @@ in
       ];
 
     home.packages = with pkgs; [
-      waybar
       vscode
       discord
       betterdiscordctl
-      dunst
       libnotify
-      rofi-wayland
       firefox
-      networkmanagerapplet
-      wl-clipboard
-      grim #screenshot
-      slurp #select part of screen
 
       steam
       lutris
-
       prismlauncher
-      cinnamon.nemo
-      piper
-      libratbag
 
-      pavucontrol
       pulseaudio
 
     ];
-
 
   };
 }

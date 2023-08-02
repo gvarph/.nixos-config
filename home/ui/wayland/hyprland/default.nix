@@ -1,4 +1,5 @@
-{ custom ? {
+{ pkgs
+, custom ? {
     fontsize = "12";
     primary_accent = "cba6f7";
     secondary_accent = "89b4fa";
@@ -21,6 +22,10 @@ in
     hyprland.homeManagerModules.default
   ];
 
+  home.packages = with pkgs; [
+    hyprpaper
+  ];
+
   wayland.windowManager.hyprland = {
     enable = true;
     nvidiaPatches = true;
@@ -36,6 +41,7 @@ in
       exec-once=nm-applet --indicator
       exec-once=waybar
       exec-once=dunst
+      exec-once=copyq --start-server
     '';
 
   };
