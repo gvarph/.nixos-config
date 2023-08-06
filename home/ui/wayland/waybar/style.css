@@ -65,6 +65,7 @@ window#waybar.hidden {
 #cpu,
 #memory,
 #disk,
+#language,
 #temperature,
 #backlight,
 #network,
@@ -107,6 +108,7 @@ window#waybar.hidden {
     color: #fb958b;
     background-color: #1f2530;
 }
+
 
 #memory {
     color: #ebcb8b;
@@ -290,13 +292,7 @@ label:focus {
     color: #51a37a;
 }
 
-#language {
-    background: #00b093;
-    color: #740864;
-    padding: 0 5px;
-    margin: 0 5px;
-    min-width: 16px;
-}
+
 
 #keyboard-state {
     background: #97e1ad;

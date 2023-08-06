@@ -9,5 +9,12 @@
         "JetBrainsMono"
       ];
     })
+    font-awesome
+    powerline-fonts
+    corefonts
+    noto-fonts
+    noto-fonts-cjk
+    noto-fonts-emoji
+    noto-fonts-extra
   ];
 }

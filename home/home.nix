@@ -28,6 +28,7 @@
     bottom
     neofetch
     tree
+    ffmpeg
   ];
 
 

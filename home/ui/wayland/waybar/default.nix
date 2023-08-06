@@ -35,11 +35,12 @@
           #"bluetooth"
           "pulseaudio"
           "network"
+          "hyprland/language"
           #"battery"
           "clock"
           # "custom/power-menu"
         ];
-        wlr-workspaces = {
+        "wlr/workspaces" = {
           format = "{icon}";
           onClick = "activate";
           format-icons = {
@@ -53,7 +54,7 @@
             default = "";
           };
         };
-        hyprland-window = {
+        "hyprland/window" = {
           format = "{}";
         };
         tray = { spacing = 10; };
@@ -82,9 +83,9 @@
         };
         pulseaudio = {
           format = "{icon} {volume}%";
-          format-bluetooth = "  {volume}%";
-          format-bluetooth-muted = " ";
-          format-muted = "婢";
+          format-bluetooth = " {volume}%";
+          format-bluetooth-muted = "  ";
+          format-muted = "";
           format-icons = {
             headphone = "";
             hands-free = "";
@@ -133,6 +134,11 @@
           format = " <span color='#6a92d7'> </span>";
           onClick = "~/.bin/scripts/wallpaper.sh change";
         };
+        "hyprland/language" = {
+          format = " {short}";
+
+        };
+
       };
 
       style = (builtins.readFile ./mocha.css) + (builtins.readFile ./style.css);

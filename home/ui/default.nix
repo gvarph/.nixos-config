@@ -13,6 +13,8 @@ let
   };
 in
 {
+
+
   hardware.logitech.wireless.enable = true;
   hardware.logitech.wireless.enableGraphical = true;
 
@@ -42,28 +44,10 @@ in
 
     imports =
       [
-        #./packages.nix
-        #(import ./general { inherit (inputs) self; })
-        (import ./themes {
-          inherit pkgs custom;
-        })
+        (import ./themes { inherit pkgs custom; })
         (import ./wayland { inherit pkgs custom; })
+        (import ./packages { inherit pkgs; })
+
       ];
-
-    home.packages = with pkgs; [
-      vscode
-      discord
-      betterdiscordctl
-      libnotify
-      firefox
-
-      steam
-      lutris
-      prismlauncher
-
-      pulseaudio
-
-    ];
-
   };
 }
