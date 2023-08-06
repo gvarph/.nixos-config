@@ -25,7 +25,7 @@
 
   imports = [
     (import ./hyprland { inherit pkgs custom; })
-    (import ./waybar { inherit custom; })
+    (import ./waybar { inherit pkgs custom; })
     (import ./wofi.nix { inherit custom; })
     (import ./foot.nix { inherit custom; })
   ];

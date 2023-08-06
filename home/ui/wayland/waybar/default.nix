@@ -1,4 +1,5 @@
-{ custom ? {
+{ pkgs
+, custom ? {
     font = "FiraCode Nerd Font";
     fontsize = "12";
     primary_accent = "cba6f7";
@@ -14,8 +15,14 @@
   programs.waybar =
     {
       enable = true;
+      package = pkgs.waybar.overrideAttrs (oldAttrs: {
+        mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+        #patchPhase = ''
+        #  substituteInPlace src/modules/wlr/workspace_manager.cpp --replace "zext_workspace_handle_v1_activate(workspace_handle_);" "const std::string command = \"${config.wayland.windowManager.hyprland.package}/bin/hyprctl dispatch workspace \" + name_; system(command.c_str());"
+        #'';
+      });
       settings.mainBar = {
-        height = 30; # Waybar height (to be removed for auto height)
+        height = 30;
         marginTop = 6;
         layer = "top";
         marginLeft = 10;
@@ -25,6 +32,7 @@
         modules-left = [
           "custom/launcher"
           "wlr/workspaces"
+          #"hyprland/window"
         ];
         #modules-center = [ "custom/wallpaper" ];
         modules-right = [
@@ -43,16 +51,11 @@
         "wlr/workspaces" = {
           format = "{icon}";
           onClick = "activate";
-          format-icons = {
-            "1" = "󰈹";
-            "2" = "󰙯";
-            "3" = "";
-            "4" = "";
-            "5" = "";
-            urgent = "";
-            active = "";
-            default = "";
-          };
+          #format-icons = {
+          #  urgent = "";
+          #  active = "";
+          #  default = "";
+          #};
         };
         "hyprland/window" = {
           format = "{}";
