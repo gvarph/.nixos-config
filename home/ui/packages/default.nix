@@ -24,14 +24,11 @@
     libsForQt5.kdeconnect-kde
 
 
-   ledger-live-desktop
+    ledger-live-desktop
 
   ];
-   
+
   imports = [
-    #(import ./hyprland { inherit pkgs custom; })
-    #(import ./waybar { inherit custom; })
-    #(import ./wofi.nix { inherit custom; })
-    #(import ./foot.nix { inherit custom; })
+    #(import ./thing { inherit pkgs custom; })
   ];
 }
