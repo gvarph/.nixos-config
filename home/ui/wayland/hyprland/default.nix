@@ -35,6 +35,7 @@ in
     };
     extraConfig = (builtins.readFile ./monitors.conf)
       + (builtins.readFile ./keybinds.conf)
+      + (builtins.readFile ./nav_keybinds.conf)
       + (builtins.readFile ./theme.conf)
       + (builtins.readFile ./other.conf)
       + ''
