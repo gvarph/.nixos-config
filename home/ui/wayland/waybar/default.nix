@@ -16,10 +16,7 @@
     {
       enable = true;
       package = pkgs.waybar.overrideAttrs (oldAttrs: {
-        mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-        #patchPhase = ''
-        #  substituteInPlace src/modules/wlr/workspace_manager.cpp --replace "zext_workspace_handle_v1_activate(workspace_handle_);" "const std::string command = \"${config.wayland.windowManager.hyprland.package}/bin/hyprctl dispatch workspace \" + name_; system(command.c_str());"
-        #'';
+        mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ]; # fix for hyprland
       });
       settings.mainBar = {
         height = 30;
@@ -51,11 +48,32 @@
         "wlr/workspaces" = {
           format = "{icon}";
           onClick = "activate";
-          #format-icons = {
-          #  urgent = "";
-          #  active = "";
-          #  default = "";
-          #};
+          all-outputs = "true";
+          format-icons = {
+            #  urgent = "";
+            #  active = "";
+            #  default = "";
+            "1" = "1";
+            "2" = "2";
+            "3" = "3";
+            "4" = "4";
+            "5" = "5";
+            "6" = "6";
+            "7" = "7";
+            "8" = "8";
+            "9" = "9";
+            "10" = "10";
+            "11" = "11";
+            "12" = "12";
+            "13" = "13";
+            "14" = "14";
+            "15" = "15";
+            "16" = "16";
+            "17" = "17";
+            "18" = "18";
+            "19" = "19";
+            "20" = "20";
+          };
         };
         "hyprland/window" = {
           format = "{}";
