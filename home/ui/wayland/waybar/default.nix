@@ -12,6 +12,7 @@
 , ...
 }:
 {
+
   programs.waybar =
     {
       enable = true;
@@ -26,6 +27,7 @@
         marginBottom = 0;
         marginRight = 10;
         spacing = 5; # Gaps between modules (4px)
+
         modules-left = [
           "custom/launcher"
           "wlr/workspaces"
@@ -80,9 +82,12 @@
         };
         tray = { spacing = 10; };
         clock = {
-          format = "<span color='#bf616a'> </span>{:%I:%H}";
+          format = "<span color='#bf616a'> </span>{:%I:%M:%S}";
           format-alt = "<span color='#bf616a'> </span>{:%a %b %d}";
           onClick = "~/.config/eww/scripts/toggle-onotify.sh";
+          interval = 1; # Update interval in seconds
+          tooltip-format = "<tt><small>{calendar}</small></tt>";
+
         };
         cpu = {
           interval = 10;
@@ -91,7 +96,7 @@
           onClick = "";
         };
         memory = {
-          interval = 30;
+          interval = 10;
           format = " {}%";
           format-alt = " {used:0.1f}G";
           maxLength = 10;
