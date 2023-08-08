@@ -10,6 +10,8 @@
     libnotify
 
     firefox
+    google-chrome
+
 
     steam
     lutris
@@ -26,9 +28,13 @@
 
     ledger-live-desktop
 
+    playerctl
+    wev
+
   ];
 
   imports = [
-    #(import ./thing { inherit pkgs custom; })
+    ./work.nix
   ];
+
 }
