@@ -43,6 +43,7 @@
     nixpkgs-fmt
     gdu
     grc
+    vscode
   ];
 
   users.users.${username} = {
