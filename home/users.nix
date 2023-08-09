@@ -12,6 +12,8 @@
 
   home-manager.users.${username} =
     {
+      # home.enableNixpkgsReleaseCheck = false;
+
       imports = [
         ./home.nix
       ];
