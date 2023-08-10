@@ -8,7 +8,7 @@ in
 {
 
   imports = [
-    (import ../common.nix { inherit config pkgs username; })
+    (import ../default.nix { inherit config pkgs username; })
     ../system/features/docker.nix
     ../system/filesystem/nas/mount.nix
   ];
