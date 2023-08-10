@@ -46,6 +46,8 @@
     grc
   ];
 
+
+
   users.users.${username} = {
 
     isNormalUser = true;

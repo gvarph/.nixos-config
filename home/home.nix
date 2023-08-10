@@ -29,13 +29,14 @@
     neofetch
     tree
     ffmpeg
+
+
   ];
 
-
-
-
-
-
+  programs.vscode = {
+    enable = true;
+    enableUpdateCheck = false;
+  };
 
   home.stateVersion = "23.11";
 
