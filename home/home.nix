@@ -5,7 +5,6 @@
     ./shell/fish.nix
 
     ./shell/starship.nix
-    ./shell/starship-symbols.nix
 
     ./shell/exa.nix
     ./shell/bat.nix
