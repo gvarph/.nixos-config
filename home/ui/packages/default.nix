@@ -2,7 +2,6 @@
 {
 
   home.packages = with pkgs; [
-    vscode
 
     discord
     betterdiscordctl

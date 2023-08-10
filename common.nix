@@ -8,7 +8,7 @@
   imports =
     [
       # fix vs code server
-      #./system/vscode-server.nix
+      ./system/vscode-server.nix
 
       # set locale
       ./system/locale.nix
@@ -33,6 +33,7 @@
 
   #cd List packages installed in system profile.
   environment.systemPackages = with pkgs; [
+    #vscode
     wget
     curl
     tmux
@@ -43,7 +44,6 @@
     nixpkgs-fmt
     gdu
     grc
-    vscode
   ];
 
   users.users.${username} = {

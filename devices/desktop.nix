@@ -27,7 +27,6 @@ in
     nvidiaSettings = true;
   };
 
-  hardware.ledger.enable = true;
 
   services.udev.packages = [ pkgs.ledger-live-desktop ];
 
