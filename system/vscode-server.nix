@@ -12,5 +12,5 @@
 {
 
   # environment.systemPackages = [ pkgs_with_old_code.vscode ];
-
+  environment.systemPackages = [ pkgs.vscode ];
 }
