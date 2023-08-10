@@ -21,8 +21,8 @@
     };
     extraConfig = ''
       # external addressess
-      #Match Address 192.168.31.0/24
-      #  PasswordAuthentication yes
+      Match Address 192.168.31.0/24
+        PasswordAuthentication yes
     '';
   };
 
