@@ -1,13 +1,5 @@
 { pkgs
-, custom ? {
-    fontsize = "12";
-    primary_accent = "cba6f7";
-    secondary_accent = "89b4fa";
-    tertiary_accent = "f5f5f5";
-    background = "11111B";
-    opacity = ".85";
-    cursor = "Numix-Cursor";
-  }
+, custom
 , ...
 }:
 let
@@ -33,17 +25,18 @@ in
       enable = true;
       hidpi = true;
     };
-    extraConfig = (builtins.readFile ./monitors.conf)
+    extraConfig =
+      custom.hypr_monitors
       + (builtins.readFile ./keybinds.conf)
       + (builtins.readFile ./nav_keybinds.conf)
       + (builtins.readFile ./theme.conf)
       + (builtins.readFile ./other.conf)
       + ''
-      exec-once=nm-applet --indicator
-      exec-once=waybar
-      exec-once=dunst
-      exec-once=copyq --start-server
-    '';
+        exec-once=nm-applet --indicator
+        exec-once=waybar
+        exec-once=dunst
+        exec-once=copyq --start-server
+      '';
 
   };
 

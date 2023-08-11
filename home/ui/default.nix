@@ -1,4 +1,8 @@
-{ pkgs, config, username, ... }:
+{ pkgs
+, username
+, hypr_monitors ? "monitor=,preferred,auto,1"
+, ...
+}:
 let
   # Variables to share accross configs
   custom = {
@@ -10,6 +14,7 @@ let
     background = "11111B";
     opacity = ".85";
     cursor = "Numix-Cursor";
+    hypr_monitors = hypr_monitors;
   };
 in
 {
