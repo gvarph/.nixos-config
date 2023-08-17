@@ -11,9 +11,9 @@ in
     (import ../../default.nix {
       inherit config pkgs username;
     })
-    ../../system/features/docker.nix
-    ../../system/filesystem/nas/mount.nix
-    ../../system/nvidia.nix
+    ../../linux/features/docker.nix
+    ../../linux/filesystem/nas/mount.nix
+    ../../linux/nvidia.nix
     (import ../../home/ui { inherit pkgs username hypr_monitors; })
   ];
 
