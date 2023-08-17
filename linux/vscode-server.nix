@@ -13,4 +13,11 @@
 
   # environment.systemPackages = [ pkgs_with_old_code.vscode ];
   environment.systemPackages = [ pkgs.vscode ];
+
+  imports = [
+	(fetchTarball "https://github.com/nix-community/nixos-vscode-server/tarball/master")
+  ];
+ # services.vscode-server.enable = true;  
+ 
 }
+

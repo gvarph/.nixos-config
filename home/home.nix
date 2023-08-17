@@ -28,6 +28,13 @@
     tree
     ffmpeg
 
+    google-cloud-sdk
+    skaffold
+    minikube
+    kubectl
+
+    azure-cli
+
     wget
     curl
     tmux

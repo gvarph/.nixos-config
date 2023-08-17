@@ -29,6 +29,7 @@
 
     playerctl
     wev
+    
 
   ];
 
