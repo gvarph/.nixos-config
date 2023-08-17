@@ -6,7 +6,6 @@
     google-chrome
 
     slack
-
   ];
 
 }
