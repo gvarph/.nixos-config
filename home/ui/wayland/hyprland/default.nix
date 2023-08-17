@@ -20,10 +20,10 @@ in
 
   wayland.windowManager.hyprland = {
     enable = true;
-    nvidiaPatches = true;
+    enableNvidiaPatches = true;
     xwayland = {
       enable = true;
-      hidpi = true;
+      #hidpi = true;
     };
     extraConfig =
       custom.hypr_monitors

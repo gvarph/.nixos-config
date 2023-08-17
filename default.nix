@@ -1,27 +1,23 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, username, ... }:
 
 {
   imports =
     [
       # fix vs code server
-      ./system/vscode-server.nix
+      ./linux/vscode-server.nix
 
       # set locale
-      ./system/locale.nix
+      ./linux/locale.nix
 
       # set user and enable home-manager
       (import ./home/users.nix { inherit config pkgs username; })
 
       # set up ssh server
-      ./system/features/ssh.nix
+      ./linux/features/ssh.nix
 
-      ./system/features/direnv.nix
+      ./linux/features/direnv.nix
 
-      ./system/fonts.nix
+      ./linux/fonts.nix
     ];
 
 
@@ -31,20 +27,6 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  #cd List packages installed in system profile.
-  environment.systemPackages = with pkgs; [
-    #vscode
-    wget
-    curl
-    tmux
-    openssh
-    rnix-lsp
-    git
-    git-crypt
-    nixpkgs-fmt
-    gdu
-    grc
-  ];
 
 
 

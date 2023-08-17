@@ -9,8 +9,8 @@ in
 
   imports = [
     (import ../default.nix { inherit config pkgs username; })
-    ../system/features/docker.nix
-    ../system/filesystem/nas/mount.nix
+    ../linux/features/docker.nix
+    ../linux/filesystem/nas/mount.nix
   ];
 
 
