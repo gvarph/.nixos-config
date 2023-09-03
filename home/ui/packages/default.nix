@@ -26,11 +26,10 @@
 
 
     ledger-live-desktop
-
+    transmission-gtk
     playerctl
     wev
-    
-
+    signal-desktop
   ];
 
   imports = [
