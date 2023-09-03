@@ -16,13 +16,13 @@
   programs.waybar =
     {
       enable = true;
-      package = pkgs.waybar.overrideAttrs (oldAttrs: {
-        mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ]; # fix for hyprland
-      });
+      #package = pkgs.waybar.overrideAttrs (oldAttrs: {
+      #  mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ]; # fix for hyprland
+      #});
       settings.mainBar = {
         height = 30;
         marginTop = 6;
-        layer = "top";
+        #layer = "top";
         marginLeft = 10;
         marginBottom = 0;
         marginRight = 10;
@@ -30,7 +30,7 @@
 
         modules-left = [
           "custom/launcher"
-          "wlr/workspaces"
+          "hyprland/workspaces"
           #"hyprland/window"
         ];
         #modules-center = [ "custom/wallpaper" ];
