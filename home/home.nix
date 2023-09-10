@@ -6,7 +6,7 @@
 
     ./shell/starship.nix
 
-    ./shell/exa.nix
+    ./shell/eza.nix
     ./shell/bat.nix
 
     ./shell/aliases.nix
