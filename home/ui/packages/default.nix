@@ -15,6 +15,7 @@
     steam
     lutris
     prismlauncher
+    wineWowPackages.stable
 
     pulseaudio
 
