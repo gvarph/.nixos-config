@@ -1,10 +1,14 @@
 { config, pkgs, ... }:
 
-
+let
+  username = "gvarph";
+  #gpuId = "10de:1f02";
+  #soundId = "10de:10f9";
+in
 {
 
   imports = [
-    ../common.nix
+        (import ../default.nix { inherit config pkgs username; })
     ../linux/features/docker.nix
     ../linux/filesystem/nas/mount.nix
   ];
