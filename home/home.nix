@@ -35,6 +35,8 @@
 
     azure-cli
 
+    busybox
+
     wget
     curl
     tmux
