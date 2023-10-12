@@ -9,7 +9,7 @@ in
       config = '' config /etc/nixos/secrets/bizmachine_new.ovpn '';
       authUserPass.username = secrets.office-vpn-login.username;
       authUserPass.password = secrets.office-vpn-login.password;
-      autoStart = false;
+      autoStart = true;
     };
   };
 }
