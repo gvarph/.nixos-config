@@ -26,6 +26,8 @@
     # fzf a directory and cd into it
     fzcd = "cd (fd -t d | fzf)";
 
+    gcm = "git checkout main";
+
     # go up by number of dots
     "cd.." = "cd .."; # go up one directory
     "cd..." = "cd ../.."; # go up two directories
