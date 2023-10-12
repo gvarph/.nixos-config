@@ -10,7 +10,11 @@
     ./shell/bat.nix
 
     ./shell/aliases.nix
-  ];
+    
+    "${fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master"}/modules/vscode-server/home.nix"
+ ];
+
+   services.vscode-server.enable = true;
 
   home.packages = with pkgs; [
     fd
@@ -53,3 +57,4 @@
   home.stateVersion = "23.11";
 
 }
+
