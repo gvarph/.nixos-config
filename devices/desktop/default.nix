@@ -15,6 +15,7 @@ in
     ../../linux/features/docker.nix
     ../../linux/filesystem/nas/mount.nix
     ../../linux/nvidia.nix
+    ../../linux/vpn.nix
     (import ../../home/ui { inherit pkgs username hypr_monitors; })
   ];
 
@@ -33,15 +34,6 @@ in
     ];
     allowedUDPPortRanges = [{ from = 1714; to = 1764; } # KDE Connect
     ];
-  };
-
-  services.openvpn.servers = {
-    officeVPN = {
-      config = '' config /etc/nixos/secrets/bizmachine_new.ovpn '';
-      authUserPass.username = secrets.office-vpn-login.username;
-      authUserPass.password = secrets.office-vpn-login.password;
-      autoStart = false;
-    };
   };
 
 }
