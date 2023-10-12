@@ -37,8 +37,9 @@ in
 
     isNormalUser = true;
     description = "Filip Krul";
-    extraGroups = [ "networkmanager" "wheel" "nixeditors" "docker" ];
-    packages = with pkgs; [ ];
+    extraGroups = [ "networkmanager" "wheel" "nixeditors" "docker" "openvpn" ];
+    packages = with pkgs;
+      [ ];
     shell = pkgs.fish;
     home = "/home/${username}";
     openssh.authorizedKeys.keys = secrets.authorizedSSHKeys;
