@@ -11,7 +11,7 @@
     firefox
     google-chrome
 
-
+    vscode
     steam
     lutris
     prismlauncher
