@@ -10,11 +10,11 @@
     ./shell/bat.nix
 
     ./shell/aliases.nix
-    
-    "${fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master"}/modules/vscode-server/home.nix"
- ];
 
-   services.vscode-server.enable = true;
+    "${fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master"}/modules/vscode-server/home.nix"
+  ];
+
+  services.vscode-server.enable = true;
 
   home.packages = with pkgs; [
     fd
@@ -32,7 +32,15 @@
     tree
     ffmpeg
 
-    google-cloud-sdk
+    k9s
+
+    (google-cloud-sdk.withExtraComponents
+      (with pkgs.google-cloud-sdk.components; [
+        gke-gcloud-auth-plugin
+      ])
+    )
+
+
     skaffold
     minikube
     kubectl
