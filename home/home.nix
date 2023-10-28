@@ -45,7 +45,7 @@
     minikube
     kubectl
 
-    azure-cli
+    #azure-cli
 
     busybox
 
