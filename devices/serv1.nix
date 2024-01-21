@@ -19,7 +19,7 @@ in
     pkgs.unixODBCDrivers.msodbcsql17
     pkgs.plantuml
   ];
-  
+
   environment.unixODBCDrivers = [
     pkgs.unixODBCDrivers.msodbcsql17
   ];
@@ -31,5 +31,14 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 80 443 ];
+    allowedUDPPortRanges = [
+
+      { from = 4000; to = 4007; }
+      { from = 8000; to = 8010; }
+    ];
+  };
 
 }
