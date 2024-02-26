@@ -7,6 +7,7 @@
     fishPlugins.forgit
     fishPlugins.hydro
     fishPlugins.done
+    jq
   ];
 
   programs.fish = {
@@ -41,7 +42,7 @@
     '';
 
 
-    /* functions =
+    functions =
       {
         mcd = {
           body = ''
@@ -49,8 +50,30 @@
           '';
           description = "Create a directory and change to it";
         };
-      }; */
+        follow_pod_logs = {
+          body = ''
+            function follow_pod_logs -d "Follow logs from all containers in a specified pod"
+              # Check if pod name is provided
+              if test (count $argv) -lt 1
+                echo "Usage: follow_pod_logs POD_NAME"
+                return 1
+              end
+
+              # Extract pod name from arguments
+              set pod_name $argv[1]
+
+              # Get all container names in the pod
+              set containers (kubectl get pod $pod_name -o json | jq -r '.spec.containers[].name')
+
+              # Follow logs for each container
+              for container in $containers
+                echo "Following logs for container $container"
+                kubectl logs -f $pod_name -c $container &
+              end
+            end
+          '';
+          description = "Follow logs from all containers in a specified pod";
+        };
+      };
   };
 }
-
-
