@@ -7,6 +7,10 @@
   programs.starship = {
     enable = true;
     enableFishIntegration = true;
-    settings = { };
+    settings = {
+      gcloud.disabled = true;
+      nix_shell.disabled = true;
+      username.disabled = true;
+    };
   };
 }
