@@ -1,15 +1,11 @@
 { config, pkgs, ... }:
 
-let
-  secrets = import /etc/nixos/secrets.nix;
-in
 {
   fileSystems."media-server" = {
     device = "//192.168.31.7/Multimedia";
     fsType = "cifs";
     options = [
-      "username=${secrets.nas-login.username}"
-      "password=${secrets.nas-login.password}"
+      "credentials=/run/secrets/nas-credentials"
       "uid=1000"
       "x-systemd.automount" # auto-mount on access
       "noauto" # don't mount on boot
@@ -21,3 +17,5 @@ in
     mountPoint = "/remote/nas/media";
   };
 }
+
+

@@ -12,7 +12,3 @@
 # Built Visual Studio Code Extensions
 *.vsix
 
-# Nix stuff
-
-## I use secrets/* to manage all my secrets
-.secrets

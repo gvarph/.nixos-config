@@ -5,7 +5,6 @@ let
   soundId = "10de:10f9";
   base = "../..";
   hypr_monitors = (builtins.readFile ./hypr_monitors.conf);
-  secrets = import /etc/nixos/secrets.nix;
 in
 {
   imports = [
