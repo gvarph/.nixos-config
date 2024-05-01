@@ -8,10 +8,12 @@ in
 {
 
   imports = [
-    (import ../default.nix { inherit config pkgs username; })
-    ../linux/features/docker.nix
-    ../linux/filesystem/nas/mount.nix
-    ../linux/vpn.nix
+    ./hardware-configuration.nix
+
+    (import ../../default.nix { inherit config pkgs username; })
+    ../../linux/features/docker.nix
+    ../../linux/filesystem/nas/mount.nix
+    ../../linux/vpn.nix
   ];
 
   environment.systemPackages = [
