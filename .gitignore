@@ -11,3 +11,10 @@
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+# Nix stuff
+## Hardware configuration is automatically generated on each machine
+hardware-configuration.nix 
+
+## I use secrets/* to manage all my secrets
+.secrets
