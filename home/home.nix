@@ -53,7 +53,7 @@
     curl
     tmux
     openssh
-    rnix-lsp
+
     git
     git-crypt
     nixpkgs-fmt
