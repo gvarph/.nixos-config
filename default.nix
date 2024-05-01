@@ -1,8 +1,6 @@
 { config, pkgs, username, ... }:
 
-let
-  secrets = import /etc/nixos/secrets.nix;
-in
+
 {
   imports =
     [
@@ -33,6 +31,8 @@ in
 
 
 
+
+  users.mutableUsers = false;
   users.users.${username} = {
 
     isNormalUser = true;
@@ -42,6 +42,7 @@ in
       [ ];
     shell = pkgs.fish;
     home = "/home/${username}";
+
     openssh.authorizedKeys.keys = [
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDLHO/mS3CxMS6TieqaFEqPcP1uJcgkGYBcINY9GceosG4Wyx+q1Y/K2bt+VDjM2cap7Y7njdNMDK2F+G2o8T/Oihhi7qk/kGgavOsTXp0XSQqzvaE0yeE3uGUAE4c+WMCGi97gd8R3robQSl6UlrzGcKIaqVJeZAO1Vs5trbX0yjnmGtiXcUAdZvw5bBxNmp49UVBylJjXCQd+y/neqeP3JVuEiEeLubqFBQEE5p5XVYm5YqA+dfvysQR9sNC5tPurpDCPljxQol6EYmCAoWOTyJ9oe4Ps7IXnpMy+lfaw3Sfl7Z+r0+FqLSnt2U4j92NNDTSnQRcysF3mcqacHPKptSidcCKF2JYJPfx/mYdxrCFq5ajA4iIy+L7tpVa/5paLolrvb1vgYDWd3eWpQqPNifPR3IYHFebWs6jH3J5sNoI5qd44S0k9vN47yztrn9UdTpdxj3G4USDdleMs7Ukp9q+gGacvNi37etulBB0BNj1XB3Pc8cNHWeF7MIvxGh8= gvarp@Gvarph_D"
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDxQd1E2P6RVXJRBxMcV/Zmm683vLxpkfxPgvkYyBTmhYtohvMBs9DFxDsr5ual/kWb5UCv8Ae80GS3V1bXH4lrm05hcP3FJA1UCUpQ9GQZMjjp6F72GcXcdjXmf98eWZE1+V3xWd206n9GjZbo2edErON7TqwWBPMfo6RSJlSvo3lrksN6/5V9Ja/ZdhLK0uCehWEwavlG1BfUMhLqeXBJEu2N4+OG2DqNkThc7pMyg/Yiwn2vQl03H4C0R6ZnNOagJ07hFit41073gvyUqQeGGVyoYq0PW9WbmQTb9u3F2lWre052y3uv+EruhsEXBCSQELyZE6DWtfy/Tzr7fCF7xSdlAkOTjsGaSkpUbjx71HKbWDM251oe8BzUIy4u4QPOJjTzc1CPz3kEsdCnI0WoYnb036iwty/pxmWJsI5b1n+9fiAEs8wDauSjdpeTR7TkqgSaIbAbkg5ZelqTvQcOEnHkYoE4hYclSZQXUQHhXMfmE0zaxlkZE62ex0vXgi0= user@DESKTOP-A3LQ8JG  "
@@ -49,10 +50,11 @@ in
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCuRwAmg4m/BYlsvz66HRNuVkzUVPNQyJSKIkDo6fTOhLqyYx13o2mZ5AMUhkpgcy+ty0jeG4pfAqtDuQsfQKP65uBwQ7Z43bvHJUEOuqTRgAxYHueXjm+8zh70SKgcpmfkbpkQpkzPzCqmUltNFTh7H5p7Gt9AnquVR2Z0XDKZPtFBJXGp4ZIzUV+MXU1dla1AeevbYi1djMzEnRzCJX/QfbESkio/rrjih3e+L5HSwN2nthccSOB6HDh+Ph76e8z1pU3U02xG182sPLXgBj/7MGFZrSt8X1+bAPX+pP6Yzzs6HjZC7TKRcZWaNnW6mdBlYswL2oFtvYJS1zPnWi50TfoUPkKZxJiwaLD97viSqkf+Ue8IM3kAlYLdAAVYZFoO4DK3RuuDfKftD3FhkEPJUS00hubwVwv/0gqjSS1cO3gyUA5v9LLb5a/k04PXK41XKufThQ+JkmyyELWNhPFPi4+i1liaAwBYYkU6OzPDz+eN1VCB8YBE2Z0SpDCU9F0= gvarph@deskt"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJvKRp9b8bg4pX3OTEGiCX5g3eED169m/bmiV3jM+VfY gvarph@DESKTOP-86UCT0V"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKAEtmLivQKX77XCGfszdGaMEN3pY27x8L981cwl0jHD gvarph@DESKTOP-86UCT0V" # id_main
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIaLojLN0qJaHr6BsSnypa0ktTo0g0KpHCT0lJ7VyLG7 gvarph@Filips-MacBook-Air.local" 
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIaLojLN0qJaHr6BsSnypa0ktTo0g0KpHCT0lJ7VyLG7 gvarph@Filips-MacBook-Air.local"
     ];
 
-    hashedPassword = secrets.hashedPassword;
+
+    hashedPasswordFile = config.sops.secrets.hashedPassword.path;
   };
 
 
