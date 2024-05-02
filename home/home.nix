@@ -17,6 +17,9 @@
   ];
 
   #services.vscode-server.enable = true;
+  programs.neovim = inputs.gvarph-nvim.lib.mkHomeManager {
+    system = pkgs.system;
+  };
 
   home.packages = with pkgs; [
     alejandra
