@@ -1,16 +1,17 @@
-{ config, pkgs, inputs, ... }:
-
-let
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}: let
   username = "gvarph";
   gpuId = "10de:1f02";
   soundId = "10de:10f9";
-in
-{
-
+in {
   imports = [
     ./hardware-configuration.nix
 
-    (import ../../default.nix { inherit config pkgs username; })
+    (import ../../default.nix {inherit config pkgs username;})
     ../../linux/features/docker.nix
     ../../linux/filesystem/nas/mount.nix
     ../../linux/vpn.nix
@@ -23,7 +24,6 @@ in
     pkgs.icu
     pkgs.dotnet-sdk_8
     pkgs.azure-cli
-
   ];
 
   environment.unixODBCDrivers = [
@@ -39,12 +39,16 @@ in
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 80 443 ];
+    allowedTCPPorts = [80 443];
     allowedUDPPortRanges = [
-
-      { from = 4000; to = 4007; }
-      { from = 8000; to = 8010; }
+      {
+        from = 4000;
+        to = 4007;
+      }
+      {
+        from = 8000;
+        to = 8010;
+      }
     ];
   };
-
 }

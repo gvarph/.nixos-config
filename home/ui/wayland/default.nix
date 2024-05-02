@@ -1,6 +1,8 @@
-{ pkgs, custom, ... }:
 {
-
+  pkgs,
+  custom,
+  ...
+}: {
   home.packages = with pkgs; [
     dunst
     libnotify
@@ -17,15 +19,12 @@
     pavucontrol
 
     copyq
-
-
-
   ];
 
   imports = [
-    (import ./hyprland { inherit pkgs custom; })
-    (import ./waybar { inherit pkgs custom; })
-    (import ./wofi.nix { inherit custom; })
-    (import ./foot.nix { inherit custom; })
+    (import ./hyprland {inherit pkgs custom;})
+    (import ./waybar {inherit pkgs custom;})
+    (import ./wofi.nix {inherit custom;})
+    (import ./foot.nix {inherit custom;})
   ];
 }

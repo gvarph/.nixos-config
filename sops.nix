@@ -1,5 +1,10 @@
-{ pkgs, inputs, config, username, ... }:
 {
+  pkgs,
+  inputs,
+  config,
+  username,
+  ...
+}: {
   sops = {
     defaultSopsFile = ./secrets/secrets.yaml;
     defaultSopsFormat = "yaml";
@@ -9,12 +14,10 @@
     };
 
     secrets = {
-      "nas-credentials" = { };
+      "nas-credentials" = {};
 
-
-
-      "bizmachine_vpn.credentials" = { };
-      "bizmachine_vpn.ovpn" = { };
+      "bizmachine_vpn.credentials" = {};
+      "bizmachine_vpn.ovpn" = {};
 
       hashedPassword = {
         neededForUsers = true;

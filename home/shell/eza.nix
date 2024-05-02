@@ -1,14 +1,13 @@
-{ config, pkgs, ... }:
-let
-  eza_args = " --icons --color=auto --git --binary --header --created --modified --accessed";
-in
-
 {
+  config,
+  pkgs,
+  ...
+}: let
+  eza_args = " --icons --color=auto --git --binary --header --created --modified --accessed";
+in {
   home.packages = with pkgs; [
     eza
-
   ];
-
 
   home.shellAliases = {
     ls = "eza" + eza_args;

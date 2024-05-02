@@ -1,14 +1,13 @@
-{ config, pkgs, ... }:
-let
-  exa_args = " --icons --color=auto --git --binary --header --created --modified --accessed";
-in
-
 {
+  config,
+  pkgs,
+  ...
+}: let
+  exa_args = " --icons --color=auto --git --binary --header --created --modified --accessed";
+in {
   home.packages = with pkgs; [
     exa
-
   ];
-
 
   home.shellAliases = {
     ls = "exa" + exa_args;

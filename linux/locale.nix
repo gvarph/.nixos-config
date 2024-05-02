@@ -1,6 +1,8 @@
-{ config, pkgs, ... }:
-
 {
+  config,
+  pkgs,
+  ...
+}: {
   # Set your time zone.
   time.timeZone = "Europe/Prague";
 
@@ -18,5 +20,4 @@
     LC_TELEPHONE = "cs_CZ.UTF-8";
     LC_TIME = "en_CA.UTF-8";
   };
-
 }

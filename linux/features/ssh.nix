@@ -1,9 +1,5 @@
-{ pkgs, ... }:
-
-{
-
-  environment.systemPackages = [ pkgs.openssh ];
-
+{pkgs, ...}: {
+  environment.systemPackages = [pkgs.openssh];
 
   services.xserver = {
     layout = "us";
@@ -25,5 +21,4 @@
         PasswordAuthentication yes
     '';
   };
-
 }

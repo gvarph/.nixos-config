@@ -1,18 +1,17 @@
-{ config, pkgs, ... }:
-
-let
+{
+  config,
+  pkgs,
+  ...
+}: let
   username = "gvarph";
   #gpuId = "10de:1f02";
   #soundId = "10de:10f9";
-in
-{
-
+in {
   imports = [
-        (import ../default.nix { inherit config pkgs username; })
+    (import ../default.nix {inherit config pkgs username;})
     ../linux/features/docker.nix
     ../linux/filesystem/nas/mount.nix
   ];
-
 
   networking.hostName = "serv2";
   networking.networkmanager.enable = true;
@@ -20,5 +19,4 @@ in
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
 }

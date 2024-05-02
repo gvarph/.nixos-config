@@ -1,13 +1,13 @@
-{ custom ? {
+{
+  custom ? {
     font = "FiraCode Nerd Font";
     fontsize = "12";
     primary_accent = "cba6f7";
     background = "11111B";
     opacity = ".85";
-  }
-, ...
-}:
-{
+  },
+  ...
+}: {
   programs.foot = {
     enable = true;
     server.enable = true;

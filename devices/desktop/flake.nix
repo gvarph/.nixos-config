@@ -4,7 +4,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
-  outputs = { nixpkgs, ... }: {
+  outputs = {nixpkgs, ...}: {
     nixosConfigurations = {
       hostname = nixpkgs.lib.nixosSystem {
         modules = [

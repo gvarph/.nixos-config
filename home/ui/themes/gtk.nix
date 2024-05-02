@@ -1,12 +1,12 @@
-{ pkgs
-, custom ? {
+{
+  pkgs,
+  custom ? {
     font = "FiraCode Nerd Font";
     fontsize = "12";
     cursor = "Numix-Cursor";
-  }
-, ...
-}:
-{
+  },
+  ...
+}: {
   #FIXME:
   gtk = {
     enable = true;
@@ -21,7 +21,7 @@
     };
     theme = {
       name = "Catppuccin-Mocha-Standard-Blue-dark";
-      package = pkgs.catppuccin-gtk.override { variant = "mocha"; };
+      package = pkgs.catppuccin-gtk.override {variant = "mocha";};
     };
     gtk3.extraConfig = {
       Settings = ''
