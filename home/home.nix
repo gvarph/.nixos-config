@@ -1,6 +1,8 @@
-{ config, pkgs, ... }:
-
 {
+  config,
+  pkgs,
+  ...
+}: {
   imports = [
     ./shell/fish.nix
 
@@ -17,7 +19,6 @@
   #services.vscode-server.enable = true;
 
   home.packages = with pkgs; [
-
     alejandra
 
     fd
@@ -37,12 +38,12 @@
 
     k9s
 
-    (google-cloud-sdk.withExtraComponents
+    (
+      google-cloud-sdk.withExtraComponents
       (with pkgs.google-cloud-sdk.components; [
         gke-gcloud-auth-plugin
       ])
     )
-
 
     skaffold
     minikube
@@ -64,8 +65,5 @@
     grc
   ];
 
-
   home.stateVersion = "23.11";
-
 }
-

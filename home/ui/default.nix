@@ -1,9 +1,9 @@
-{ pkgs
-, username
-, hypr_monitors ? "monitor=,preferred,auto,1"
-, ...
-}:
-let
+{
+  pkgs,
+  username,
+  hypr_monitors ? "monitor=,preferred,auto,1",
+  ...
+}: let
   # Variables to share accross configs
   custom = {
     font = "FiraCode Nerd Font";
@@ -16,11 +16,7 @@ let
     cursor = "Numix-Cursor";
     hypr_monitors = hypr_monitors;
   };
-in
-{
-
-
-
+in {
   hardware.logitech.wireless.enable = true;
   hardware.logitech.wireless.enableGraphical = true;
   programs.dconf.enable = true;
@@ -30,8 +26,6 @@ in
   #  remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
   #  dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   #};
-
-
 
   security.rtkit.enable = true;
   services.pipewire = {
@@ -43,21 +37,17 @@ in
   };
 
   xdg.portal.enable = true;
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-hyprland ];
-  environment.sessionVariables =
-    {
-      WLR_NO_HARDWARE_CURSORS = "1";
-      NIXOS_OZONE_WL = "1";
-    };
+  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-hyprland];
+  environment.sessionVariables = {
+    WLR_NO_HARDWARE_CURSORS = "1";
+    NIXOS_OZONE_WL = "1";
+  };
 
   home-manager.users.${username} = {
-
-    imports =
-      [
-        (import ./themes { inherit pkgs custom; })
-        (import ./wayland { inherit pkgs custom; })
-        (import ./packages { inherit pkgs; })
-
-      ];
+    imports = [
+      (import ./themes {inherit pkgs custom;})
+      (import ./wayland {inherit pkgs custom;})
+      (import ./packages {inherit pkgs;})
+    ];
   };
 }

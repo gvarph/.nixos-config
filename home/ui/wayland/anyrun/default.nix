@@ -1,12 +1,11 @@
-{ config, pkgs, ... }:
-
-let
-  # Fetch the repositories
-  anyrun = import (fetchTarball "https://github.com/Kirottu/anyrun/archive/master.tar.gz") { };
-
-in
 {
-
+  config,
+  pkgs,
+  ...
+}: let
+  # Fetch the repositories
+  anyrun = import (fetchTarball "https://github.com/Kirottu/anyrun/archive/master.tar.gz") {};
+in {
   programs.anyrun = {
     enable = true;
     config = {
@@ -26,7 +25,7 @@ in
     };
 
     # custom css for anyrun, based on catppuccin-mocha
-    extraCss = (builtins.readFile ./style.css);
+    extraCss = builtins.readFile ./style.css;
   };
 
   # ... any other home-manager configurations ...

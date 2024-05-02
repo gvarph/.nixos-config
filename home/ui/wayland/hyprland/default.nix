@@ -1,15 +1,16 @@
-{ pkgs
-, custom
-, ...
-}:
-let
+{
+  pkgs,
+  custom,
+  ...
+}: let
   flake-compat = builtins.fetchTarball "https://github.com/edolstra/flake-compat/archive/master.tar.gz";
 
-  hyprland = (import flake-compat {
-    src = builtins.fetchTarball "https://github.com/hyprwm/Hyprland/archive/master.tar.gz";
-  }).defaultNix;
-in
-{
+  hyprland =
+    (import flake-compat {
+      src = builtins.fetchTarball "https://github.com/hyprwm/Hyprland/archive/master.tar.gz";
+    })
+    .defaultNix;
+in {
   imports = [
     hyprland.homeManagerModules.default
   ];
@@ -37,7 +38,5 @@ in
         exec-once=dunst
         exec-once=copyq --start-server
       '';
-
   };
-
 }

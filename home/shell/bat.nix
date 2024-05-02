@@ -1,9 +1,9 @@
-{ config, pkgs, ... }:
-let
-
-in
-
 {
+  config,
+  pkgs,
+  ...
+}: let
+in {
   home.packages = with pkgs; [
     bat
 
@@ -11,9 +11,7 @@ in
 
     ripgrep
     bat-extras.batgrep
-
   ];
-
 
   home.shellAliases = {
     bata = "bat -A";

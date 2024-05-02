@@ -1,8 +1,5 @@
-{ pkgs, ... }:
-{
-
+{pkgs, ...}: {
   home.packages = with pkgs; [
-
     discord
     betterdiscordctl
 
@@ -25,7 +22,6 @@
     okular
     libsForQt5.kdeconnect-kde
 
-
     ledger-live-desktop
     transmission-gtk
     playerctl
@@ -36,5 +32,4 @@
   imports = [
     ./work.nix
   ];
-
 }
