@@ -17,6 +17,9 @@
   #services.vscode-server.enable = true;
 
   home.packages = with pkgs; [
+
+    alejandra
+
     fd
     ripgrep
     tokei
