@@ -2,6 +2,7 @@
   config,
   pkgs,
   username,
+  inputs,
   ...
 }: {
   home-manager.useUserPackages = true;
@@ -13,6 +14,7 @@
     imports = [
       ./home.nix
     ];
+
     programs.git = {
       enable = true;
       userName = "Filip Krul";
