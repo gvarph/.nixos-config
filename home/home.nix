@@ -13,17 +13,14 @@
 
     ./shell/aliases.nix
 
+    ./programs/nvim
+    ./programs/tmux
     # "${fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master"}/modules/vscode-server/home.nix"
   ];
 
-  #services.vscode-server.enable = true;
-  programs.neovim = inputs.gvarph-nvim.lib.mkHomeManager {
-    system = pkgs.system;
-  };
-
   home.packages = with pkgs; [
     alejandra
-
+    # vscode
     fd
     ripgrep
     tokei
@@ -58,7 +55,7 @@
 
     wget
     curl
-    tmux
+
     openssh
 
     git

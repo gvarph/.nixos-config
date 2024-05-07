@@ -11,7 +11,7 @@ in {
   imports = [
     ./hardware-configuration.nix
 
-    (import ../../default.nix {inherit config pkgs username;})
+    (import ../../default.nix {inherit config pkgs inputs username;})
     ../../linux/features/docker.nix
     ../../linux/filesystem/nas/mount.nix
     ../../linux/vpn.nix
