@@ -12,13 +12,19 @@
 
     defaultEditor = true;
 
+    withPython3 = true;
+    withNodeJs = true;
+
     extraLuaConfig = ''
-    ${builtins.readFile ./nvim/init.lua}
+      ${builtins.readFile ./nvim/init.lua}
     '';
 
-
     plugins = with pkgs.vimPlugins; [
-      nvim-treesitter.withAllGrammars
+      {
+        plugin = nvim-treesitter.withAllGrammars;
+        type = "lua";
+        config = builtins.readFile ./nvim/plugins/treesitter.lua;
+      }
 
       nvim-lspconfig
 
@@ -34,15 +40,30 @@
       {
         plugin = telescope-nvim;
         config = builtins.readFile ./nvim/plugins/telescope.lua;
-	type = "lua";
+        type = "lua";
       }
-      
+
       {
         plugin = nvim-lspconfig;
-	type = "lua";
-	config = ''
-	require'lspconfig'.pyright.setup{}
-	'';
+        config = builtins.readFile ./nvim/plugins/lsp.lua;
+        type = "lua";
+      }
+      {
+        plugin = neogit;
+        config = builtins.readFile ./nvim/plugins/neogit.lua;
+        type = "lua";
+      }
+
+      {
+        plugin = diffview-nvim;
+        config = builtins.readFile ./nvim/plugins/diffview.lua;
+        type = "lua";
+      }
+
+      {
+        plugin = gitsigns-nvim;
+        config = builtins.readFile ./nvim/plugins/gitsigns.lua;
+        type = "lua";
       }
     ];
 
@@ -54,12 +75,15 @@
       ripgrep
       fd
       fzf
-
+      lemonade # Clipboard manager
+      tree-sitter
       # Python stuff
       nodePackages.pyright
       pyright
       poetry
       ruff
+
+      terraform-ls
     ];
   };
 }

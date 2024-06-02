@@ -6,7 +6,7 @@
       authUserPass.username = "filip.krul";
       authUserPass.password = "98f_pK2710C!";
 
-      autoStart = true;
+      autoStart = false;
     };
   };
 }
