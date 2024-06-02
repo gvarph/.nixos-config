@@ -37,3 +37,11 @@ vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<CR>', { noremap = t
 vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>fb', '<cmd>Telescope buffers<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>fh', '<cmd>Telescope help_tags<CR>', { noremap = true, silent = true })
+
+-- Enable filetype detection, plugins, and indentation
+vim.cmd('filetype plugin indent on')
+
+-- Enable syntax highlighting
+vim.cmd('syntax on')
+
+

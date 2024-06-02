@@ -20,7 +20,7 @@
 
   home.packages = with pkgs; [
     alejandra
-    # vscode
+    sops
     fd
     ripgrep
     tokei

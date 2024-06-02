@@ -6,7 +6,7 @@
       authUserPass.username = "filip.krul";
       authUserPass.password = "foo";
 
-      autoStart = true;
+      autoStart = false;
     };
   };
 }
