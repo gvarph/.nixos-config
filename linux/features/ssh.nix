@@ -2,8 +2,10 @@
   environment.systemPackages = [pkgs.openssh];
 
   services.xserver = {
-    layout = "us";
-    xkbVariant = "";
+    xkb = {
+      layout = "us";
+      variant = "";
+    };
     enable = true;
   };
 
@@ -17,7 +19,7 @@
     };
     extraConfig = ''
       # external addressess
-      Match Address 192.168.31.0/24
+        Match Address 192.168.31.0/24
         PasswordAuthentication yes
     '';
   };

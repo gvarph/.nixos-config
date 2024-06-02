@@ -2,7 +2,31 @@
   config,
   pkgs,
   ...
-}: {
+}: let
+  treesitter-parsers = pkgs.symlinkJoin {
+    name = "treesitter-parsers";
+    paths = pkgs.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
+  };
+in {
+  home.file.".config/nvim/" = {
+    source = ./nvim;
+    recursive = true;
+  };
+
+  # Treesiter is configured as a locally developed plugin in lazy.nvim
+  #   so we have to hardcode a symlink to the treesitter parsers
+  #   to which we can refer to in the lazy.nvim config
+  home.file."./.local/share/nvim/nix/nvim-treesitter/" = {
+    recursive = true;
+    source = pkgs.vimPlugins.nvim-treesitter.withAllGrammars;
+  };
+
+  home.file.".config/nvim/lua/gvarph/init.lua".text = ''
+    require("gvarph.set")
+    require("gvarph.keymaps")
+    vim.opt.runtimepath:append("${treesitter-parsers}")
+  '';
+
   programs.neovim = {
     enable = true;
 
@@ -12,71 +36,20 @@
 
     defaultEditor = true;
 
-    withPython3 = true;
-    withNodeJs = true;
-
-    extraLuaConfig = ''
-      ${builtins.readFile ./nvim/init.lua}
-    '';
-
     plugins = with pkgs.vimPlugins; [
-      {
-        plugin = nvim-treesitter.withAllGrammars;
-        type = "lua";
-        config = builtins.readFile ./nvim/plugins/treesitter.lua;
-      }
-
-      nvim-lspconfig
-
-      {
-        plugin = catppuccin-nvim;
-        config = "colorscheme catppuccin";
-      }
-
-      copilot-vim
-
-      vim-tmux-navigator
-      telescope-fzf-native-nvim
-      {
-        plugin = telescope-nvim;
-        config = builtins.readFile ./nvim/plugins/telescope.lua;
-        type = "lua";
-      }
-
-      {
-        plugin = nvim-lspconfig;
-        config = builtins.readFile ./nvim/plugins/lsp.lua;
-        type = "lua";
-      }
-      {
-        plugin = neogit;
-        config = builtins.readFile ./nvim/plugins/neogit.lua;
-        type = "lua";
-      }
-
-      {
-        plugin = diffview-nvim;
-        config = builtins.readFile ./nvim/plugins/diffview.lua;
-        type = "lua";
-      }
-
-      {
-        plugin = gitsigns-nvim;
-        config = builtins.readFile ./nvim/plugins/gitsigns.lua;
-        type = "lua";
-      }
+      nvim-treesitter.withAllGrammars
     ];
 
     extraPackages = with pkgs; [
-      git
+      git # Needed to install lazy.nvim
       nil
       lua-language-server
       zig # C compiler
       ripgrep
       fd
       fzf
-      lemonade # Clipboard manager
       tree-sitter
+
       # Python stuff
       nodePackages.pyright
       pyright
