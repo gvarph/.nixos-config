@@ -86,6 +86,14 @@
         '';
         description = "Follow logs from all containers in a specified pod";
       };
+      starship_transient_prompt_func = {
+        body = ''
+               	function starship_transient_prompt_func
+           		starship module character
+          end
+        '';
+        description = "Starship transient prompt function";
+      };
     };
   };
 }

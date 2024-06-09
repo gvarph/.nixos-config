@@ -14,7 +14,7 @@ in {
     (import ../../default.nix {inherit config pkgs inputs username;})
     ../../linux/features/docker.nix
     ../../linux/filesystem/nas/mount.nix
-    ../../linux/vpn.nix
+    #../../linux/vpn.nix
   ];
 
   environment.systemPackages = [
