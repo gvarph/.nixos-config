@@ -1,5 +1,3 @@
-
-extraLuaConfig = ''
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
@@ -9,6 +7,10 @@ vim.opt.relativenumber = true
 vim.g.have_nerd_font = true
 
 vim.opt.showmode = false
+
+-- Sync clipboard between OS and Neovim.
+--  Remove this option if you want your OS clipboard to remain independent.
+--  See `:help 'clipboard'`
 
 vim.opt.clipboard = 'unnamedplus'
 
@@ -23,6 +25,8 @@ vim.opt.signcolumn = 'yes'
 
 vim.opt.timeoutlen = 300
 
+
+-- Configure how new splits should be opened
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
@@ -41,4 +45,5 @@ vim.cmd('filetype plugin indent on')
 -- Enable syntax highlighting
 vim.cmd('syntax on')
 
-
+-- Don't show the mode, since it's already in the status line
+vim.opt.showmode = false

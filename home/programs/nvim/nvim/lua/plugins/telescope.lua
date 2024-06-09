@@ -17,6 +17,18 @@ return {
         "<leader>fh",
         "<cmd>Telescope help_tags<cr>",
         desc = "[F]ind [H]elp"
+    }, {
+        "<leader>fk",
+        "<cmd>Telescope keymaps<cr>",
+        desc = "[F]ind [K]eymaps"
+    }, {
+        "<leader>fd",
+        "<cmd>Telescope lsp_document_diagnostics<cr>",
+        desc = "[F]ind [D]iagnostics"
+    }, {
+        "<leader>f.",
+        "<cmd>Telescope lsp_code_actions<cr>",
+        desc = "[F]ind [.]Code [A]ctions"
     }},
     -- change some options
     opts = {
