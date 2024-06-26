@@ -1,5 +1,5 @@
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -12,7 +12,7 @@ vim.opt.showmode = false
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 
-vim.opt.clipboard = 'unnamedplus'
+vim.opt.clipboard = "unnamedplus"
 
 vim.opt.breakindent = true
 
@@ -21,7 +21,7 @@ vim.opt.undofile = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
-vim.opt.signcolumn = 'yes'
+vim.opt.signcolumn = "yes"
 
 vim.opt.timeoutlen = 300
 
@@ -32,19 +32,18 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', extends = '>', precedes = '<', nbsp = '␣' }
+vim.opt.listchars = { tab = "» ", trail = "·", extends = ">", precedes = "<", nbsp = "␣" }
 
 -- live preview substitutions
-vim.opt.inccommand = 'split'
+vim.opt.inccommand = "split"
 
 vim.opt.cursorline = true
 
-
 -- Enable filetype detection, plugins, and indentation
-vim.cmd('filetype plugin indent on')
+vim.cmd("filetype plugin indent on")
 
 -- Enable syntax highlighting
-vim.cmd('syntax on')
+vim.cmd("syntax on")
 
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
