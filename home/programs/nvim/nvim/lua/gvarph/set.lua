@@ -25,6 +25,7 @@ vim.opt.signcolumn = 'yes'
 
 vim.opt.timeoutlen = 300
 
+vim.o.scrolloff = 10
 
 -- Configure how new splits should be opened
 vim.opt.splitright = true

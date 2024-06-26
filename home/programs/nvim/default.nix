@@ -50,13 +50,14 @@ in {
       fd
       fzf
       tree-sitter
-
+	taplo
       # Python stuff
-      nodePackages.pyright
+      pyright
       pyright
       poetry
       ruff
-
+      rust-analyzer
+      yaml-language-server
       terraform-ls
     ];
   };

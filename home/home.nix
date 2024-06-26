@@ -35,7 +35,7 @@
     neofetch
     tree
     ffmpeg
-
+    thefuck
     k9s
 
     (
