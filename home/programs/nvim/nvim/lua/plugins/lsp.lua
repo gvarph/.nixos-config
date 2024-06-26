@@ -106,7 +106,7 @@ return { -- LSP Configuration & Plugins
       --local capabilities = vim.lsp.protocol.make_client_capabilities()
       --capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
-
+	local lspconfig = require('lspconfig');
 
 	lspconfig.pyright.setup {};
 	lspconfig.terraformls.setup {};
@@ -119,6 +119,15 @@ return { -- LSP Configuration & Plugins
 			},
 		},
 	};
+	lspconfig.nil_ls.setup {};
+	lspconfig.taplo.setup {};
+	lspconfig.yamlls.setup {};
+	lspconfig.rust_analyzer.setup {
+	  settings = {
+	    ['rust-analyzer'] = {},
+	  },
+	}
 	end
+
 }
-	
+

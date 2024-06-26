@@ -34,7 +34,7 @@
     isNormalUser = true;
     description = "Filip Krul";
     extraGroups = ["networkmanager" "wheel" "nixeditors" "docker" "openvpn"];
-    packages = with pkgs; [];
+    packages = [];
     shell = pkgs.fish;
     home = "/home/${username}";
 
