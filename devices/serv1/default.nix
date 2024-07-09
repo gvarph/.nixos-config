@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  pkgs-stable,
   inputs,
   ...
 }: let
@@ -24,6 +25,7 @@ in {
     # pkgs.icu
     # pkgs.dotnet-sdk_8
     # pkgs.azure-cli
+    pkgs-stable.azure-cli
   ];
 
   environment.unixODBCDrivers = [
