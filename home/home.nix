@@ -32,10 +32,10 @@
     unzip
     htop
     bottom
-    neofetch
+    # neofetch
     tree
     ffmpeg
-    thefuck
+    # thefuck
     k9s
 
     (

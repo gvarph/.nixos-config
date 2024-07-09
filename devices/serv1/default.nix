@@ -20,10 +20,10 @@ in {
   environment.systemPackages = [
     pkgs.unixODBC
     pkgs.unixODBCDrivers.msodbcsql17
-    pkgs.plantuml
-    pkgs.icu
-    pkgs.dotnet-sdk_8
-    pkgs.azure-cli
+    # pkgs.plantuml
+    # pkgs.icu
+    # pkgs.dotnet-sdk_8
+    # pkgs.azure-cli
   ];
 
   environment.unixODBCDrivers = [
