@@ -59,6 +59,8 @@ in {
       rust-analyzer
       yaml-language-server
       terraform-ls
+
+      stylua
     ];
   };
 }

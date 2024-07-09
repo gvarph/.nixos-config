@@ -103,29 +103,65 @@ return { -- LSP Configuration & Plugins
 		--  By default, Neovim doesn't support everything that is in the LSP specification.
 		--  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
 		--  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
-		--local capabilities = vim.lsp.protocol.make_client_capabilities()
-		--capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+		local capabilities = vim.lsp.protocol.make_client_capabilities()
+		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
 		local lspconfig = require("lspconfig")
 
-		lspconfig.basedpyright.setup({})
-		lspconfig.terraformls.setup({})
-		lspconfig.lua_ls.setup({
-			settings = {
-				Lua = {
-					completion = {
-						callSnippet = "Replace",
+		-- lspconfig.basedpyright.setup({
+		--           capabilities = capabilities,
+		--       })
+		-- lspconfig.terraformls.setup({})
+		-- lspconfig.lua_ls.setup({
+		-- 	settings = {
+		-- 		Lua = {
+		-- 			completion = {
+		-- 				callSnippet = "Replace",
+		-- 			},
+		-- 		},
+		-- 	},
+		-- })
+		-- lspconfig.nil_ls.setup({})
+		-- lspconfig.taplo.setup({})
+		-- lspconfig.yamlls.setup({})
+		-- lspconfig.rust_analyzer.setup({
+		-- 	settings = {
+		-- 		["rust-analyzer"] = {},
+		-- 	},
+		-- })
+		local servers = {
+			lua_ls = {
+				-- cmd = {...},
+				-- filetypes = { ...},
+				-- capabilities = {},
+				settings = {
+					Lua = {
+						completion = {
+							callSnippet = "Replace",
+						},
+						-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+						-- diagnostics = { disable = { 'missing-fields' } },
 					},
 				},
 			},
-		})
-		lspconfig.nil_ls.setup({})
-		lspconfig.taplo.setup({})
-		lspconfig.yamlls.setup({})
-		lspconfig.rust_analyzer.setup({
-			settings = {
-				["rust-analyzer"] = {},
+			basedpyright = {},
+			terraformls = {},
+			nil_ls = {},
+			taplo = {},
+			yamlls = {},
+			rust_analyzer = {
+				settings = {
+					["rust-analyzer"] = {},
+				},
 			},
-		})
+		}
+
+		for server, config in pairs(servers) do
+			-- Merge capabilities if not already defined in the config
+			config.capabilities = vim.tbl_deep_extend("force", capabilities, config.capabilities or {})
+
+			-- Setup the server
+			lspconfig[server].setup(config)
+		end
 	end,
 }

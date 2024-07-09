@@ -49,16 +49,16 @@ return {
 			},
 		},
 	},
-        setup = function()
-      local trouble = require("trouble.providers.telescope")
+	setup = function()
+		local trouble = require("trouble.providers.telescope")
 
-      require("telescope").setup({
-        defaults = {
-          mappings = {
-            i = { ["<c-t>"] = trouble.open },  -- For insert mode
-            n = { ["<c-t>"] = trouble.open },  -- For normal mode
-          },
-        },
-      })
-    end,
+		require("telescope").setup({
+			defaults = {
+				mappings = {
+					i = { ["<c-t>"] = trouble.open }, -- For insert mode
+					n = { ["<c-t>"] = trouble.open }, -- For normal mode
+				},
+			},
+		})
+	end,
 }
