@@ -54,3 +54,6 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 
+-- Enable inlay hints by default
+vim.lsp.inlay_hint.enable(true, { 0 })
+
