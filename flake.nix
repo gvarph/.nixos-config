@@ -16,29 +16,18 @@
     };
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    nixpkgs-stable,
-    ...
-  } @ inputs: {
+  outputs = { self, nixpkgs, nixpkgs-stable, ... } @ inputs: {
     nixosConfigurations.serv1 = nixpkgs.lib.nixosSystem {
-      specialArgs = let
-        system = "x86_64-linux";
-        in
-      {
-        inherit inputs;
-
-        pkgs-stable = nixpkgs-stable.legacyPackages.${system};
+      specialArgs = inputs // {
+        pkgs-stable = nixpkgs-stable.legacyPackages.${"x86_64-linux"};
       };
       modules = [
         inputs.sops-nix.nixosModules.sops
-
         inputs.home-manager.nixosModules.default
-
         ./devices/serv1
         ./sops.nix
       ];
     };
   };
 }
+
