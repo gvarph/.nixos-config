@@ -108,7 +108,7 @@ return { -- LSP Configuration & Plugins
 
 		local lspconfig = require("lspconfig")
 
-		lspconfig.pyright.setup({})
+		lspconfig.basedpyright.setup({})
 		lspconfig.terraformls.setup({})
 		lspconfig.lua_ls.setup({
 			settings = {
