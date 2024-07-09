@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   ...
 }: {
@@ -15,9 +14,10 @@
 
     ./programs/nvim
     ./programs/tmux
-    # "${fetchTarball "https://github.com/msteen/nixos-vscode-server/tarball/master"}/modules/vscode-server/home.nix"
-  ];
 
+    ./stable.nix
+  ];
+  
   home.packages = with pkgs; [
     alejandra
     sops
@@ -37,6 +37,7 @@
     ffmpeg
     # thefuck
     k9s
+    # basedpyright
 
     (
       google-cloud-sdk.withExtraComponents
@@ -49,7 +50,7 @@
     minikube
     kubectl
 
-    #azure-cli
+    # azure-cli
 
     busybox
 

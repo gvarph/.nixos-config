@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -18,10 +19,18 @@
   outputs = {
     self,
     nixpkgs,
+    nixpkgs-stable,
     ...
   } @ inputs: {
     nixosConfigurations.serv1 = nixpkgs.lib.nixosSystem {
-      specialArgs = {inherit inputs;};
+      specialArgs = let
+        system = "x86_64-linux";
+        in
+      {
+        inherit inputs;
+
+        pkgs-stable = nixpkgs-stable.legacyPackages.${system};
+      };
       modules = [
         inputs.sops-nix.nixosModules.sops
 
