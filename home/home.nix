@@ -16,7 +16,7 @@
     ./programs/nvim
     ./programs/tmux
 
-    ./stable.nix
+    # ./stable.nix
   ];
   
   home.packages = with pkgs; [
