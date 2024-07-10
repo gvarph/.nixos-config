@@ -53,7 +53,7 @@ in {
 	taplo
       # Python stuff
       pyright
-      basedpyright
+      # basedpyright
       poetry
       ruff
       rust-analyzer
