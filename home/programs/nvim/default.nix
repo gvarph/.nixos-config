@@ -50,17 +50,22 @@ in {
       fd
       fzf
       tree-sitter
-	taplo
+      taplo
       # Python stuff
-      pyright
-      # basedpyright
+      # pyright
+      basedpyright
       poetry
       ruff
+      python312Packages.debugpy
       rust-analyzer
       yaml-language-server
       terraform-ls
 
       stylua
+
+      # Typst
+      typst-lsp
+      typstyle
     ];
   };
 }

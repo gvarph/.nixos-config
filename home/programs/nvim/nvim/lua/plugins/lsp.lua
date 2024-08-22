@@ -108,28 +108,8 @@ return { -- LSP Configuration & Plugins
 
 		local lspconfig = require("lspconfig")
 
-		-- lspconfig.basedpyright.setup({
-		--           capabilities = capabilities,
-		--       })
-		-- lspconfig.terraformls.setup({})
-		-- lspconfig.lua_ls.setup({
-		-- 	settings = {
-		-- 		Lua = {
-		-- 			completion = {
-		-- 				callSnippet = "Replace",
-		-- 			},
-		-- 		},
-		-- 	},
-		-- })
-		-- lspconfig.nil_ls.setup({})
-		-- lspconfig.taplo.setup({})
-		-- lspconfig.yamlls.setup({})
-		-- lspconfig.rust_analyzer.setup({
-		-- 	settings = {
-		-- 		["rust-analyzer"] = {},
-		-- 	},
-		-- })
 		local servers = {
+			-- Lua
 			lua_ls = {
 				-- cmd = {...},
 				-- filetypes = { ...},
@@ -144,16 +124,68 @@ return { -- LSP Configuration & Plugins
 					},
 				},
 			},
-			basedpyright = {},
-			terraformls = {},
-			nil_ls = {},
-			taplo = {},
-			yamlls = {},
+
+			-- Python
+			basedpyright = {
+				enabled = true,
+				settings = {
+					basedpyright = {
+						disableOrganizeImports = true,
+						-- https://github.com/DetachHead/basedpyright/issues/203
+						typeCheckingMode = "off",
+					},
+				},
+			},
+			ruff = {
+				enabled = true,
+				on_attach = function(client, bufnr)
+					if client.name ~= "ruff" then
+						return
+					end
+					client.server_capabilities.hoverProvider = false
+
+					-- Create ruff commands
+					vim.api.nvim_create_user_command("RuffAutoFix", function()
+						vim.lsp.buf.execute_command({
+							command = "ruff.applyAutofix",
+							arguments = {
+								{ uri = vim.uri_from_bufnr(bufnr) },
+							},
+						})
+					end, { desc = "Ruff: Fix all auto-fixable problems" })
+
+					vim.api.nvim_create_user_command("RuffOrganizeImports", function()
+						vim.lsp.buf.execute_command({
+							command = "ruff.applyOrganizeImports",
+							arguments = {
+								{ uri = vim.uri_from_bufnr(bufnr) },
+							},
+						})
+					end, { desc = "Ruff: Format imports" })
+				end,
+			},
+
+			-- Rust
 			rust_analyzer = {
 				settings = {
 					["rust-analyzer"] = {},
 				},
 			},
+
+			-- Terraform
+			terraformls = {},
+
+			-- Nix
+			nil_ls = {},
+
+			-- Toml
+			taplo = {},
+
+			-- Yaml
+			yamlls = {},
+
+			-- Typst
+			typst_lsp = {},
 		}
 
 		for server, config in pairs(servers) do

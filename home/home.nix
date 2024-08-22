@@ -18,7 +18,7 @@
 
     # ./stable.nix
   ];
-  
+
   home.packages = with pkgs; [
     alejandra
     sops
@@ -33,7 +33,7 @@
     unzip
     htop
     bottom
-    # neofetch
+    fastfetch
     tree
     ffmpeg
     # thefuck
