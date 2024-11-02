@@ -40,6 +40,8 @@
     k9s
     # basedpyright
 
+    code-cursor
+
     (
       google-cloud-sdk.withExtraComponents
       (with pkgs.google-cloud-sdk.components; [
