@@ -16,11 +16,20 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, ... } @ inputs: {
+  outputs = {
+    self,
+    nixpkgs,
+    nixpkgs-stable,
+    home-manager,
+    ...
+  } @ inputs: {
+    # NixOS configuration for devices
     nixosConfigurations.serv1 = nixpkgs.lib.nixosSystem {
-      specialArgs = inputs // {
-        pkgs-stable = nixpkgs-stable.legacyPackages.${"x86_64-linux"};
-      };
+      specialArgs =
+        inputs
+        // {
+          pkgs-stable = nixpkgs-stable.legacyPackages.${"x86_64-linux"};
+        };
       modules = [
         inputs.sops-nix.nixosModules.sops
         inputs.home-manager.nixosModules.default
@@ -28,6 +37,11 @@
         ./sops.nix
       ];
     };
+
+    # Shared Home Manager configuration for user 'gvarph'
+    homeConfigurations.gvarph = home-manager.lib.homeManagerConfiguration {
+      pkgs = nixpkgs.legacyPackages."x86_64-linux";
+      modules = [./home/users.nix]; # Include home.nix via users.nix
+    };
   };
 }
-

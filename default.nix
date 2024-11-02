@@ -13,7 +13,7 @@
     ./linux/locale.nix
 
     # set user and enable home-manager
-    (import ./home/users.nix {inherit config pkgs inputs username;})
+    (import ./home {inherit config pkgs inputs username;})
 
     # set up ssh server
     ./linux/features/ssh.nix
