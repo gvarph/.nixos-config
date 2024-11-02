@@ -19,6 +19,7 @@
 
     ./programs/nvim
     ./programs/tmux
+    ./programs/direnv
 
     # ./stable.nix
   ];

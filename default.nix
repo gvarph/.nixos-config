@@ -15,8 +15,6 @@
     # set up ssh server
     ./linux/features/ssh.nix
 
-    ./linux/features/direnv.nix
-
     ./linux/fonts.nix
   ];
 
