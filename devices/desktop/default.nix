@@ -19,7 +19,7 @@ in {
     ../../linux/filesystem/nas/mount.nix
     ../../linux/nvidia.nix
     ../../linux/vpn.nix
-    (import ../../home/ui {inherit pkgs username hypr_monitors;})
+    #(import ../../home/ui {inherit pkgs username hypr_monitors;})
   ];
 
   networking.hostName = "deskt";

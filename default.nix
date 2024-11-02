@@ -12,9 +12,6 @@
     # set locale
     ./linux/locale.nix
 
-    # set user and enable home-manager
-    (import ./home {inherit config pkgs inputs username;})
-
     # set up ssh server
     ./linux/features/ssh.nix
 
@@ -58,4 +55,19 @@
   boot.kernel.sysctl = {"vm.max_map_count" = 2147483642;};
 
   system.stateVersion = "23.11";
+
+  # Nix home manager configuration
+  home-manager.useUserPackages = true;
+  home-manager.useGlobalPkgs = true;
+
+  home-manager.users.${username} = {
+    # home.enableNixpkgsReleaseCheck = false;
+
+    imports = [
+      # set user and enable home-manager
+      (import ./home {inherit config pkgs inputs username;})
+    ];
+  };
+
+  programs.fish.enable = true;
 }
