@@ -5,86 +5,77 @@
   inputs,
   ...
 }: {
-  home-manager.useUserPackages = true;
-  home-manager.useGlobalPkgs = true;
+  imports = [
+    ./shell/fish.nix
 
-  home-manager.users.${username} = {
-    # home.enableNixpkgsReleaseCheck = false;
+    ./shell/starship.nix
 
-    imports = [
-      ./shell/fish.nix
+    ./shell/eza.nix
+    ./shell/bat.nix
 
-      ./shell/starship.nix
+    ./shell/aliases.nix
 
-      ./shell/eza.nix
-      ./shell/bat.nix
+    ./programs/nvim
+    ./programs/tmux
 
-      ./shell/aliases.nix
+    # ./stable.nix
+  ];
 
-      ./programs/nvim
-      ./programs/tmux
+  home.packages = with pkgs; [
+    alejandra
+    sops
+    fd
+    ripgrep
+    tokei
+    tealdeer
+    fzf
+    procs
+    prettyping
+    gzip
+    unzip
+    htop
+    bottom
+    fastfetch
+    tree
+    ffmpeg
+    # thefuck
+    k9s
+    # basedpyright
 
-      # ./stable.nix
-    ];
+    code-cursor
 
-    home.packages = with pkgs; [
-      alejandra
-      sops
-      fd
-      ripgrep
-      tokei
-      tealdeer
-      fzf
-      procs
-      prettyping
-      gzip
-      unzip
-      htop
-      bottom
-      fastfetch
-      tree
-      ffmpeg
-      # thefuck
-      k9s
-      # basedpyright
+    (
+      google-cloud-sdk.withExtraComponents
+      (with pkgs.google-cloud-sdk.components; [
+        gke-gcloud-auth-plugin
+      ])
+    )
 
-      code-cursor
+    skaffold
+    minikube
+    kubectl
 
-      (
-        google-cloud-sdk.withExtraComponents
-        (with pkgs.google-cloud-sdk.components; [
-          gke-gcloud-auth-plugin
-        ])
-      )
+    # azure-cli
 
-      skaffold
-      minikube
-      kubectl
+    busybox
 
-      # azure-cli
+    wget
+    curl
 
-      busybox
+    openssh
 
-      wget
-      curl
+    git
+    git-crypt
+    nixpkgs-fmt
+    gdu
+    grc
+  ];
 
-      openssh
+  home.stateVersion = "23.11";
 
-      git
-      git-crypt
-      nixpkgs-fmt
-      gdu
-      grc
-    ];
-
-    home.stateVersion = "23.11";
-
-    programs.git = {
-      enable = true;
-      userName = "Filip Krul";
-      userEmail = "gvarph006@gmail.com";
-    };
+  programs.git = {
+    enable = true;
+    userName = "Filip Krul";
+    userEmail = "gvarph006@gmail.com";
   };
-
-  programs.fish.enable = true;
 }
