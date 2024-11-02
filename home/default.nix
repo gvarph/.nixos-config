@@ -22,8 +22,6 @@
     ./programs/tmux
     ./programs/direnv
     (import ./programs/az-cli {inherit pkgs-stable;})
-
-    # ./stable.nix
   ];
   home.packages = with pkgs; [
     alejandra
@@ -42,11 +40,8 @@
     fastfetch
     tree
     ffmpeg
-    # thefuck
+    thefuck
     k9s
-    # basedpyright
-
-    code-cursor
 
     (
       google-cloud-sdk.withExtraComponents
@@ -58,8 +53,6 @@
     skaffold
     minikube
     kubectl
-
-    # azure-cli
 
     busybox
 
