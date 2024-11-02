@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  pkgs-stable,
   username,
   inputs,
   ...
@@ -20,6 +21,7 @@
     ./programs/nvim
     ./programs/tmux
     ./programs/direnv
+    (import ./programs/az-cli {inherit pkgs-stable;})
 
     # ./stable.nix
   ];

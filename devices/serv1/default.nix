@@ -8,12 +8,12 @@
   username = "gvarph";
   gpuId = "10de:1f02";
   soundId = "10de:10f9";
-  az-cli-with-extensions = pkgs-stable.azure-cli.withExtensions (with pkgs.azure-cli-extensions; [fzf ai-examples azure-devops]);
+  #az-cli-with-extensions = pkgs-stable.azure-cli.withExtensions (with pkgs.azure-cli-extensions; [fzf ai-examples azure-devops]);
 in {
   imports = [
     ./hardware-configuration.nix
 
-    (import ../../default.nix {inherit config pkgs inputs username;})
+    (import ../../default.nix {inherit config pkgs pkgs-stable inputs username;})
     ../../linux/features/docker.nix
     ../../linux/filesystem/nas/mount.nix
     #../../linux/vpn.nix
@@ -26,7 +26,7 @@ in {
     # pkgs.icu
     # pkgs.dotnet-sdk_8
     # pkgs.azure-cli
-    az-cli-with-extensions
+    #  az-cli-with-extensions
     pkgs.xdummy
   ];
 
