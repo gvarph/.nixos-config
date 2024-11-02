@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  pkgs-stable,
   username,
   inputs,
   ...
@@ -63,7 +64,7 @@
 
     imports = [
       # set user and enable home-manager
-      (import ./home {inherit config pkgs inputs username;})
+      (import ./home {inherit config pkgs pkgs-stable inputs username;})
     ];
   };
 
