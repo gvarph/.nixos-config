@@ -41,7 +41,11 @@
     # Shared Home Manager configuration for user 'gvarph'
     homeConfigurations.gvarph = home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages."x86_64-linux";
-      modules = [./home];
+      modules = [
+        inputs.home-manager.homeModules.default
+        ./home
+        ./sops.nix
+      ];
     };
   };
 }
