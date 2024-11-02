@@ -23,4 +23,6 @@
         PasswordAuthentication yes
     '';
   };
+
+  #services.fail2ban.enable = true;
 }

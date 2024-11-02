@@ -8,7 +8,7 @@
   username = "gvarph";
   gpuId = "10de:1f02";
   soundId = "10de:10f9";
-    az-cli-with-extensions = (pkgs-stable.azure-cli.withExtensions   (with pkgs.azure-cli-extensions; [ fzf ai-examples azure-devops ]));
+  az-cli-with-extensions = pkgs-stable.azure-cli.withExtensions (with pkgs.azure-cli-extensions; [fzf ai-examples azure-devops]);
 in {
   imports = [
     ./hardware-configuration.nix
@@ -27,6 +27,7 @@ in {
     # pkgs.dotnet-sdk_8
     # pkgs.azure-cli
     az-cli-with-extensions
+    pkgs.xdummy
   ];
 
   environment.unixODBCDrivers = [
@@ -54,4 +55,7 @@ in {
       }
     ];
   };
+  services.xserver.enable = true;
+  services.xserver.displayManager.startx.enable = true; # Enables starting X server manually
+  services.xserver.videoDrivers = ["dummy"];
 }
