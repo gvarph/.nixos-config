@@ -38,13 +38,18 @@
       ];
     };
 
-    # Shared Home Manager configuration for user 'gvarph'
+    # Home manager only configuration
     homeConfigurations.gvarph = home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages."x86_64-linux";
+      extraSpecialArgs = {
+        username = "gvarph"; # Or whatever username you want to use
+      };
       modules = [
-        inputs.home-manager.homeModules.default
         ./home
-        ./sops.nix
+        {
+          # Add this configuration to allow unfree packages
+          nixpkgs.config.allowUnfree = true;
+        }
       ];
     };
   };

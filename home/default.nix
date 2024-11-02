@@ -5,6 +5,8 @@
   inputs,
   ...
 }: {
+  home.username = username;
+  home.homeDirectory = "/home/${username}";
   imports = [
     ./shell/fish.nix
 
@@ -20,7 +22,6 @@
 
     # ./stable.nix
   ];
-
   home.packages = with pkgs; [
     alejandra
     sops
