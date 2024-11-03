@@ -45,7 +45,8 @@ in {
       git # Needed to install lazy.nvim
       nil
       lua-language-server
-      zig # C compiler
+      clang
+      #zig # C compiler
       ripgrep
       fd
       fzf

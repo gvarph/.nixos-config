@@ -4,7 +4,6 @@
   ...
 }: {
   home.packages = with pkgs; [
-    fishPlugins.fzf-fish
     fishPlugins.forgit
     fishPlugins.hydro
     fishPlugins.done
