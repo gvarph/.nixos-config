@@ -14,6 +14,12 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin";
+
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -21,6 +27,7 @@
     nixpkgs,
     nixpkgs-stable,
     home-manager,
+    nix-darwin,
     ...
   } @ inputs: {
     # NixOS configuration for devices
@@ -47,10 +54,27 @@
       modules = [
         ./home
         {
-          # Add this configuration to allow unfree packages
           nixpkgs.config.allowUnfree = true;
         }
       ];
     };
+
+
+
+#darwin-rebuild switch --flake .#mba --show-trace
+    darwinConfigurations."mba" = nix-darwin.lib.darwinSystem {
+      specialArgs =
+        inputs
+        // {
+          pkgs-stable = nixpkgs-stable.legacyPackages.${"x86_64-darwin"};
+        };
+ 
+      modules = [
+        ./devices/mba
+        home-manager.darwinModules.home-manager
+      ];
+    };
+
+    darwinPackages = self.darwinConfigurations."mba".pkgs;
   };
 }

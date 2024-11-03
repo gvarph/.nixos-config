@@ -7,7 +7,7 @@
   ...
 }: {
   home.username = username;
-  home.homeDirectory = "/home/${username}";
+  home.homeDirectory = "/Users/${username}";
 
   programs.home-manager.enable = true;
   imports = [
@@ -56,7 +56,6 @@
     minikube
     kubectl
 
-    busybox
 
     wget
     curl
