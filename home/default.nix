@@ -7,7 +7,6 @@
   ...
 }: {
   home.username = username;
-  home.homeDirectory = "/Users/${username}";
 
   programs.home-manager.enable = true;
   imports = [
@@ -23,6 +22,7 @@
     ./programs/nvim
     ./programs/tmux
     ./programs/direnv
+    ./programs/git
     (import ./programs/az-cli {inherit pkgs-stable;})
   ];
   home.packages = with pkgs; [
@@ -61,7 +61,6 @@
 
     openssh
 
-    git
     git-crypt
     nixpkgs-fmt
     gdu
@@ -69,10 +68,4 @@
   ];
 
   home.stateVersion = "23.11";
-
-  programs.git = {
-    enable = true;
-    userName = "Filip Krul";
-    userEmail = "gvarph006@gmail.com";
-  };
 }
