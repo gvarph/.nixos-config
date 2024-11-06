@@ -17,7 +17,6 @@
 
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
-
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -30,7 +29,7 @@
     nix-darwin,
     ...
   } @ inputs: {
-    # NixOS configuration for devices
+    # sudo nixos-rebuild switch --flake .#serv1
     nixosConfigurations.serv1 = nixpkgs.lib.nixosSystem {
       specialArgs =
         inputs
@@ -45,11 +44,11 @@
       ];
     };
 
-    # Home manager only configuration
-    homeConfigurations.gvarph = home-manager.lib.homeManagerConfiguration {
+    # home-manager switch --flake .#wsl
+    homeConfigurations.wsl = home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages."x86_64-linux";
       extraSpecialArgs = {
-        username = "gvarph"; # Or whatever username you want to use
+        username = "gvarph";
       };
       modules = [
         ./home
