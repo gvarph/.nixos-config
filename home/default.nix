@@ -56,7 +56,6 @@
     minikube
     kubectl
 
-
     wget
     curl
 

@@ -59,16 +59,14 @@
       ];
     };
 
-
-
-#darwin-rebuild switch --flake .#mba --show-trace
+    #darwin-rebuild switch --flake .#mba --show-trace
     darwinConfigurations."mba" = nix-darwin.lib.darwinSystem {
       specialArgs =
         inputs
         // {
           pkgs-stable = nixpkgs-stable.legacyPackages.${"x86_64-darwin"};
         };
- 
+
       modules = [
         ./devices/mba
         home-manager.darwinModules.home-manager
