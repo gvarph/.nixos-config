@@ -67,6 +67,9 @@ in {
       # Typst
       typst-lsp
       typstyle
+
+      # Helm
+      helm-ls
     ];
   };
 }
