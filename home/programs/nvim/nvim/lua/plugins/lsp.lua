@@ -8,6 +8,9 @@ return { -- LSP Configuration & Plugins
 		-- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
 		-- used for completion, annotations and signatures of Neovim apis
 		{ "folke/neodev.nvim", opts = {} },
+
+		--
+		{ "neovim/nvim-lspconfig", event = { "BufReadPre", "BufNewFile", "BufEnter" } },
 	},
 	config = function()
 		vim.api.nvim_create_autocmd("LspAttach", {
@@ -186,6 +189,17 @@ return { -- LSP Configuration & Plugins
 
 			-- Typst
 			typst_lsp = {},
+
+			-- Helm
+			helm_ls = {
+				settings = {
+					["helm-ls"] = {
+						yamlls = {
+							path = "yaml-language-server",
+						},
+					},
+				},
+			},
 		}
 
 		for server, config in pairs(servers) do
