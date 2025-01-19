@@ -46,4 +46,8 @@ in {
       }
     ];
   };
+  services.xserver = {
+    enable = false;
+    displayManager.lightdm.enable = false;
+  };
 }
