@@ -10,11 +10,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -37,10 +32,8 @@
           pkgs-stable = nixpkgs-stable.legacyPackages.${"x86_64-linux"};
         };
       modules = [
-        inputs.sops-nix.nixosModules.sops
         inputs.home-manager.nixosModules.default
         ./devices/serv1
-        ./sops.nix
       ];
     };
 

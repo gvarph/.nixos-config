@@ -27,7 +27,6 @@
   ];
   home.packages = with pkgs; [
     alejandra
-    sops
     fd
     ripgrep
     tokei
