@@ -1,14 +1,6 @@
 {pkgs, ...}: {
   environment.systemPackages = [pkgs.openssh];
 
-  services.xserver = {
-    xkb = {
-      layout = "us";
-      variant = "";
-    };
-    enable = true;
-  };
-
   services.openssh = {
     enable = true;
     settings = {
