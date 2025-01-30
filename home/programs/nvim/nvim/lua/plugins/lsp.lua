@@ -189,7 +189,7 @@ return { -- LSP Configuration & Plugins
 			yamlls = {},
 
 			-- Typst
-			typst_lsp = {},
+			tinymist = {},
 
 			-- Helm
 			helm_ls = {
