@@ -65,7 +65,7 @@ in {
       stylua
 
       # Typst
-      typst-lsp
+      tinymist
       typstyle
 
       # Helm
