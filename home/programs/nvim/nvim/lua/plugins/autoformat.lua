@@ -29,7 +29,7 @@ return { -- Autoformat
 			-- python = { "isort", "black" },
 			--
 			-- You can use a sub-list to tell conform to run *until* a formatter
-			-- is found.
+			-- is found
 			-- javascript = { { "prettierd", "prettier" } },
 			python = { "ruff_format", "ruff_organaize_imports" },
 			nix = { "alejandra" },

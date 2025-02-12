@@ -1,5 +1,9 @@
 return {
-	{ "echasnovski/mini.ai", version = "*" },
-	{ "echasnovski/mini.files", version = "*" },
-	{ "echasnovski/mini.surround", version = "*" },
+	"echasnovski/mini.nvim",
+	version = "*",
+	config = function()
+		require("mini.ai").setup()
+		require("mini.surround").setup()
+		require("mini.files").setup()
+	end,
 }
