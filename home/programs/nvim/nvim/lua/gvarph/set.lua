@@ -65,3 +65,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 		vim.highlight.on_yank()
 	end,
 })
+
+-- Auto reload after external changes
+vim.o.autoread = true
