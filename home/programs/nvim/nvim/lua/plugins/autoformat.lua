@@ -34,6 +34,8 @@ return { -- Autoformat
 			python = { "ruff_format", "ruff_organaize_imports" },
 			nix = { "alejandra" },
 			typst = { "typstyle" },
+			sql = { "sqruff" },
+			markdown = { "prettierd", "prettier" },
 		},
 	},
 }
