@@ -70,6 +70,15 @@ in {
 
       # Helm
       helm-ls
+
+      # Postgres
+      sqruff
+
+      # Markdown
+      prettierd
+
+      # JS and family
+      deno
     ];
   };
 }

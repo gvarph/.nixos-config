@@ -54,6 +54,7 @@ return {
 
 		require("telescope").setup({
 			defaults = {
+				file_ignore_patterns = { ".+%.lock$" }, -- Ignore all .lock files
 				mappings = {
 					i = { ["<c-t>"] = trouble.open }, -- For insert mode
 					n = { ["<c-t>"] = trouble.open }, -- For normal mode

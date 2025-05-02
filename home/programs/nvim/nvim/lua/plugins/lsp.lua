@@ -201,6 +201,9 @@ return { -- LSP Configuration & Plugins
 					},
 				},
 			},
+
+			-- JS, TS, JSX, TSX
+			denols = {},
 		}
 
 		for server, config in pairs(servers) do
