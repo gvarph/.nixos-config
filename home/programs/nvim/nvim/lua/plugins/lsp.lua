@@ -204,6 +204,9 @@ return { -- LSP Configuration & Plugins
 
 			-- JS, TS, JSX, TSX
 			denols = {},
+
+			-- Postgres
+			postgres_lsp = {},
 		}
 
 		for server, config in pairs(servers) do

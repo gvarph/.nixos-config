@@ -73,6 +73,7 @@ in {
 
       # Postgres
       sqruff
+      postgres-lsp
 
       # Markdown
       prettierd

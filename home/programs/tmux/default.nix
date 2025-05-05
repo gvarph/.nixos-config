@@ -14,6 +14,7 @@
     terminal = "tmux-256color";
     escapeTime = 0;
     # prefix = "C-b";
+    historyLimit = 16384;
 
     aggressiveResize = true;
     plugins = with pkgs.tmuxPlugins; [
@@ -27,9 +28,13 @@
 
       set -g @catppuccin_flavour 'mocha'
 
-       # Open panes in the current directory
-       bind '"' split-window -v -c '#{pane_current_path}'
-       bind % split-window -h -c '#{pane_current_path}'
+      # Open panes in the current directory
+      bind '"' split-window -v -c '#{pane_current_path}'
+      bind % split-window -h -c '#{pane_current_path}'
+
+      set -g @catppuccin_window_default_text "#W"
+      set -g @catppuccin_window_text "#W"
+      set -g @catppuccin_window_current_text "#W"
     '';
   };
 }
