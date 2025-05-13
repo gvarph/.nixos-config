@@ -23,3 +23,22 @@ require("lazy").setup("plugins", {
 })
 
 require("gvarph")
+
+local lsps = {
+	"denols", -- JS, TS, JSX, TSX
+	"helm_ls", -- Helm
+	"lua_ls", -- Lua
+	"nil_ls", -- Nix
+	"postgres_lsp", -- Postgres
+	"rust_analyzer", -- Rust
+	"taplo", -- Toml
+	"terraformls", -- Terraform
+	"tinymist", -- Typst
+	"yamlls", -- Yaml
+	"basedpyright", -- Python
+	"ruff", -- Python
+}
+
+for _, lsp in ipairs(lsps) do
+	vim.lsp.enable(lsp)
+end
