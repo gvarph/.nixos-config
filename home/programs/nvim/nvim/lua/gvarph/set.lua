@@ -68,3 +68,5 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- Auto reload after external changes
 vim.o.autoread = true
+
+vim.opt.mouse = "a"
