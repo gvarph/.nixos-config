@@ -36,6 +36,31 @@ return {
 			"<cmd>Telescope lsp_code_actions<cr>",
 			desc = "[F]ind [.]Code [A]ctions",
 		},
+		{
+			"gd",
+			"<cmd>Telescope lsp_definitions<cr>",
+			desc = "[G]oto [D]efinition",
+		},
+		{
+			"grr",
+			"<cmd>Telescope lsp_references<cr>",
+			desc = "[G]oto [R]eferences",
+		},
+		{
+			"gri",
+			"<cmd>Telescope lsp_implementations<cr>",
+			desc = "[G]oto [I]mplementation",
+		},
+		{
+			"gO",
+			"<cmd>Telescope lsp_document_symbols<cr>",
+			desc = "[G]oto [O]utline",
+		},
+		{
+			"gra",
+			"<cmd>Telescope lsp_range_code_actions<cr>",
+			desc = "[G]oto [R]ange [A]ctions",
+		},
 	},
 	-- change some options
 	opts = {
