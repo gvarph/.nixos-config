@@ -15,10 +15,10 @@ return {
 		incremental_selection = {
 			enable = true,
 			keymaps = {
-				init_selection = "<CR>",
-				node_incremental = "<CR>",
-				scope_incremental = "<S-CR>",
-				node_decremental = "<BS>",
+				init_selection = "gnn", -- set to `false` to disable one of the mappings
+				node_incremental = "grn",
+				scope_incremental = "grc",
+				node_decremental = "grm",
 			},
 		},
 	},
