@@ -14,6 +14,11 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -22,6 +27,7 @@
     nixpkgs-stable,
     home-manager,
     nix-darwin,
+    agenix,
     ...
   } @ inputs: {
     # sudo nixos-rebuild switch --flake .#serv1
@@ -30,9 +36,11 @@
         inputs
         // {
           pkgs-stable = nixpkgs-stable.legacyPackages.${"x86_64-linux"};
+          age = agenix.packages."x86_64-linux".default;
         };
       modules = [
         inputs.home-manager.nixosModules.default
+        inputs.agenix.nixosModules.default
         ./devices/serv1
       ];
     };
@@ -82,6 +90,7 @@
           packages = with pkgs; [
             alejandra # Nix formatter
             nil # Nix language server
+            agenix.packages.${system}.default # Agenix CLI tool
           ];
         };
       });
