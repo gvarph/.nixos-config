@@ -7,7 +7,7 @@
     device = "//192.168.31.7/Multimedia";
     fsType = "cifs";
     options = [
-      "credentials=/run/secrets/nas-credentials"
+      "credentials=${config.age.secrets.nas_auth.path}"
       "uid=1000"
       "x-systemd.automount" # auto-mount on access
       "noauto" # don't mount on boot
