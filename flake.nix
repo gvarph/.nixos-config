@@ -66,5 +66,24 @@
     };
 
     darwinPackages = self.darwinConfigurations."mba".pkgs;
+
+    # Development shells
+    devShells =
+      nixpkgs.lib.genAttrs [
+        "x86_64-linux"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
+      ] (system: let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in {
+        default = pkgs.mkShell {
+          name = "nix-config";
+          packages = with pkgs; [
+            alejandra # Nix formatter
+            nil # Nix language server
+          ];
+        };
+      });
   };
 }
