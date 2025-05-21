@@ -9,5 +9,6 @@
     nix-direnv = {
       enable = true;
     };
+    silent = true;
   };
 }
