@@ -3,30 +3,42 @@
   pkgs,
   ...
 }: {
+  # imports = [
+  #   ./gpg.nix
+  # ];
   programs.git = {
     enable = true;
 
     userName = "Filip Krul";
     userEmail = "gvarph006@gmail.com";
 
-    maintenance.enable = true;
-
-    signing = {
-      key = "~/.ssh/id_ed25519.pub";
-      signByDefault = true;
+    maintenance = {
+      enable = true;
     };
 
+    # signing = {
+    #   key = "~/.ssh/id_ed25519.pub";
+    #   signByDefault = true;
+    # };
+
     aliases = {
-      gl = "log --graph --all --pretty=format:'%C(magenta)%h%C(reset) %C(white)%an %C(dim)%ar%C(reset)%C(blue)  %D%n%s%n' -n 30";
+      "prettylog" = "log --graph --all --pretty=format:'%C(magenta)%h%C(reset) %C(white)%an %C(dim)%ar%C(reset)%C(blue)  %D%n%s%n' -n 30";
+      "smartblame" = "blame -C -C -C -w";
+      "worddiff" = "diff --word-diff=color";
+      "fpush" = "push --force-with-lease";
+      "pushf" = "push --force-with-lease";
     };
 
     extraConfig = {
+      rerere.enabled = true;
+
       core = {
         compression = 9;
       };
 
       url = {
         "git@github.com:".insteadOf = "gh:";
+        "git@ssh.dev.azure.com:v3/sharpgrid/Development/".insteadOf = "sga/";
       };
 
       pull = {
@@ -42,11 +54,14 @@
 
       rebase = {
         autoStash = true;
-        missingCommitsCheck = true;
       };
 
       log = {
         abbrevCommit = true;
+      };
+
+      branch = {
+        sort = "-committerdate";
       };
     };
   };
