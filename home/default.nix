@@ -23,6 +23,7 @@
     ./programs/tmux
     ./programs/direnv
     ./programs/git
+    ./programs/zoxide.nix
     (import ./programs/az-cli {inherit pkgs-stable;})
   ];
   home.packages = with pkgs; [
