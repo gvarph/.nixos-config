@@ -54,6 +54,8 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKcG90VcEnUkA8qjtQXZ9WHSob8lDm9gjWZNCTlmAnhh deck@steamdeck"
 
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHSGf6aVu23GcNSbF82+NzrO0MfknMt31so4XsHFd0vn gvarph@serv1"
+
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDE2TzrpOPaQ3Htd51zqES06PePo1E8fb9bemh9iQOJS gvarph@serv2"
     ];
   };
 
