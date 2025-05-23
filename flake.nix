@@ -45,6 +45,20 @@
       ];
     };
 
+    nixosConfigurations.serv2 = nixpkgs.lib.nixosSystem {
+      specialArgs =
+        inputs
+        // {
+          pkgs-stable = nixpkgs-stable.legacyPackages.${"x86_64-linux"};
+          age = agenix.packages."x86_64-linux".default;
+        };
+      modules = [
+        inputs.home-manager.nixosModules.default
+        inputs.agenix.nixosModules.default
+        ./devices/serv2
+      ];
+    };
+
     # home-manager switch --flake .#wsl
     homeConfigurations.wsl = home-manager.lib.homeManagerConfiguration {
       pkgs = nixpkgs.legacyPackages."x86_64-linux";
