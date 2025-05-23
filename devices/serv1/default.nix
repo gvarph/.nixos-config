@@ -7,17 +7,13 @@
 }: let
   username = "gvarph";
 in {
-  age.secrets.nas_auth.file = ../../secrets/nas_auth.age;
-  age.identityPaths = [
-    "/home/gvarph/.ssh/id_ed25519"
-  ];
-
   imports = [
     ./hardware-configuration.nix
 
     (import ../../default.nix {inherit config pkgs pkgs-stable inputs username;})
     ../../linux/features/docker.nix
     ../../linux/filesystem/nas/mount.nix
+    ../../secrets/age.nix
   ];
 
   environment.systemPackages = [
