@@ -26,12 +26,17 @@
     ./programs/zoxide.nix
     (import ./programs/az-cli {inherit pkgs-stable;})
   ];
+
+  programs.tealdeer = {
+    enable = true;
+    enableAutoUpdates = true;
+  };
+
   home.packages = with pkgs; [
     alejandra
     fd
     ripgrep
     tokei
-    tealdeer
     fzf
     procs
     prettyping
