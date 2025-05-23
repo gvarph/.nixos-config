@@ -1,16 +1,19 @@
 {
   config,
   pkgs,
+  pkgs-stable,
+  inputs,
   ...
 }: let
   username = "gvarph";
-  #gpuId = "10de:1f02";
-  #soundId = "10de:10f9";
 in {
   imports = [
-    (import ../default.nix {inherit config pkgs username;})
-    ../linux/features/docker.nix
-    ../linux/filesystem/nas/mount.nix
+    ./hardware-configuration.nix
+
+    (import ../../default.nix {inherit config pkgs pkgs-stable inputs username;})
+    ../../linux/features/docker.nix
+    ../../linux/filesystem/nas/mount.nix
+    ../../secrets/age.nix
   ];
 
   networking.hostName = "serv2";
