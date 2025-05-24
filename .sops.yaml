@@ -1,7 +1,0 @@
-keys:
-- &serv1 age1k886hq47r4erhxkkgym9jl7wvz5tucf7rmzvz88x8rdqpmhnndaqge8p0q
-creation_rules:
-- path_regex: secrets/.*$
-  key_groups:
-  - age:
-    - *serv1
