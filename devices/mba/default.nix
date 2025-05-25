@@ -2,7 +2,6 @@
   self,
   lib,
   pkgs,
-  pkgs-stable,
   inputs,
   config,
   ...
@@ -19,7 +18,7 @@ in {
   home-manager.useUserPackages = true;
   home-manager.users.${username} = {
     imports = [
-      (import ../../home {inherit config pkgs pkgs-stable username inputs;})
+      (import ../../home {inherit config pkgs username inputs;})
     ];
 
     programs.git = {

@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -24,7 +23,6 @@
   outputs = {
     self,
     nixpkgs,
-    nixpkgs-stable,
     home-manager,
     nix-darwin,
     agenix,
@@ -35,7 +33,6 @@
       specialArgs =
         inputs
         // {
-          pkgs-stable = nixpkgs-stable.legacyPackages.${"x86_64-linux"};
           age = agenix.packages."x86_64-linux".default;
         };
       modules = [
@@ -49,7 +46,6 @@
       specialArgs =
         inputs
         // {
-          pkgs-stable = nixpkgs-stable.legacyPackages.${"x86_64-linux"};
           age = agenix.packages."x86_64-linux".default;
         };
       modules = [
@@ -78,7 +74,6 @@
       specialArgs =
         inputs
         // {
-          pkgs-stable = nixpkgs-stable.legacyPackages.${"x86_64-darwin"};
         };
 
       modules = [
