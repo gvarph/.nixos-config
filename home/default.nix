@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  pkgs-stable,
   username,
   inputs,
   ...
@@ -24,7 +23,7 @@
     ./programs/direnv
     ./programs/git
     ./programs/zoxide.nix
-    (import ./programs/az-cli {inherit pkgs-stable;})
+    ./programs/az-cli
   ];
 
   programs.tealdeer = {
