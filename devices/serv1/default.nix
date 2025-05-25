@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  pkgs-stable,
   inputs,
   ...
 }: let
@@ -10,7 +9,7 @@ in {
   imports = [
     ./hardware-configuration.nix
 
-    (import ../../default.nix {inherit config pkgs pkgs-stable inputs username;})
+    (import ../../default.nix {inherit config pkgs inputs username;})
     ../../linux/features/docker.nix
     ../../linux/filesystem/nas/mount.nix
     ../../secrets/age.nix
