@@ -93,6 +93,27 @@
         '';
         description = "Starship transient prompt function";
       };
+      dump_mongo_queries = {
+        body = ''
+          function dump_mongo_queries -d "Dump documents from a specified MongoDB collection in a given database"
+            set dbname $argv[1]
+            set collection $argv[2]
+            set mongo_url $argv[3]
+
+            if test -z "$dbname" -o -z "$collection"
+              echo "Usage: dump_mongo_queries DB_NAME COLLECTION [MONGO_URL]"
+              return 1
+            end
+
+            if test -n "$mongo_url"
+              mongosh "$mongo_url" --quiet --eval "JSON.stringify(db.getSiblingDB(\"$dbname\").$collection.find().toArray())"
+            else
+              mongosh --quiet --eval "JSON.stringify(db.getSiblingDB(\"$dbname\").$collection.find().toArray())"
+            end
+          end
+        '';
+        description = "Dump documents from a MongoDB collection";
+      };
     };
   };
 }
