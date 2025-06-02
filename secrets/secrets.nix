@@ -3,4 +3,5 @@ let
   serv2 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDE2TzrpOPaQ3Htd51zqES06PePo1E8fb9bemh9iQOJS gvarph@serv2";
 in {
   "nas_auth.age".publicKeys = [serv1 serv2];
+  "homelab_k3s_token.age".publicKeys = [serv1 serv2];
 }
