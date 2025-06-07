@@ -10,8 +10,6 @@
     extraFlags = toString [
       "--write-kubeconfig-mode=644"
       "--cluster-init"
-      "--disable"
-      "traefik"
     ];
   };
 
