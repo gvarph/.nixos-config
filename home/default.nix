@@ -46,7 +46,6 @@
     fastfetch
     tree
     ffmpeg
-    thefuck
     k9s
 
     (
