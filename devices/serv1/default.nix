@@ -13,6 +13,7 @@ in {
     ../../linux/features/docker.nix
     ../../linux/filesystem/nas/mount.nix
     ../../secrets/age.nix
+    ../../linux/features/kubernetes.nix
   ];
 
   environment.systemPackages = [
