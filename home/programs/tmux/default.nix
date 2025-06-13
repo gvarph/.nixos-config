@@ -30,13 +30,13 @@
           set -g @catppuccin_window_status_style "slanted"
 
           ## Window global/default configuration
-          set -g @catppuccin_window_default_text " # {window_name}"
+          set -g @catppuccin_window_default_text " #{window_name}"
           set -g @catppuccin_window_number_position "left"
 
-          set -g @catppuccin_window_text " # {window_name}"
+          set -g @catppuccin_window_text " #{window_name}"
 
           ## Window current configuration
-          set -g @catppuccin_window_current_text "#{window_name}"
+          set -g @catppuccin_window_current_text " #{window_name}"
           set -g @catppuccin_window_current_fill "all"
 
           # Status modules config
