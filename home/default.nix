@@ -31,6 +31,11 @@
     enableAutoUpdates = true;
   };
 
+  programs.nh = {
+    enable = true;
+    flake = "/home/gvarph/.nixos-config/";
+  };
+
   home.packages = with pkgs; [
     alejandra
     fd
