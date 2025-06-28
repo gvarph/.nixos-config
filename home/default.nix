@@ -52,6 +52,7 @@
     tree
     ffmpeg
     k9s
+    dust
 
     (
       google-cloud-sdk.withExtraComponents
