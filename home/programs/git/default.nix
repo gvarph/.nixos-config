@@ -1,11 +1,11 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }: {
-  # imports = [
-  #   ./gpg.nix
-  # ];
+  home.file.".ssh/allowed_signers".text = lib.concatStringsSep "\n" (map (key: "* ${key}") (import ../../../ssh_keys.nix));
+
   programs.git = {
     enable = true;
 
@@ -62,6 +62,17 @@
 
       branch = {
         sort = "-committerdate";
+      };
+
+      commit = {
+        gpgSign = true;
+      };
+      gpg = {
+        format = "ssh";
+        ssh.allowedSignersFile = config.home.homeDirectory + "/.ssh/allowed_signers";
+      };
+      user = {
+        signingkey = config.home.homeDirectory + "/.ssh/id_ed25519";
       };
     };
   };
