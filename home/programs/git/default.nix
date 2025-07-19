@@ -22,7 +22,7 @@
     # };
 
     aliases = {
-      "prettylog" = "log --graph --all --pretty=format:'%C(magenta)%h%C(reset) %C(white)%an %C(dim)%ar%C(reset)%C(blue)  %D%n%s%n' -n 30";
+      "prettylog" = "log --graph --all --pretty=format:'%C(magenta)%h%C(reset) %C(green)[%G?]%C(reset) %C(white)%an%C(reset) %C(dim)%ar%C(reset)%C(blue)  %D%C(reset)%n%s%n'";
       "smartblame" = "blame -C -C -C -w";
       "worddiff" = "diff --word-diff=color";
       "fpush" = "push --force-with-lease";
