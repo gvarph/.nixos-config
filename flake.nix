@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-main.url = "github:nixos/nixpkgs/master";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -27,7 +28,11 @@
     nix-darwin,
     agenix,
     ...
-  } @ inputs: {
+  } @ inputs: let
+    opencodeOverlay = final: prev: {
+      opencode = inputs.nixpkgs-main.legacyPackages.${final.system}.opencode;
+    };
+  in {
     # sudo nixos-rebuild switch --flake .#serv1
     nixosConfigurations.serv1 = nixpkgs.lib.nixosSystem {
       specialArgs =
@@ -39,6 +44,7 @@
         inputs.home-manager.nixosModules.default
         inputs.agenix.nixosModules.default
         ./devices/serv1
+        {nixpkgs.overlays = [opencodeOverlay];}
       ];
     };
 

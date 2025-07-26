@@ -24,6 +24,8 @@
     ./programs/git
     ./programs/zoxide.nix
     ./programs/az-cli
+
+    ./programs/opencode
   ];
 
   programs.tealdeer = {
