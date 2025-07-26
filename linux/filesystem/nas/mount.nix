@@ -18,10 +18,9 @@
     mountPoint = "/remote/nas/media";
   };
   fileSystems."nas-personal" = {
-    device = "//192.168.31.7/personal";
-    fsType = "cifs";
+    device = "192.168.31.7:/personal";
+    fsType = "nfs";
     options = [
-      "credentials=${config.age.secrets.nas_auth.path}"
       "uid=1000"
       "x-systemd.automount" # auto-mount on access
       "noauto" # don't mount on boot
