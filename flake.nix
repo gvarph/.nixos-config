@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-main.url = "github:nixos/nixpkgs/master";
+    nixpkgs-opencode-source.url = "github:nixos/nixpkgs/d84d0cc12ae9d77c0334e9fced7ca656ffaac679";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -30,7 +30,7 @@
     ...
   } @ inputs: let
     opencodeOverlay = final: prev: {
-      opencode = inputs.nixpkgs-main.legacyPackages.${final.system}.opencode;
+      opencode = inputs.nixpkgs-opencode-source.legacyPackages.${final.system}.opencode;
     };
   in {
     # sudo nixos-rebuild switch --flake .#serv1
