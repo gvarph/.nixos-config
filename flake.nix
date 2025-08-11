@@ -3,7 +3,9 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-opencode-source.url = "github:nixos/nixpkgs/d84d0cc12ae9d77c0334e9fced7ca656ffaac679";
+
+    # Fixes a bug with non-linked c libraries
+    nixpkgs-opencode-source.url = "github:pblgomez/nixpkgs/feature/opencode";
 
     home-manager = {
       url = "github:nix-community/home-manager";
