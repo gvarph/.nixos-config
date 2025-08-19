@@ -36,6 +36,10 @@
   programs.nh = {
     enable = true;
     flake = "/home/gvarph/.nixos-config/";
+    clean = {
+      enable = true;
+      extraArgs = "--keep 5 --keep-since 30d";
+    };
   };
 
   home.packages = with pkgs; [
