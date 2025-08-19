@@ -7,6 +7,9 @@
     # Fixes a bug with non-linked c libraries
     nixpkgs-opencode-source.url = "github:nixos/nixpkgs/master";
 
+    # Stable nixpkgs for Azure CLI
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -26,14 +29,22 @@
   outputs = {
     self,
     nixpkgs,
+    nixpkgs-stable,
     home-manager,
     nix-darwin,
     agenix,
     ...
   } @ inputs: let
-    opencodeOverlay = final: prev: {
-      opencode = inputs.nixpkgs-opencode-source.legacyPackages.${final.system}.opencode;
-    };
+    # Define all overlays in one place
+    overlays = [
+      (final: prev: {
+        opencode = inputs.nixpkgs-opencode-source.legacyPackages.${final.system}.opencode;
+      })
+      (final: prev: {
+        azure-cli = inputs.nixpkgs-stable.legacyPackages.${final.system}.azure-cli;
+        azure-cli-extensions = inputs.nixpkgs-stable.legacyPackages.${final.system}.azure-cli-extensions;
+      })
+    ];
   in {
     # sudo nixos-rebuild switch --flake .#serv1
     nixosConfigurations.serv1 = nixpkgs.lib.nixosSystem {
@@ -46,7 +57,7 @@
         inputs.home-manager.nixosModules.default
         inputs.agenix.nixosModules.default
         ./devices/serv1
-        {nixpkgs.overlays = [opencodeOverlay];}
+        {nixpkgs.overlays = overlays;}
       ];
     };
 
@@ -73,6 +84,7 @@
         ./home
         {
           nixpkgs.config.allowUnfree = true;
+          nixpkgs.overlays = overlays;
         }
       ];
     };
@@ -87,6 +99,9 @@
       modules = [
         ./devices/mba
         home-manager.darwinModules.home-manager
+        {
+          nixpkgs.overlays = overlays;
+        }
       ];
     };
 
