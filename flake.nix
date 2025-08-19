@@ -5,7 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Fixes a bug with non-linked c libraries
-    nixpkgs-opencode-source.url = "github:pblgomez/nixpkgs/feature/opencode";
+    nixpkgs-opencode-source.url = "github:nixos/nixpkgs/master";
 
     home-manager = {
       url = "github:nix-community/home-manager";
