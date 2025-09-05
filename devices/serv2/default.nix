@@ -34,4 +34,12 @@ in {
       options = "--delete-older-than 30d";
     };
   };
+
+  # Cron job to start audiobook shelf container every 5 minutes if not running
+  services.cron = {
+    enable = true;
+    systemCronJobs = [
+      "*/5 * * * * root ${pkgs.docker}/bin/docker start audiobookshelf-audiobookshelf-1 || true"
+    ];
+  };
 }
