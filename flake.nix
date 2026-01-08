@@ -38,11 +38,11 @@
     # Define all overlays in one place
     overlays = [
       (final: prev: {
-        opencode = inputs.nixpkgs-opencode-source.legacyPackages.${final.system}.opencode;
+        opencode = inputs.nixpkgs-opencode-source.legacyPackages.${final.stdenv.hostPlatform.system}.opencode;
       })
       (final: prev: {
-        azure-cli = inputs.nixpkgs-stable.legacyPackages.${final.system}.azure-cli;
-        azure-cli-extensions = inputs.nixpkgs-stable.legacyPackages.${final.system}.azure-cli-extensions;
+        azure-cli = inputs.nixpkgs-stable.legacyPackages.${final.stdenv.hostPlatform.system}.azure-cli;
+        azure-cli-extensions = inputs.nixpkgs-stable.legacyPackages.${final.stdenv.hostPlatform.system}.azure-cli-extensions;
       })
     ];
   in {
