@@ -9,9 +9,6 @@
   programs.git = {
     enable = true;
 
-    userName = "Filip Krul";
-    userEmail = "gvarph006@gmail.com";
-
     maintenance = {
       enable = true;
     };
@@ -21,15 +18,21 @@
     #   signByDefault = true;
     # };
 
-    aliases = {
-      "prettylog" = "log --graph --all --pretty=format:'%C(magenta)%h%C(reset) %C(green)[%G?]%C(reset) %C(white)%an%C(reset) %C(dim)%ar%C(reset)%C(blue)  %D%C(reset)%n%s%n'";
-      "smartblame" = "blame -C -C -C -w";
-      "worddiff" = "diff --word-diff=color";
-      "fpush" = "push --force-with-lease";
-      "pushf" = "push --force-with-lease";
-    };
+    settings = {
+      user = {
+        name = "Filip Krul";
+        email = "gvarph006@gmail.com";
+        signingkey = config.home.homeDirectory + "/.ssh/id_ed25519";
+      };
 
-    extraConfig = {
+      alias = {
+        "prettylog" = "log --graph --all --pretty=format:'%C(magenta)%h%C(reset) %C(green)[%G?]%C(reset) %C(white)%an%C(reset) %C(dim)%ar%C(reset)%C(blue)  %D%C(reset)%n%s%n'";
+        "smartblame" = "blame -C -C -C -w";
+        "worddiff" = "diff --word-diff=color";
+        "fpush" = "push --force-with-lease";
+        "pushf" = "push --force-with-lease";
+      };
+
       rerere.enabled = true;
 
       core = {
@@ -67,12 +70,10 @@
       commit = {
         gpgSign = true;
       };
+
       gpg = {
         format = "ssh";
         ssh.allowedSignersFile = config.home.homeDirectory + "/.ssh/allowed_signers";
-      };
-      user = {
-        signingkey = config.home.homeDirectory + "/.ssh/id_ed25519";
       };
     };
   };
