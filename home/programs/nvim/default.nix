@@ -73,7 +73,7 @@ in {
 
       # Postgres
       sqruff
-      postgres-lsp
+      postgres-language-server
 
       # Markdown
       prettierd
