@@ -4,7 +4,7 @@
   ...
 }: {
   services.k3s = {
-    enable = true;
+    enable = false;
     role = "server";
     tokenFile = config.age.secrets.homelab_k3s_token.path;
     extraFlags = toString [
