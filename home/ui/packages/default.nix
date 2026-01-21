@@ -5,7 +5,7 @@
     #
     # libnotify
     #
-    firefox
+    zen-browser
     # google-chrome
     #
     # vscode
