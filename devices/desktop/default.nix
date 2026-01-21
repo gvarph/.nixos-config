@@ -10,6 +10,7 @@ in {
     ./hardware-configuration.nix
 
     (import ../../default.nix {inherit config pkgs inputs username;})
+    (import ../../home/ui {inherit pkgs username;})
     ../../linux/features/docker.nix
     ../../linux/filesystem/nas/mount.nix
     ../../secrets/age.nix

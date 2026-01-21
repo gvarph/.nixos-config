@@ -24,6 +24,8 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    hyprland = {url = "github:hyprwm/Hyprland";};
   };
 
   outputs = {
@@ -32,6 +34,7 @@
     nixpkgs-stable,
     home-manager,
     nix-darwin,
+    hyprland,
     agenix,
     ...
   } @ inputs: let
@@ -46,20 +49,6 @@
       })
     ];
   in {
-    # sudo nixos-rebuild switch --flake .#serv1
-    nixosConfigurations.serv1 = nixpkgs.lib.nixosSystem {
-      specialArgs =
-        inputs
-        // {
-          age = agenix.packages."x86_64-linux".default;
-        };
-      modules = [
-        inputs.home-manager.nixosModules.default
-        inputs.agenix.nixosModules.default
-        ./devices/serv1
-        {nixpkgs.overlays = overlays;}
-      ];
-    };
     # sudo nixos-rebuild switch --flake .#dekstop
     nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
       specialArgs =
@@ -71,6 +60,21 @@
         inputs.home-manager.nixosModules.default
         inputs.agenix.nixosModules.default
         ./devices/desktop
+        {nixpkgs.overlays = overlays;}
+      ];
+    };
+
+    # sudo nixos-rebuild switch --flake .#serv1
+    nixosConfigurations.serv1 = nixpkgs.lib.nixosSystem {
+      specialArgs =
+        inputs
+        // {
+          age = agenix.packages."x86_64-linux".default;
+        };
+      modules = [
+        inputs.home-manager.nixosModules.default
+        inputs.agenix.nixosModules.default
+        ./devices/serv1
         {nixpkgs.overlays = overlays;}
       ];
     };

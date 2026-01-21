@@ -1,4 +1,5 @@
 {
+  inputs,
   pkgs,
   username,
   hypr_monitors ? "monitor=,preferred,auto,1",
@@ -17,37 +18,41 @@
     hypr_monitors = hypr_monitors;
   };
 in {
-  hardware.logitech.wireless.enable = true;
-  hardware.logitech.wireless.enableGraphical = true;
-  programs.dconf.enable = true;
+  # hardware.logitech.wireless.enable = true;
+  # hardware.logitech.wireless.enableGraphical = true;
+  # programs.dconf.enable = true;
 
   #programs.steam = {
   #  enable = true;
   #  remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
   #  dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   #};
-
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    jack.enable = true;
-  };
-
-  xdg.portal.enable = true;
-  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-hyprland];
-  environment.sessionVariables = {
-    WLR_NO_HARDWARE_CURSORS = "1";
-    NIXOS_OZONE_WL = "1";
-  };
-
+  #
+  # security.rtkit.enable = true;
+  # services.pipewire = {
+  #   enable = true;
+  #   alsa.enable = true;
+  #   alsa.support32Bit = true;
+  #   pulse.enable = true;
+  #   jack.enable = true;
+  # };
+  #
+  # xdg.portal.enable = true;
+  # xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-hyprland];
+  # environment.sessionVariables = {
+  #   WLR_NO_HARDWARE_CURSORS = "1";
+  #   NIXOS_OZONE_WL = "1";
+  # };
+  #
   home-manager.users.${username} = {
     imports = [
-      (import ./themes {inherit pkgs custom;})
-      (import ./wayland {inherit pkgs custom;})
-      (import ./packages {inherit pkgs;})
+      # (import ./themes {inherit pkgs custom;})
+      (import ./wayland {inherit pkgs custom inputs;})
+      # (import ./packages {inherit pkgs;})
     ];
+    wayland.windowManager.hyprland = {
+      package = inputs.hyprland.packages."x86_64-linux".hyprland;
+      portalPackage = inputs.hyprland.packages."x86_64-linux".xdg-desktop-portal-hyprland;
+    };
   };
 }
