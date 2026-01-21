@@ -3,20 +3,11 @@
   pkgs,
   ...
 }: {
-  fonts.packages = with pkgs; [
-    (nerdfonts.override {
-      fonts = [
-        "FiraCode"
-        "DroidSansMono"
-        "JetBrainsMono"
-      ];
-    })
-    font-awesome
-    powerline-fonts
-    corefonts
-    noto-fonts
-    noto-fonts-cjk-sans
-    noto-fonts-emoji
-    noto-fonts-extra
-  ];
+  fonts.enableDefaultPackages = true;
+  fonts.packages = with pkgs;
+    [
+      font-awesome
+      powerline-fonts
+    ]
+    ++ builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
 }

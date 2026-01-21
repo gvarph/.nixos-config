@@ -13,6 +13,7 @@ in {
     (import ../../home/ui {inherit pkgs username;})
     ../../linux/filesystem/nas/mount.nix
     ../../secrets/age.nix
+    ../../linux/fonts.nix
   ];
 
   environment.systemPackages = with pkgs; [

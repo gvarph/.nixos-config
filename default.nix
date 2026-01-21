@@ -14,8 +14,6 @@
 
     # set up ssh server
     ./linux/features/ssh.nix
-
-    #./linux/fonts.nix
   ];
 
   # Enable flake support
