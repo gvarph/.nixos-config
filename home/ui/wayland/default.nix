@@ -11,7 +11,7 @@
   imports = [
     ./hyprland
     # (import ./waybar {inherit pkgs custom;})
-    # (import ./wofi.nix {inherit custom;})
+    ./wofi.nix
     # (import ./foot.nix {inherit custom;})
   ];
 }
