@@ -79,6 +79,7 @@
         {nixpkgs.overlays = overlays;}
         {
           home-manager.users.gvarph = {imports = [catpuccin.homeModules.catppuccin];};
+          catppuccin.enable = true;
         }
       ];
     };
