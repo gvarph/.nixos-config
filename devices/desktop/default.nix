@@ -11,13 +11,11 @@ in {
 
     (import ../../default.nix {inherit config pkgs inputs username;})
     (import ../../home/ui {inherit pkgs username;})
-    ../../linux/features/docker.nix
     ../../linux/filesystem/nas/mount.nix
     ../../secrets/age.nix
-    ../../linux/features/kubernetes.nix
   ];
 
-  environment.systemPackages = [
+  environment.systemPackages = with pkgs; [
   ];
 
   networking.hostName = "desktop";
