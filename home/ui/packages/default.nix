@@ -29,7 +29,8 @@
     # signal-desktop
   ];
 
-  # imports = [
-  #   ./work.nix
-  # ];
+  imports = [
+    #   ./work.nix
+  ];
+  programs.vesktop.enable = true;
 }
