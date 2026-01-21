@@ -60,6 +60,20 @@
         {nixpkgs.overlays = overlays;}
       ];
     };
+    # sudo nixos-rebuild switch --flake .#dekstop
+    nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
+      specialArgs =
+        inputs
+        // {
+          age = agenix.packages."x86_64-linux".default;
+        };
+      modules = [
+        inputs.home-manager.nixosModules.default
+        inputs.agenix.nixosModules.default
+        ./devices/desktop
+        {nixpkgs.overlays = overlays;}
+      ];
+    };
 
     nixosConfigurations.serv2 = nixpkgs.lib.nixosSystem {
       specialArgs =
