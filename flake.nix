@@ -34,6 +34,8 @@
         home-manager.follows = "home-manager";
       };
     };
+
+    catpuccin.url = "github:catppuccin/nix";
   };
 
   outputs = {
@@ -41,6 +43,7 @@
     nixpkgs,
     nixpkgs-stable,
     home-manager,
+    catpuccin,
     nix-darwin,
     hyprland,
     agenix,
@@ -63,7 +66,6 @@
       })
     ];
   in {
-    # sudo nixos-rebuild switch --flake .#dekstop
     nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
       specialArgs = {
         inherit inputs;
@@ -71,9 +73,13 @@
       };
       modules = [
         inputs.home-manager.nixosModules.default
+        inputs.catpuccin.nixosModules.catppuccin
         inputs.agenix.nixosModules.default
         ./devices/desktop
         {nixpkgs.overlays = overlays;}
+        {
+          home-manager.users.gvarph = {imports = [catpuccin.homeModules.catppuccin];};
+        }
       ];
     };
 
