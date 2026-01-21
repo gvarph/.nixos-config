@@ -47,7 +47,7 @@ in {
     imports = [
       # (import ./themes {inherit pkgs custom;})
       (import ./wayland {inherit pkgs custom;})
-      # (import ./packages {inherit pkgs;})
+      (import ./packages {inherit pkgs;})
     ];
   };
 }

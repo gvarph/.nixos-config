@@ -1,35 +1,35 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    discord
-    betterdiscordctl
-
-    libnotify
-
+    # discord
+    # betterdiscordctl
+    #
+    # libnotify
+    #
     firefox
-    google-chrome
-
-    vscode
-    steam
-    lutris
-    prismlauncher
-    wineWowPackages.stable
-
-    pulseaudio
-
-    slack
-
-    thunderbird
-    okular
-    libsForQt5.kdeconnect-kde
-
-    ledger-live-desktop
-    transmission-gtk
-    playerctl
-    wev
-    signal-desktop
+    # google-chrome
+    #
+    # vscode
+    # steam
+    # lutris
+    # prismlauncher
+    # wineWowPackages.stable
+    #
+    # pulseaudio
+    #
+    # slack
+    #
+    # thunderbird
+    # okular
+    # libsForQt5.kdeconnect-kde
+    #
+    # ledger-live-desktop
+    # transmission-gtk
+    # playerctl
+    # wev
+    # signal-desktop
   ];
 
-  imports = [
-    ./work.nix
-  ];
+  # imports = [
+  #   ./work.nix
+  # ];
 }
