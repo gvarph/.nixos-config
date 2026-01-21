@@ -51,11 +51,10 @@
   in {
     # sudo nixos-rebuild switch --flake .#dekstop
     nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
-      specialArgs =
-        inputs
-        // {
-          age = agenix.packages."x86_64-linux".default;
-        };
+      specialArgs = {
+        inherit inputs;
+        age = agenix.packages."x86_64-linux".default;
+      };
       modules = [
         inputs.home-manager.nixosModules.default
         inputs.agenix.nixosModules.default

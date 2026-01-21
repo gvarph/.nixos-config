@@ -1,5 +1,4 @@
 {
-  inputs,
   pkgs,
   username,
   hypr_monitors ? "monitor=,preferred,auto,1",
@@ -47,12 +46,8 @@ in {
   home-manager.users.${username} = {
     imports = [
       # (import ./themes {inherit pkgs custom;})
-      (import ./wayland {inherit pkgs custom inputs;})
+      (import ./wayland {inherit pkgs custom;})
       # (import ./packages {inherit pkgs;})
     ];
-    wayland.windowManager.hyprland = {
-      package = inputs.hyprland.packages."x86_64-linux".hyprland;
-      portalPackage = inputs.hyprland.packages."x86_64-linux".xdg-desktop-portal-hyprland;
-    };
   };
 }

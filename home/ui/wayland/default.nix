@@ -9,7 +9,7 @@
   ];
 
   imports = [
-    (import ./hyprland {inherit pkgs custom;})
+    ./hyprland
     # (import ./waybar {inherit pkgs custom;})
     # (import ./wofi.nix {inherit custom;})
     # (import ./foot.nix {inherit custom;})
