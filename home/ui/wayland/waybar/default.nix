@@ -15,6 +15,11 @@ in {
 
   home.packages = with pkgs; [
     waybar
+    pavucontrol
+    pamixer
+    brightnessctl
+    networkmanagerapplet  # provides nm-connection-editor
+    playerctl
   ];
   # Create an out-of-store symlink to the config file
   # This means changes to hyprland.conf take effect immediately without rebuilding
