@@ -56,6 +56,22 @@ in {
   services.xserver = {
     enable = false;
     displayManager.lightdm.enable = false;
+    videoDrivers = ["displaylink" "modesetting"];
+  };
+
+  systemd.services.displaylink-server = {
+    enable = true;
+    requires = ["systemd-udevd.service"];
+    after = ["systemd-udevd.service"];
+    wantedBy = ["multi-user.target"];
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${pkgs.displaylink}/bin/DisplayLinkManager";
+      User = "root";
+      Group = "root";
+      Restart = "on-failure";
+      RestartSec = 5; # Wait 5 seconds before restarting
+    };
   };
 
   programs.hyprland = {
