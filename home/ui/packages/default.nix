@@ -33,5 +33,4 @@
     #   ./work.nix
   ];
   programs.vesktop.enable = true;
-  programs.hyprpanel.enable = true;
 }
