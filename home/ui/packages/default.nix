@@ -9,7 +9,6 @@
     # google-chrome
     #
     # vscode
-    # steam
     # lutris
     # prismlauncher
     # wineWowPackages.stable
@@ -27,6 +26,7 @@
     # playerctl
     # wev
     # signal-desktop
+    r2modman
   ];
 
   imports = [
