@@ -13,11 +13,9 @@
   ];
 
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod"];
-  boot.initrd.kernelModules = ["evdi"];
+  boot.initrd.kernelModules = [];
   boot.kernelModules = ["kvm-amd"];
-  boot.extraModulePackages = [
-    config.boot.kernelPackages.evdi
-  ];
+  boot.extraModulePackages = [];
 
   fileSystems."/" = {
     device = "/dev/mapper/luks-10d76de3-6728-4947-9d50-923b9fca4ef7";
