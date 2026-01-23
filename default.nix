@@ -6,9 +6,6 @@
   ...
 }: {
   imports = [
-    # fix vs code server
-    ./linux/vscode-server.nix
-
     # set locale
     ./linux/locale.nix
 
