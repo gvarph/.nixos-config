@@ -16,15 +16,15 @@
   "modules-center": [
     "memory",
     "cpu",
-    "temperature"
+    "temperature#cpu",
+    "gpu",
+    "temperature#gpu",
   ],
   
   "modules-right": [
     "idle_inhibitor",
-    "battery",
     "hyprland/language",
     "keyboard-state",
-    "backlight",
     "pulseaudio",
     "network",
     "custom/vpn",

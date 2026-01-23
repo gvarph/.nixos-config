@@ -18,8 +18,9 @@ in {
     pavucontrol
     pamixer
     brightnessctl
-    networkmanagerapplet  # provides nm-connection-editor
+    networkmanagerapplet # provides nm-connection-editor
     playerctl
+    cava
   ];
   # Create an out-of-store symlink to the config file
   # This means changes to hyprland.conf take effect immediately without rebuilding

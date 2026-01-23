@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Not my own work. Credit to original author
 
@@ -14,8 +14,12 @@ for ((i = 0; i < bar_length; i++)); do
     dict+=";s/$i/${bar:$i:1}/g"
 done
 
-# Create cava config
-config_file="/tmp/bar_cava_config"
+# Get the default sink's monitor source dynamically
+default_sink=$(pactl get-default-sink)
+monitor_source="${default_sink}.monitor"
+
+# Create cava config with unique name per instance
+config_file="/tmp/bar_cava_config_$$"
 cat >"$config_file" <<EOF
 [general]
 # Older systems show significant CPU use with default framerate
@@ -23,10 +27,11 @@ cat >"$config_file" <<EOF
 # You can increase the value if you wish
 framerate = 60
 bars = 14
+mono_option = average
 
 [input]
 method = pulse
-source = auto
+source = ${monitor_source}
 
 [output]
 method = raw

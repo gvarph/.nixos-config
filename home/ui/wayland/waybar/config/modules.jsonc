@@ -63,11 +63,23 @@
     "format": "󰘚 {usage: >3}%",
     "on-click": "neohtop"
   },
-  "temperature": {
-    "hwmon-path": "/sys/class/hwmon/hwmon1/temp1_input",
+  "temperature#cpu": {
+    "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
     "critical-threshold": 80,
     "format": "  {temperatureC}°C",
     "on-click": "neohtop"
+  },
+  "gpu": {
+    "format": "{icon} {}",
+    "format-icons": {
+      "amd": ""
+    },
+    "on-click": "nvidia-settings"
+  },
+  "temperature#gpu": {
+    "hwmon-path": "/sys/class/hwmon/hwmon4/temp1_input",
+    "critical-threshold": 80,
+    "format": "  {temperatureC}°C",
   },
 
   // Idle inhibitor
