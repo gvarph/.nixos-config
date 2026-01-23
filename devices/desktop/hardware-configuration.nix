@@ -17,12 +17,19 @@
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = [];
 
+  # Enable TPM2 support in initrd
+  boot.initrd.systemd.enable = true;
+
   fileSystems."/" = {
     device = "/dev/mapper/luks-10d76de3-6728-4947-9d50-923b9fca4ef7";
     fsType = "ext4";
   };
 
-  boot.initrd.luks.devices."luks-10d76de3-6728-4947-9d50-923b9fca4ef7".device = "/dev/disk/by-uuid/10d76de3-6728-4947-9d50-923b9fca4ef7";
+  boot.initrd.luks.devices."luks-10d76de3-6728-4947-9d50-923b9fca4ef7" = {
+    device = "/dev/disk/by-uuid/10d76de3-6728-4947-9d50-923b9fca4ef7";
+    # Enable TPM2 auto-unlock
+    crypttabExtraOpts = ["tpm2-device=auto"];
+  };
 
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/9D27-0512";
