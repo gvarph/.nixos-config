@@ -1,32 +1,14 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    # discord
-    # betterdiscordctl
-    #
-    # libnotify
-    #
+    pulseaudio
+
     zen-browser
-    # google-chrome
-    #
-    # vscode
-    # lutris
-    # prismlauncher
-    # wineWowPackages.stable
-    #
-    # pulseaudio
-    #
-    # slack
-    #
-    # thunderbird
-    # okular
-    # libsForQt5.kdeconnect-kde
-    #
-    # ledger-live-desktop
-    # transmission-gtk
-    # playerctl
-    # wev
-    # signal-desktop
+
     r2modman
+
+    slurp
+    grim
+    wl-clipboard
   ];
 
   imports = [
