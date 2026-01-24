@@ -15,4 +15,9 @@
     #   ./work.nix
   ];
   programs.vesktop.enable = true;
+
+  programs.ghostty = {
+    enable = true;
+    enableFishIntegration = true;
+  };
 }

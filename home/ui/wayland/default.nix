@@ -4,7 +4,6 @@
   ...
 }: {
   home.packages = with pkgs; [
-    ghostty
     microsoft-edge
   ];
 
