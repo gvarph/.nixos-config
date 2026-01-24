@@ -93,9 +93,14 @@
         };
       modules = [
         inputs.home-manager.nixosModules.default
+        inputs.catpuccin.nixosModules.catppuccin
         inputs.agenix.nixosModules.default
         ./devices/serv1
         {nixpkgs.overlays = overlays;}
+        {
+          home-manager.users.gvarph = {imports = [catpuccin.homeModules.catppuccin];};
+          catppuccin.enable = true;
+        }
       ];
     };
 
@@ -107,6 +112,7 @@
         };
       modules = [
         inputs.home-manager.nixosModules.default
+        inputs.catpuccin.nixosModules.catppuccin
         inputs.agenix.nixosModules.default
         ./devices/serv2
       ];
