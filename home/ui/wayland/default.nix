@@ -5,6 +5,7 @@
 }: {
   home.packages = with pkgs; [
     microsoft-edge
+    mongodb-compass
   ];
 
   imports = [
