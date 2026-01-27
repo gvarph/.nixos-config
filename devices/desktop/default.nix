@@ -84,4 +84,7 @@ in {
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
   };
+
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.hyprland.enableGnomeKeyring = true;
 }
