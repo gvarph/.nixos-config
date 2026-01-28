@@ -5,6 +5,7 @@
     zen-browser
 
     r2modman
+    rusty-path-of-building
 
     slurp
     grim
