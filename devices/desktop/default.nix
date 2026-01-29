@@ -17,9 +17,6 @@ in {
     ../../linux/displaylink.nix
   ];
 
-  environment.systemPackages = with pkgs; [
-  ];
-
   networking.hostName = "desktop";
   networking.networkmanager.enable = true;
 
@@ -79,11 +76,18 @@ in {
   #   };
   #
   # }
+
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
+    gamescopeSession = {
+      enable = true;
+    };
   };
+  environment.systemPackages = with pkgs; [
+    gamescope-wsi # HDR won't work without this
+  ];
 
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.hyprland.enableGnomeKeyring = true;
