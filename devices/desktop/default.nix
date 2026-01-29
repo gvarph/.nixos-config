@@ -37,6 +37,11 @@ in {
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
+  # Apple keyboard fn mode (2 = F-keys first)
+  boot.extraModprobeConfig = ''
+    options hid_apple fnmode=2
+  '';
+
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [80 443 1194 1195];
