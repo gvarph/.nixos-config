@@ -91,6 +91,7 @@ in {
     };
   };
   environment.systemPackages = with pkgs; [
+    gamescope
     gamescope-wsi # HDR won't work without this
   ];
 
