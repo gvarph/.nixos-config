@@ -35,7 +35,13 @@
       };
     };
 
-    catpuccin.url = "github:catppuccin/nix";
+    #catppuccin.url = "github:catppuccin/nix";
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
   };
 
   outputs = {
@@ -43,7 +49,7 @@
     nixpkgs,
     nixpkgs-stable,
     home-manager,
-    catpuccin,
+    catppuccin,
     nix-darwin,
     hyprland,
     agenix,
@@ -65,62 +71,31 @@
         zen-browser = inputs.zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
       })
     ];
-  in {
-    nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
-      specialArgs = {
-        inherit inputs;
-        age = agenix.packages."x86_64-linux".default;
+
+    # Helper to create NixOS configurations
+    mkNixos = hostname:
+      nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs;
+          age = agenix.packages."x86_64-linux".default;
+        };
+        modules = [
+          home-manager.nixosModules.default
+          inputs.catppuccin.nixosModules.catppuccin
+          agenix.nixosModules.default
+          ./devices/${hostname}
+          {
+            nixpkgs.overlays = overlays;
+            home-manager.users.gvarph.imports = [inputs.catppuccin.homeModules.catppuccin];
+            catppuccin.enable = true;
+          }
+        ];
       };
-      modules = [
-        inputs.home-manager.nixosModules.default
-        inputs.catpuccin.nixosModules.catppuccin
-        inputs.agenix.nixosModules.default
-        ./devices/desktop
-        {nixpkgs.overlays = overlays;}
-        {
-          home-manager.users.gvarph = {imports = [catpuccin.homeModules.catppuccin];};
-          catppuccin.enable = true;
-        }
-      ];
-    };
-
-    # sudo nixos-rebuild switch --flake .#serv1
-    nixosConfigurations.serv1 = nixpkgs.lib.nixosSystem {
-      specialArgs =
-        inputs
-        // {
-          age = agenix.packages."x86_64-linux".default;
-        };
-      modules = [
-        inputs.home-manager.nixosModules.default
-        inputs.catpuccin.nixosModules.catppuccin
-        inputs.agenix.nixosModules.default
-        ./devices/serv1
-        {nixpkgs.overlays = overlays;}
-        {
-          home-manager.users.gvarph = {imports = [catpuccin.homeModules.catppuccin];};
-          catppuccin.enable = true;
-        }
-      ];
-    };
-
-    nixosConfigurations.serv2 = nixpkgs.lib.nixosSystem {
-      specialArgs =
-        inputs
-        // {
-          age = agenix.packages."x86_64-linux".default;
-        };
-      modules = [
-        inputs.home-manager.nixosModules.default
-        inputs.catpuccin.nixosModules.catppuccin
-        inputs.agenix.nixosModules.default
-        ./devices/serv2
-        {nixpkgs.overlays = overlays;}
-        {
-          home-manager.users.gvarph = {imports = [catpuccin.homeModules.catppuccin];};
-          catppuccin.enable = true;
-        }
-      ];
+  in {
+    nixosConfigurations = {
+      desktop = mkNixos "desktop";
+      serv1 = mkNixos "serv1";
+      serv2 = mkNixos "serv2";
     };
 
     # home-manager switch --flake .#wsl
