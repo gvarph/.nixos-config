@@ -98,21 +98,6 @@
       serv2 = mkNixos "serv2";
     };
 
-    # home-manager switch --flake .#wsl
-    homeConfigurations.wsl = home-manager.lib.homeManagerConfiguration {
-      pkgs = nixpkgs.legacyPackages."x86_64-linux";
-      extraSpecialArgs = {
-        username = "gvarph";
-      };
-      modules = [
-        ./home
-        {
-          nixpkgs.config.allowUnfree = true;
-          nixpkgs.overlays = overlays;
-        }
-      ];
-    };
-
     #darwin-rebuild switch --flake .#mba --show-trace
     darwinConfigurations."mba" = nix-darwin.lib.darwinSystem {
       specialArgs =
