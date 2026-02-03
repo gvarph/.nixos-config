@@ -5,7 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Fixes a bug with non-linked c libraries
-    nixpkgs-opencode-source.url = "github:nixos/nixpkgs/master";
+    nixpkgs-master.url = "github:nixos/nixpkgs/master";
 
     # Stable nixpkgs for Azure CLI
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
@@ -59,7 +59,7 @@
     overlays = [
       # Opencode
       (final: prev: {
-        opencode = inputs.nixpkgs-opencode-source.legacyPackages.${final.stdenv.hostPlatform.system}.opencode;
+        opencode = inputs.nixpkgs-master.legacyPackages.${final.stdenv.hostPlatform.system}.opencode;
       })
       # Azure CLI
       (final: prev: {

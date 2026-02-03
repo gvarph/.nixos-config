@@ -532,13 +532,13 @@
         "type": "github"
       }
     },
-    "nixpkgs-opencode-source": {
+    "nixpkgs-master": {
       "locked": {
-        "lastModified": 1769983319,
-        "narHash": "sha256-Ugb199v49B3cUzqMHNPO6t6rMrF/aZH87DxXGA4fEAg=",
+        "lastModified": 1770122324,
+        "narHash": "sha256-r61rM0tlJyUsn1WxQiMu69NssK+rY3N2l++PLjdUgjs=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "4a5f9f2d1e8ed9ff70e2b9bdd0419733634b27aa",
+        "rev": "c585cf68ffb9a128ecdc9896875d964a7c10e066",
         "type": "github"
       },
       "original": {
@@ -611,7 +611,7 @@
         "hyprland": "hyprland",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs_2",
-        "nixpkgs-opencode-source": "nixpkgs-opencode-source",
+        "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-stable": "nixpkgs-stable",
         "zen-browser": "zen-browser"
       }
