@@ -23,6 +23,7 @@
     enableFishIntegration = true;
     settings = {
       mouse-scroll-multiplier = 0.5;
+      term = "xterm-256color";
     };
   };
 }
