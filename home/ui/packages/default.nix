@@ -3,6 +3,7 @@
     pulseaudio
 
     zen-browser
+    qbittorrent-enhanced
 
     r2modman
     rusty-path-of-building
