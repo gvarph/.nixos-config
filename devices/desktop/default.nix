@@ -15,22 +15,11 @@ in {
     ../../secrets/age.nix
     ../../linux/fonts.nix
     ../../linux/displaylink.nix
+    ../../modules/nix-maintenance.nix
   ];
 
   networking.hostName = "desktop";
   networking.networkmanager.enable = true;
-
-  nix = {
-    optimise = {
-      automatic = true;
-      dates = ["03:45"];
-    };
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 30d";
-    };
-  };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
