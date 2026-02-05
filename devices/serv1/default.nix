@@ -14,6 +14,7 @@ in {
     ../../linux/filesystem/nas/mount.nix
     ../../secrets/age.nix
     ../../modules/nix-maintenance.nix
+    ../../modules/boot-systemd.nix
     #../../linux/features/kubernetes.nix
   ];
 
@@ -31,11 +32,6 @@ in {
 
   networking.hostName = "serv1";
   networking.networkmanager.enable = true;
-
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   networking.firewall = {
     enable = true;

@@ -14,13 +14,10 @@ in {
     ../../linux/filesystem/nas/mount.nix
     ../../secrets/age.nix
     ../../modules/nix-maintenance.nix
+    ../../modules/boot-systemd.nix
     #../../linux/features/kubernetes.nix
   ];
 
   networking.hostName = "serv2";
   networking.networkmanager.enable = true;
-
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
 }

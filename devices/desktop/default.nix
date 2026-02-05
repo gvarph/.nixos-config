@@ -16,15 +16,11 @@ in {
     ../../linux/fonts.nix
     ../../linux/displaylink.nix
     ../../modules/nix-maintenance.nix
+    ../../modules/boot-systemd.nix
   ];
 
   networking.hostName = "desktop";
   networking.networkmanager.enable = true;
-
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Apple keyboard fn mode (2 = F-keys first)
   boot.extraModprobeConfig = ''
