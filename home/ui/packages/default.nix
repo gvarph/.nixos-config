@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
     pulseaudio
+    libation
 
     zen-browser
     qbittorrent-enhanced
