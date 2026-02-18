@@ -4,7 +4,7 @@
   ...
 }: {
   fileSystems."media-server" = {
-    device = "//192.168.31.7/Multimedia";
+    device = "//10.0.30.7/Multimedia";
     fsType = "cifs";
     options = [
       "credentials=${config.age.secrets.nas_auth.path}"
