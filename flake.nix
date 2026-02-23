@@ -70,6 +70,15 @@
       (final: prev: {
         zen-browser = inputs.zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
       })
+      # microsoft-edge
+      (final: prev: let
+        pkgs-master = import inputs.nixpkgs-master {
+          system = final.stdenv.hostPlatform.system;
+          config.allowUnfree = true;
+        };
+      in {
+        microsoft-edge = pkgs-master.microsoft-edge;
+      })
     ];
 
     # Helper to create NixOS configurations
