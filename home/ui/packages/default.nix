@@ -2,6 +2,7 @@
   home.packages = with pkgs; [
     pulseaudio
     libation
+    libreoffice
 
     zen-browser
     qbittorrent-enhanced
