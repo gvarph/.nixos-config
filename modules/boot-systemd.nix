@@ -1,10 +1,11 @@
-# Standard systemd-boot configuration with latest kernel
+# Standard systemd-boot configuration with stable LTS kernel
 {pkgs, ...}: {
   boot = {
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    kernelPackages = pkgs.linuxPackages_latest;
+    # Using 6.12 LTS for better hardware compatibility (especially DisplayLink)
+    kernelPackages = pkgs.linuxPackages_6_12;
   };
 }
