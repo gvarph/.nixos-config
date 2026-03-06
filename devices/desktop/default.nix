@@ -22,6 +22,16 @@ in {
   networking.hostName = "desktop";
   networking.networkmanager.enable = true;
 
+  # Framebuffer resolution for console (fixes small quadrant issue on 4K)
+  boot.kernelParams = [ "video=3840x2160@60" ];
+  
+  # Console font for 4K display
+  console = {
+    font = "${pkgs.terminus_font}/share/consolefonts/ter-v32n.psf.gz";
+    packages = with pkgs; [ terminus_font ];
+    earlySetup = true;
+  };
+
   # Apple keyboard fn mode (2 = F-keys first)
   boot.extraModprobeConfig = ''
     options hid_apple fnmode=2
