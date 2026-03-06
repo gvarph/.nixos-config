@@ -10,7 +10,7 @@ in {
     ./hardware-configuration.nix
 
     (import ../../default.nix {inherit config pkgs inputs username;})
-    (import ../../home/ui {inherit pkgs username;})
+    (import ../../home/ui {inherit pkgs username inputs;})
     ../../linux/filesystem/nas/mount.nix
     ../../secrets/age.nix
     ../../linux/fonts.nix
