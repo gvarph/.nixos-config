@@ -81,6 +81,8 @@
     nixpkgs-fmt
     gdu
     grc
+
+    lm_sensors
   ];
 
   home.stateVersion = "23.11";
