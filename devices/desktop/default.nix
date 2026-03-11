@@ -23,12 +23,12 @@ in {
   networking.networkmanager.enable = true;
 
   # Framebuffer resolution for console (fixes small quadrant issue on 4K)
-  boot.kernelParams = [ "video=3840x2160@60" ];
-  
+  boot.kernelParams = ["video=3840x2160@60"];
+
   # Console font for 4K display
   console = {
     font = "${pkgs.terminus_font}/share/consolefonts/ter-v32n.psf.gz";
-    packages = with pkgs; [ terminus_font ];
+    packages = with pkgs; [terminus_font];
     earlySetup = true;
   };
 
@@ -70,7 +70,7 @@ in {
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd 'uwsm start hyprland-uwsm.desktop'";
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd 'uwsm start hyprland-uwsm.desktop'";
         user = "greeter";
       };
     };
