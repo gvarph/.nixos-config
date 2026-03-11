@@ -1,7 +1,6 @@
 {
   pkgs,
   custom,
-  inputs,
   ...
 }: {
   home.packages = with pkgs; [
@@ -17,7 +16,6 @@
     ./hypridle
     ./hyprlock
     # (import ./foot.nix {inherit custom;})
-    (import ./noctalia.nix {inherit pkgs inputs;})
   ];
 
   home.sessionVariables = {

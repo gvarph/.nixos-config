@@ -1,7 +1,6 @@
 {
   pkgs,
   username,
-  inputs,
   hypr_monitors ? "monitor=,preferred,auto,1",
   ...
 }: let
@@ -47,7 +46,7 @@ in {
   home-manager.users.${username} = {
     imports = [
       # (import ./themes {inherit pkgs custom;})
-      (import ./wayland {inherit pkgs custom inputs;})
+      (import ./wayland {inherit pkgs custom;})
       (import ./packages {inherit pkgs;})
     ];
   };
