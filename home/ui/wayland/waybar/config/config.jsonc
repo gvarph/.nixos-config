@@ -13,13 +13,13 @@
     "custom/cava"
   ],
   
-  "modules-center": [
-    "memory",
-    "cpu",
-    "temperature#cpu",
-    "gpu",
-    "temperature#gpu",
-  ],
+  // "modules-center": [
+  //   "memory",
+  //   "cpu",
+  //   "temperature#cpu",
+  //   "gpu",
+  //   "temperature#gpu",
+  // ],
   
   "modules-right": [
     "idle_inhibitor",
