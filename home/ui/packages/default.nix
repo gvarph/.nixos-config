@@ -13,6 +13,8 @@
     slurp
     grim
     wl-clipboard
+
+    whatsapp-electron
   ];
 
   imports = [
