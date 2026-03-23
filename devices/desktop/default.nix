@@ -14,7 +14,7 @@ in {
     ../../linux/filesystem/nas/mount.nix
     ../../secrets/age.nix
     ../../linux/fonts.nix
-    ../../linux/displaylink.nix
+    #    ../../linux/displaylink.nix
     ../../modules/nix-maintenance.nix
     ../../modules/boot-systemd.nix
   ];
