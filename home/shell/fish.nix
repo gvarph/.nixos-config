@@ -114,6 +114,26 @@
         '';
         description = "Dump documents from a MongoDB collection";
       };
+      sshpf = {
+        body = ''
+          if test (count $argv) -lt 2
+            echo "Usage: sshpf HOST PORT1 [PORT2 ...]"
+            return 1
+          end
+
+          set -l host $argv[1]
+          set -l ports $argv[2..-1]
+          set -l ssh_cmd ssh $host -N
+
+          for port in $ports
+            set ssh_cmd $ssh_cmd -L "$port:localhost:$port"
+          end
+
+          echo "Forwarding ports: $ports to $host..."
+          $ssh_cmd
+        '';
+        description = "SSH port forwarding for multiple ports";
+      };
     };
   };
 }
