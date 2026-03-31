@@ -42,6 +42,11 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -53,6 +58,7 @@
     nix-darwin,
     hyprland,
     agenix,
+    disko,
     ...
   } @ inputs: let
     # Define all overlays in one place
@@ -92,6 +98,7 @@
           home-manager.nixosModules.default
           inputs.catppuccin.nixosModules.catppuccin
           agenix.nixosModules.default
+          disko.nixosModules.disko
           ./devices/${hostname}
           {
             nixpkgs.overlays = overlays;

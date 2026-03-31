@@ -23,7 +23,6 @@
   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOWiHIItEoZ3zsMzBUL11dj2iOyQ5tQapVRmqvdHf7lx gvarph@nixos"
 
   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJnzQevH59i6xI9yeZvsRIIvN4zRHEHeQekPJDn5wuZ3 gvarph@desktop"
-  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEk8VogO8fXtVikJ3lIZ1CVN+i/xI0CIZXEYccmfRbKD gvarph@nas1" # Probably the old one?
 
-  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOtaqbNkF4N45/Hl6ihyFkJB6JzStuaaZdiFlmReQtDL gvarph@nas1"
+  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHwVmeHSQbpv6hMfnY3ZsXUPIbCWYtYf6oY1DLEuPC4y gvarph@nas1"
 ]

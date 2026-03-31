@@ -7,7 +7,8 @@
   username = "gvarph";
 in {
   imports = [
-    ./hardware-configuration.nix
+    #./hardware-configuration.nix
+    ./disko.nix
 
     (import ../../default.nix {inherit config pkgs inputs username;})
     ../../linux/features/docker.nix
@@ -32,4 +33,6 @@ in {
 
   powerManagement.powertop.enable = true;
   boot.supportedFilesystems = ["zfs"];
+
+  nixpkgs.hostPlatform = "x86_64-linux";
 }
