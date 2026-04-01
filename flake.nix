@@ -145,10 +145,11 @@
       in {
         default = pkgs.mkShell {
           name = "nix-config";
-          packages = with pkgs; [
-            alejandra # Nix formatter
-            nil # Nix language server
+          packages = [
+            pkgs.alejandra # Nix formatter
+            pkgs.disko
             agenix.packages.${system}.default # Agenix CLI tool
+            disko.packages.${system}.disko
           ];
         };
       });

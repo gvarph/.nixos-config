@@ -56,6 +56,14 @@
           type = "zfs_fs";
           mountpoint = "/home";
         };
+
+        immich = {
+          type = "zfs_fs";
+          mountpoint = "/flash/immich";
+          options = {
+            compression = "zstd";
+          };
+        };
       };
     };
   };
