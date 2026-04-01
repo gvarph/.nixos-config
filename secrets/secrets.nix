@@ -6,4 +6,5 @@ let
 in {
   "nas_auth.age".publicKeys = [serv1 serv2 desktop nas1];
   "homelab_k3s_token.age".publicKeys = [serv1 serv2 desktop nas1];
+  "cloudflare_dns_api_token.age".publicKeys = [nas1];
 }
