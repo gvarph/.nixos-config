@@ -45,16 +45,22 @@
         root = {
           type = "zfs_fs";
           mountpoint = "/";
+          options.mountpoint = "legacy";
+          mountOptions = ["zfsutil" "x-initrd.mount"];
         };
 
         nix = {
           type = "zfs_fs";
           mountpoint = "/nix";
+          options.mountpoint = "legacy";
+          mountOptions = ["zfsutil" "x-initrd.mount"];
         };
 
         home = {
           type = "zfs_fs";
           mountpoint = "/home";
+          options.mountpoint = "legacy";
+          mountOptions = ["zfsutil"];
         };
 
         immich = {
@@ -62,7 +68,9 @@
           mountpoint = "/flash/immich";
           options = {
             compression = "zstd";
+            mountpoint = "legacy";
           };
+          mountOptions = ["zfsutil"];
         };
       };
     };

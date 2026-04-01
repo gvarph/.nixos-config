@@ -88,6 +88,7 @@
           type = "zfs_fs";
           mountpoint = "/tank/storage";
           options = {
+            mountpoint = "legacy"; # Add this!
             compression = "zstd";
             recordsize = "128k";
           };
@@ -98,6 +99,7 @@
           type = "zfs_fs";
           mountpoint = "/tank/immich";
           options = {
+            mountpoint = "legacy"; # Add this!
             recordsize = "128k";
           };
         };
@@ -106,6 +108,7 @@
           type = "zfs_fs";
           mountpoint = "/tank/paperless";
           options = {
+            mountpoint = "legacy"; # Add this!
             compression = "zstd";
             recordsize = "32k";
           };
@@ -116,6 +119,7 @@
           type = "zfs_fs";
           mountpoint = "/tank/media";
           options = {
+            mountpoint = "legacy"; # Add this!
             compression = "zstd";
             recordsize = "1M";
           };

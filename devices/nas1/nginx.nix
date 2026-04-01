@@ -30,7 +30,7 @@
         useACMEHost = "gvarph.com";
         serverAliases = ["audiobooks.gvarph.com"];
         locations."/" = {
-          proxyPass = "http://localhost:80";
+          proxyPass = "http://localhost:13378";
           proxyWebsockets = true;
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
