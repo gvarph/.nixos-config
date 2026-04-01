@@ -33,6 +33,7 @@
           proxyPass = "http://localhost:13378";
           proxyWebsockets = true;
           extraConfig = ''
+            client_max_body_size 5G;
             add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
           '';
         };
