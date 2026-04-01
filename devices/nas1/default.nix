@@ -9,6 +9,7 @@ in {
   imports = [
     #./hardware-configuration.nix
     ./disko
+    ./nginx.nix
 
     (import ../../default.nix {inherit config pkgs inputs username;})
     ../../linux/features/docker.nix
