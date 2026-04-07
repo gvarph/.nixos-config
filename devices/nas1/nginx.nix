@@ -43,9 +43,13 @@
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://192.168.31.4:8123";
+          proxyPass = "http://10.0.30.117:8123";
           proxyWebsockets = true;
           extraConfig = ''
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
           '';
         };
@@ -57,6 +61,27 @@
         locations."/" = {
           proxyPass = "http://localhost:8181";
           proxyWebsockets = true;
+        };
+      };
+
+      "paperless.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:13388";
+          proxyWebsockets = true;
+        };
+      };
+
+      "music-assistant.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:8095";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
         };
       };
     };
