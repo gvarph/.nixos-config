@@ -62,4 +62,6 @@ in {
   boot.kernelParams = ["i915.enable_guc=3"];
 
   boot.initrd.supportedFilesystems = ["zfs"];
+
+  age.secrets.cloudflare_dns_api_token.file = ../../secrets/cloudflare_dns_api_token.age;
 }
