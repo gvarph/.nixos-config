@@ -92,4 +92,6 @@ in {
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.hyprland.enableGnomeKeyring = true;
   security.pam.services.greetd.enableGnomeKeyring = true;
+
+  hardware.xone.enable = true;
 }
