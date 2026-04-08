@@ -111,7 +111,6 @@
     nixosConfigurations = {
       desktop = mkNixos "desktop";
       serv1 = mkNixos "serv1";
-      serv2 = mkNixos "serv2";
       nas1 = mkNixos "nas1";
     };
 
