@@ -11,7 +11,6 @@ in {
 
     (import ../../default.nix {inherit config pkgs inputs username;})
     (import ../../home/ui {inherit pkgs username;})
-    ../../linux/filesystem/nas/mount.nix
     ../../secrets/age.nix
     ../../linux/fonts.nix
     #    ../../linux/displaylink.nix
