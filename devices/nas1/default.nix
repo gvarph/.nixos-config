@@ -33,7 +33,36 @@ in {
 
   nixpkgs.hostPlatform = "x86_64-linux";
 
-  networking.firewall.allowedTCPPorts = [80 443];
+  networking.firewall = {
+    enable = true;
+    allowPing = true;
+    allowedTCPPorts = [
+      80 # HTTP (general device APIs / fallback)
+      443 # HTTPS (general device APIs / fallback)
+
+      1400 # Sonos control API
+      8008 # Chromecast HTTP control
+      8009 # Chromecast HTTPS/control
+    ];
+    allowedUDPPorts = [
+      5353 # mDNS (multicast discovery for Chromecast, AirPlay, some Sonos features)
+      1900 # SSDP/UPnP (Sonos discovery)
+    ];
+
+    allowedTCPPortRanges = [
+      {
+        from = 8000;
+        to = 65535;
+      }
+    ];
+
+    # allowedUDPPortRanges = [
+    #   {
+    #     from = 8000;
+    #     to = 65535;
+    #   }
+    # ];
+  };
 
   services.xserver.videoDrivers = ["modesetting"];
 
