@@ -37,6 +37,9 @@ in {
     defaultEditor = true;
 
     withNodeJs = true;
+    withPython3 = true;
+    withRuby = true;
+
     plugins = with pkgs.vimPlugins; [
       nvim-treesitter.withAllGrammars
     ];
