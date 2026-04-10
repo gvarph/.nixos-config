@@ -93,4 +93,6 @@ in {
   security.pam.services.greetd.enableGnomeKeyring = true;
 
   hardware.xone.enable = true;
+
+  boot.kernelModules = ["k10temp"];
 }
