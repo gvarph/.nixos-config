@@ -19,6 +19,7 @@
 
   imports = [
     #   ./work.nix
+    ./obsidian.nix
   ];
   programs.vesktop.enable = true;
 
