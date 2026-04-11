@@ -62,16 +62,6 @@
           options.mountpoint = "legacy";
           mountOptions = ["zfsutil"];
         };
-
-        immich = {
-          type = "zfs_fs";
-          mountpoint = "/flash/immich";
-          options = {
-            compression = "zstd";
-            mountpoint = "legacy";
-          };
-          mountOptions = ["zfsutil"];
-        };
       };
     };
   };
