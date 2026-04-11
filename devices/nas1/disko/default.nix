@@ -8,5 +8,6 @@
   imports = [
     ./root.nix
     ./tank.nix
+    ./sanoid.nix
   ];
 }
