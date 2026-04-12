@@ -95,6 +95,20 @@
           '';
         };
       };
+      "s3.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:3900";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            # Disable buffering to a temporary file.
+            proxy_max_temp_file_size 0;
+          '';
+        };
+      };
     };
   };
 
