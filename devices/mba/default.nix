@@ -12,7 +12,6 @@ in {
 
   # We use Homebrew to install impure software only (Mac Apps)
   homebrew.enable = true;
-  homebrew.brewPrefix = "/opt/homebrew/bin";
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
@@ -20,12 +19,6 @@ in {
     imports = [
       (import ../../home {inherit config pkgs username inputs;})
     ];
-
-    programs.git = {
-      enable = true;
-      userName = "Filip Krul";
-      userEmail = "gvarph006@gmail.com";
-    };
   };
 
   users.users.${username} = {
@@ -43,7 +36,8 @@ in {
     # pkgs.unixODBCDrivers.msodbcsql17
   ];
 
-  services.nix-daemon.enable = true;
+  nix.enable = true;
+  system.primaryUser = "gvarph";
 
   programs.fish.enable = true;
 

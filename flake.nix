@@ -126,6 +126,7 @@
         home-manager.darwinModules.home-manager
         {
           nixpkgs.overlays = overlays;
+          home-manager.users.gvarph.imports = [inputs.catppuccin.homeModules.catppuccin];
         }
       ];
     };
