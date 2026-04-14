@@ -36,7 +36,7 @@ in {
     # pkgs.unixODBCDrivers.msodbcsql17
   ];
 
-  nix.enable = true;
+  nix.enable = false;
   system.primaryUser = "gvarph";
 
   programs.fish.enable = true;
@@ -45,5 +45,5 @@ in {
 
   system.stateVersion = 5;
 
-  nixpkgs.hostPlatform = "x86_64-darwin";
+  nixpkgs.hostPlatform = "aarch64-darwin";
 }
