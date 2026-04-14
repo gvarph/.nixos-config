@@ -76,6 +76,9 @@ in {
       intel-compute-runtime # OpenCL (NEO) + Level Zero for Arc/Xe
       # NOTE: 'intel-ocl' also exists as a legacy package; not recommended for Arc/Xe.
       # libvdpau-va-gl       # Only if you must run VDPAU-only apps
+      intel-vaapi-driver
+      libva
+      libva-utils
     ];
   };
 
