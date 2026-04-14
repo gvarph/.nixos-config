@@ -38,6 +38,9 @@ in {
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [80 443 1194 1195];
+    allowedUDPPorts = [
+      5353 # mDNS (multicast discovery for Chromecast, AirPlay, some Sonos features)
+    ];
     allowedUDPPortRanges = [
       {
         from = 4000;
@@ -85,7 +88,12 @@ in {
   environment.systemPackages = with pkgs; [
     gamescope
     gamescope-wsi # HDR won't work without this
+    mullvad-vpn
   ];
+  services.mullvad-vpn = {
+    enable = true;
+    package = pkgs.mullvad-vpn;
+  };
 
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.hyprland.enableGnomeKeyring = true;
@@ -94,4 +102,9 @@ in {
   hardware.xone.enable = true;
 
   boot.kernelModules = ["k10temp"];
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true; # Allows software to resolve .local names
+    openFirewall = true; # Opens the mDNS port (5353)
+  };
 }
