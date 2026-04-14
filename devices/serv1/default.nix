@@ -11,7 +11,6 @@ in {
 
     (import ../../default.nix {inherit config pkgs inputs username;})
     ../../linux/features/docker.nix
-    ../../secrets/age.nix
     ../../modules/nix-maintenance.nix
     ../../modules/boot-systemd.nix
     #../../linux/features/kubernetes.nix

@@ -11,6 +11,9 @@
 
     # set up ssh server
     ./linux/features/ssh.nix
+
+    # Set up age secret key
+    ./secrets/age.nix
   ];
 
   # Enable flake support
