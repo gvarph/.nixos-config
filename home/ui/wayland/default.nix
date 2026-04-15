@@ -10,6 +10,7 @@
   ];
 
   imports = [
+    ./anyrun
     ./hyprland
     ./waybar
     ./wofi.nix

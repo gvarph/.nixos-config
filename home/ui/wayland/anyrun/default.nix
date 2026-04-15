@@ -2,17 +2,14 @@
   config,
   pkgs,
   ...
-}: let
-  # Fetch the repositories
-  anyrun = import (fetchTarball "https://github.com/Kirottu/anyrun/archive/master.tar.gz") {};
-in {
+}: {
   programs.anyrun = {
     enable = true;
     config = {
-      plugins = with anyrun.packages.${pkgs.stdenv.hostPlatform.system}; [
-        applications
-        randr
-        rink
+      plugins = with pkgs.anyrunPackages; [
+        applications # Applications
+        randr # Screenshot
+        rink # Cal
         shell
         symbols
         translate
@@ -23,10 +20,5 @@ in {
       hidePluginInfo = true;
       closeOnClick = true;
     };
-
-    # custom css for anyrun, based on catppuccin-mocha
-    extraCss = builtins.readFile ./style.css;
   };
-
-  # ... any other home-manager configurations ...
 }

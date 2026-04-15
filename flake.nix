@@ -47,18 +47,25 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # miscellaneous
+    anyrun = {
+      url = "github:anyrun-org/anyrun";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
     self,
+    agenix,
+    anyrun,
+    catppuccin,
+    disko,
+    home-manager,
+    hyprland,
+    nix-darwin,
     nixpkgs,
     nixpkgs-stable,
-    home-manager,
-    catppuccin,
-    nix-darwin,
-    hyprland,
-    agenix,
-    disko,
     ...
   } @ inputs: let
     # Define all overlays in one place
@@ -84,6 +91,10 @@
         };
       in {
         microsoft-edge = pkgs-master.microsoft-edge;
+      })
+      # Anyrun
+      (final: prev: {
+        anyrunPackages = inputs.anyrun.packages.${final.stdenv.hostPlatform.system};
       })
     ];
 
