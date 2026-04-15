@@ -8,6 +8,7 @@
 in {
   imports = [
     ./hardware-configuration.nix
+    ./steam_vrmam_mgmt_fixed.nix
 
     (import ../../default.nix {inherit config pkgs inputs username;})
     (import ../../home/ui {inherit pkgs username;})
