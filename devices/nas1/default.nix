@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   inputs,
   ...
@@ -14,7 +15,7 @@ in {
     (import ../../default.nix {inherit config pkgs inputs username;})
     ../../linux/features/docker.nix
     ../../modules/nix-maintenance.nix
-    ../../modules/boot-systemd.nix
+    (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.linuxPackages_6_19;})
     #../../linux/features/kubernetes.nix
   ];
 
@@ -25,6 +26,7 @@ in {
   environment.systemPackages = with pkgs; [
     smartmontools
     powertop
+    lm_sensors
   ];
 
   powerManagement.powertop.enable = true;
@@ -84,7 +86,6 @@ in {
 
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "iHD"; # Prefer the modern iHD backend
-    # VDPAU_DRIVER = "va_gl";      # Only if using libvdpau-va-gl
   };
 
   # May help if FFmpeg/VAAPI/QSV init fails (esp. on Arc with i915):

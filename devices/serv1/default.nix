@@ -12,7 +12,7 @@ in {
     (import ../../default.nix {inherit config pkgs inputs username;})
     ../../linux/features/docker.nix
     ../../modules/nix-maintenance.nix
-    ../../modules/boot-systemd.nix
+    (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.linuxPackages_latest;})
     #../../linux/features/kubernetes.nix
   ];
 

@@ -1,10 +1,13 @@
-# Standard systemd-boot configuration with latest kernel
-{pkgs, ...}: {
+# Standard systemd-boot configuration with configurable kernel packages
+{
+  kernelPackages,
+  ...
+}: {
   boot = {
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    kernelPackages = pkgs.linuxPackages_latest;
+    inherit kernelPackages;
   };
 }

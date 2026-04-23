@@ -14,7 +14,7 @@ in {
     ../../linux/fonts.nix
     #    ../../linux/displaylink.nix
     ../../modules/nix-maintenance.nix
-    ../../modules/boot-systemd.nix
+    (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.linuxPackages_latest;})
   ];
 
   networking.hostName = "desktop";
