@@ -4,9 +4,6 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # Fixes a bug with non-linked c libraries
-    nixpkgs-master.url = "github:nixos/nixpkgs/master";
-
     # Stable nixpkgs for Azure CLI
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
 
@@ -70,10 +67,6 @@
   } @ inputs: let
     # Define all overlays in one place
     overlays = [
-      # Opencode
-      (final: prev: {
-        opencode = inputs.nixpkgs-master.legacyPackages.${final.stdenv.hostPlatform.system}.opencode;
-      })
       # Azure CLI
       (final: prev: {
         azure-cli = inputs.nixpkgs-stable.legacyPackages.${final.stdenv.hostPlatform.system}.azure-cli;
@@ -82,15 +75,6 @@
       # Zen browser
       (final: prev: {
         zen-browser = inputs.zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
-      })
-      # microsoft-edge
-      (final: prev: let
-        pkgs-master = import inputs.nixpkgs-master {
-          system = final.stdenv.hostPlatform.system;
-          config.allowUnfree = true;
-        };
-      in {
-        microsoft-edge = pkgs-master.microsoft-edge;
       })
       # Anyrun
       (final: prev: {

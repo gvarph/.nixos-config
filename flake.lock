@@ -617,22 +617,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-master": {
-      "locked": {
-        "lastModified": 1776936891,
-        "narHash": "sha256-QQbTeJjZtwD/VtIBpkrAwZLeg9lIPXoiwS0VyL+TnG0=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "ed95a6bec3c1ebf91eed550c0fb3ec4d93d5a473",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "master",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs-stable": {
       "locked": {
         "lastModified": 1767313136,
@@ -698,7 +682,6 @@
         "hyprland": "hyprland",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs_2",
-        "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-stable": "nixpkgs-stable",
         "zen-browser": "zen-browser"
       }
