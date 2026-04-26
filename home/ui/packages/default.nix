@@ -15,6 +15,19 @@
     wl-clipboard
 
     whatsapp-electron
+
+    (prismlauncher.override {
+      # Add binary required by some mod
+      additionalPrograms = [ffmpeg];
+
+      # Change Java runtimes available to Prism Launcher
+      jdks = [
+        graalvmPackages.graalvm-ce
+        jdk25
+        jdk21
+        jdk17
+      ];
+    })
   ];
 
   imports = [
