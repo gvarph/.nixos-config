@@ -89,6 +89,7 @@ in {
     gamescope
     gamescope-wsi # HDR won't work without this
     mullvad-vpn
+    nvtopPackages.amd
   ];
   services.mullvad-vpn = {
     enable = true;
