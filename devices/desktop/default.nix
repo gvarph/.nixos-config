@@ -90,6 +90,7 @@ in {
     gamescope-wsi # HDR won't work without this
     mullvad-vpn
     nvtopPackages.amd
+    vulkan-tools
   ];
   services.mullvad-vpn = {
     enable = true;
@@ -108,4 +109,11 @@ in {
     nssmdns4 = true; # Allows software to resolve .local names
     openFirewall = true; # Opens the mDNS port (5353)
   };
+
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
+  services.lact.enable = true;
 }
