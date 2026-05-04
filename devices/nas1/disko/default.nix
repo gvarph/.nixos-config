@@ -7,7 +7,9 @@
 
   imports = [
     ./root.nix
-    ./tank.nix
+    #./tank.nix
     ./sanoid.nix
   ];
+
+  boot.zfs.extraPools = ["tank"];
 }
