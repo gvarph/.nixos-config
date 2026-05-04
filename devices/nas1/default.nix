@@ -6,6 +6,21 @@
   ...
 }: let
   username = "gvarph";
+
+  zfsCompatibleKernelPackages =
+    lib.filterAttrs (
+      name: kernelPackages:
+        (builtins.match "linux_[0-9]+_[0-9]+" name)
+        != null
+        && (builtins.tryEval kernelPackages).success
+        && (!kernelPackages.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
+    )
+    pkgs.linuxKernel.packages;
+  latestKernelPackage = lib.last (
+    lib.sort (a: b: (lib.versionOlder a.kernel.version b.kernel.version)) (
+      builtins.attrValues zfsCompatibleKernelPackages
+    )
+  );
 in {
   imports = [
     ./hardware-configuration.nix
@@ -15,7 +30,7 @@ in {
     (import ../../default.nix {inherit config pkgs inputs username;})
     ../../linux/features/docker.nix
     ../../modules/nix-maintenance.nix
-    (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.linuxPackages_6_19;})
+    (import ../../modules/boot-systemd.nix {kernelPackages = latestKernelPackage;})
     #../../linux/features/kubernetes.nix
   ];
 
