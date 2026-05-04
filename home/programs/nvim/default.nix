@@ -82,7 +82,7 @@ in {
       prettierd
 
       # JS and family
-      deno
+      #deno
     ];
   };
 }
