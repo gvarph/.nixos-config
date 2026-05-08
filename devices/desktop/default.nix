@@ -67,6 +67,7 @@ in {
     # make sure to also set the portal package, so that they are in sync
     portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
   };
+
   services.greetd = {
     enable = true;
     settings = {
@@ -85,6 +86,7 @@ in {
       enable = true;
     };
   };
+
   environment.systemPackages = with pkgs; [
     gamescope
     gamescope-wsi # HDR won't work without this
@@ -92,6 +94,7 @@ in {
     nvtopPackages.amd
     vulkan-tools
   ];
+
   services.mullvad-vpn = {
     enable = true;
     package = pkgs.mullvad-vpn;
@@ -104,6 +107,7 @@ in {
   hardware.xone.enable = true;
 
   boot.kernelModules = ["k10temp"];
+
   services.avahi = {
     enable = true;
     nssmdns4 = true; # Allows software to resolve .local names
