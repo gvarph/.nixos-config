@@ -8,8 +8,8 @@
     chromium
     (pkgs.symlinkJoin {
       name = "mongodb-compass";
-      paths = [ pkgs.mongodb-compass ];
-      buildInputs = [ pkgs.makeWrapper ];
+      paths = [pkgs.mongodb-compass];
+      buildInputs = [pkgs.makeWrapper];
       postBuild = ''
         wrapProgram $out/bin/mongodb-compass \
           --add-flags "--password-store=gnome-libsecret --ignore-additional-command-line-flags"
@@ -19,7 +19,6 @@
   ];
 
   imports = [
-    ./anyrun
     ./hyprland
     ./waybar
     ./wofi.nix
