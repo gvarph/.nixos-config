@@ -27,6 +27,8 @@
     ./programs/az-cli
 
     ./programs/opencode
+    ./programs/claude-code
+    ./mcp
   ];
 
   programs.tealdeer = {

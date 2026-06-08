@@ -11,7 +11,7 @@
     hash = "sha256-EAlKoqJuTMib+gcLscMtpS8Zzq/D/LmIRoG3g/XKThc=";
   };
 in {
-  programs.opencode = {
+  programs.claude-code = {
     enable = true;
     enableMcpIntegration = true;
 
