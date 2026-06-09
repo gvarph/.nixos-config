@@ -31,9 +31,7 @@ in {
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
   environment.systemPackages = [
-    pkgs.unixodbc
     pkgs.fish
-    # pkgs.unixodbcDrivers.msodbcsql17
   ];
 
   nix.enable = false;
