@@ -32,9 +32,8 @@
       };
     };
 
-    #catppuccin.url = "github:catppuccin/nix";
     catppuccin = {
-      url = "github:catppuccin/nix";
+      url = "git+https://github.com/catppuccin/nix.git";
       inputs = {
         nixpkgs.follows = "nixpkgs";
       };
@@ -44,18 +43,11 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # miscellaneous
-    anyrun = {
-      url = "github:anyrun-org/anyrun";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = {
     self,
     agenix,
-    anyrun,
     catppuccin,
     disko,
     home-manager,
@@ -76,10 +68,6 @@
       (final: prev: {
         zen-browser = inputs.zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
       })
-      # Anyrun
-      (final: prev: {
-        anyrunPackages = inputs.anyrun.packages.${final.stdenv.hostPlatform.system};
-      })
     ];
 
     # Helper to create NixOS configurations
@@ -91,13 +79,13 @@
         };
         modules = [
           home-manager.nixosModules.default
-          inputs.catppuccin.nixosModules.catppuccin
+          catppuccin.nixosModules.catppuccin
           agenix.nixosModules.default
           disko.nixosModules.disko
           ./devices/${hostname}
           {
             nixpkgs.overlays = overlays;
-            home-manager.users.gvarph.imports = [inputs.catppuccin.homeModules.catppuccin];
+            home-manager.users.gvarph.imports = [catppuccin.homeModules.catppuccin];
             catppuccin.enable = true;
           }
         ];
@@ -121,7 +109,7 @@
         home-manager.darwinModules.home-manager
         {
           nixpkgs.overlays = overlays;
-          home-manager.users.gvarph.imports = [inputs.catppuccin.homeModules.catppuccin];
+          home-manager.users.gvarph.imports = [catppuccin.homeModules.catppuccin];
         }
       ];
     };
