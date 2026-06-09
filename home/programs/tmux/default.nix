@@ -10,6 +10,7 @@
     clock24 = true;
     keyMode = "vi";
     mouse = true;
+    focusEvents = true;
     newSession = true;
     terminal = "tmux-256color";
     escapeTime = 0;
