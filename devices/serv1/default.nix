@@ -17,15 +17,15 @@ in {
   ];
 
   environment.systemPackages = [
-    pkgs.unixODBC
-    pkgs.unixODBCDrivers.msodbcsql17
-    pkgs.unixODBCDrivers.msodbcsql18
+    pkgs.unixodbc
+    pkgs.unixodbcDrivers.msodbcsql17
+    pkgs.unixodbcDrivers.msodbcsql18
     pkgs.xdummy
   ];
 
   environment.unixODBCDrivers = [
-    pkgs.unixODBCDrivers.msodbcsql17
-    pkgs.unixODBCDrivers.msodbcsql18
+    pkgs.unixodbcDrivers.msodbcsql17
+    pkgs.unixodbcDrivers.msodbcsql18
   ];
 
   networking.hostName = "serv1";

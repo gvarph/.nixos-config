@@ -8,6 +8,7 @@
   home.username = username;
 
   catppuccin.enable = true;
+  catppuccin.autoEnable = true;
   programs.home-manager.enable = true;
   imports = [
     ./shell/fish.nix
