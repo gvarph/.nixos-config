@@ -5,7 +5,6 @@
 }: {
   home.packages = with pkgs; [
     fishPlugins.forgit
-    fishPlugins.hydro
     fishPlugins.done
     jq
   ];
@@ -35,12 +34,6 @@
         src = pkgs.fishPlugins.forgit.src;
       }
 
-      # fishPlugins.hydro
-      {
-        name = "hydro";
-        src = pkgs.fishPlugins.hydro.src;
-      }
-
       # fishPlugins.done
       {
         name = "done";
@@ -49,8 +42,6 @@
     ];
 
     interactiveShellInit = ''
-      set -g theme_nerd_fonts yes
-
       direnv hook fish | source
     '';
 

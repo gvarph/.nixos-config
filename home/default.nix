@@ -81,7 +81,6 @@
     openssh
 
     git-crypt
-    nixpkgs-fmt
     gdu
     grc
 

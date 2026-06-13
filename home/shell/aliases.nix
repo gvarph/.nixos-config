@@ -12,16 +12,10 @@
 
     nix-fish = "nix-shell --run fish -p fish ";
 
-    please = "sudo $(history - p !!)";
-
     cp = "cp -iv"; #confirm before overwriting
     mv = "mv -iv"; #confirm before overwriting
 
     mkdir = "mkdir -pv"; #create parent directories if needed
-
-    #create a directory and cd into it
-    cmkdir = "mkdir -p \"$1\" && cd \"$1\"";
-    mcd = "cmkdir";
 
     docker-tail-newest = "docker logs -f $(docker ps -q --format '{{.CreatedAt}}\t{{.ID}}' | sort -r | head -n 1 | cut -f 2)";
 
