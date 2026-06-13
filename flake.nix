@@ -43,12 +43,15 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    claude-code.url = "github:sadjow/claude-code-nix";
   };
 
   outputs = {
     self,
     agenix,
     catppuccin,
+    claude-code,
     disko,
     home-manager,
     hyprland,
@@ -68,6 +71,8 @@
       (final: prev: {
         zen-browser = inputs.zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
       })
+
+      claude-code.overlays.default
     ];
 
     # Helper to create NixOS configurations
