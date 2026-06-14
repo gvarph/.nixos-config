@@ -7,7 +7,17 @@
 
   # Feral GameMode: system-level tuning (CPU governor, scheduling) while a
   # game runs. Activate per-game with `gamemoderun %command%` in Steam.
-  programs.gamemode.enable = true;
+  programs.gamemode = {
+    enable = true;
+    settings.gpu = {
+      # Forces the AMD GPU to its high performance level for the duration
+      # of the game (reverted on exit). "accept-responsibility" is the
+      # literal opt-in string gamemode requires to apply GPU tweaks.
+      apply_gpu_optimisations = "accept-responsibility";
+      gpu_device = 0; # DRM card index; adjust if not card0
+      amd_performance_level = "high";
+    };
+  };
 
   environment.systemPackages = with pkgs; [
     gamescope
