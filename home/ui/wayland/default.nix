@@ -25,6 +25,7 @@
     ./hypridle
     ./hyprlock
     ./polkit
+    ./mako
   ];
 
   home.sessionVariables = {
