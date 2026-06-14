@@ -21,7 +21,7 @@
   imports = [
     ./hyprland
     ./waybar
-    ./wofi.nix
+    ./rofi.nix
     ./hypridle
     ./hyprlock
     ./polkit
