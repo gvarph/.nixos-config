@@ -37,7 +37,17 @@ in {
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [80 443 1194 1195];
+    allowedTCPPorts = [
+      80
+      443
+      1194
+      1195
+      # Sunshine
+      47984
+      47989
+      47990
+      48010
+    ];
     allowedUDPPorts = [
       5353 # mDNS (multicast discovery for Chromecast, AirPlay, some Sonos features)
     ];
@@ -45,6 +55,15 @@ in {
       {
         from = 4000;
         to = 4007;
+      }
+      {
+        from = 8000;
+        to = 8010;
+      }
+      # Sunshine
+      {
+        from = 47998;
+        to = 48000;
       }
       {
         from = 8000;
@@ -122,4 +141,11 @@ in {
   };
 
   services.lact.enable = true;
+
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    capSysAdmin = true;
+    openFirewall = true;
+  };
 }
