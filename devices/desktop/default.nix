@@ -13,6 +13,7 @@ in {
     (import ../../home/ui {inherit pkgs username;})
     ../../linux/fonts.nix
     #    ../../linux/displaylink.nix
+    ../../linux/features/gaming.nix
     ../../modules/nix-maintenance.nix
     (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.linuxPackages_latest;})
   ];
@@ -101,14 +102,9 @@ in {
     enable = true;
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
-    gamescopeSession = {
-      enable = true;
-    };
   };
 
   environment.systemPackages = with pkgs; [
-    gamescope
-    gamescope-wsi # HDR won't work without this
     mullvad-vpn
     nvtopPackages.amd
     vulkan-tools
