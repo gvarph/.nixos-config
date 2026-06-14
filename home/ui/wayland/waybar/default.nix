@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  custom,
   ...
 }: let
   # Get the absolute path to the config directory in your repo
