@@ -31,8 +31,6 @@
   ];
 
   imports = [
-    #   ./work.nix
-    #./obsidian.nix
     ./ghostty.nix
   ];
   programs.vesktop.enable = true;
