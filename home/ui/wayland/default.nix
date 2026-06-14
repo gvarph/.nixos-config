@@ -25,7 +25,6 @@
     ./hypridle
     ./hyprlock
     ./polkit
-    # (import ./foot.nix {inherit custom;})
   ];
 
   home.sessionVariables = {
