@@ -7,21 +7,13 @@
 
   # Feral GameMode: system-level tuning (CPU governor, scheduling) while a
   # game runs. Activate per-game with `gamemoderun %command%` in Steam.
-  programs.gamemode = {
-    enable = true;
-    settings.gpu = {
-      # Forces the AMD GPU to its high performance level for the duration
-      # of the game (reverted on exit). "accept-responsibility" is the
-      # literal opt-in string gamemode requires to apply GPU tweaks.
-      apply_gpu_optimisations = "accept-responsibility";
-      gpu_device = 1; # AMD GPU is card1 (card0 has no device/vendor)
-      amd_performance_level = "high";
-    };
-  };
+  # GPU performance-level forcing is intentionally left off: LACT owns the
+  # GPU here, and amdgpu's "auto" mode already ramps to max under load.
+  programs.gamemode.enable = true;
 
-  # gamemode's polkit rule only grants the cpu-governor / GPU helpers to
-  # members of the "gamemode" group, so the user must be in it — otherwise
-  # the governor and GPU optimisations silently fail (polkit denies).
+  # gamemode's polkit rule only grants the cpu-governor helper to members of
+  # the "gamemode" group, so the user must be in it — otherwise the governor
+  # change silently fails (polkit denies).
   users.users.gvarph.extraGroups = ["gamemode"];
 
   environment.systemPackages = with pkgs; [
