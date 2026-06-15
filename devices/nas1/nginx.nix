@@ -12,12 +12,18 @@
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
 
+    # Single backend: never eject it on a transient failure (e.g. a stale
+    # browser tab still hitting the old /socket.io path after an immich
+    # upgrade). Otherwise one failed websocket upgrade trips max_fails and
+    # 502s the *entire* site with "no live upstreams".
+    upstreams.immich.servers."127.0.0.1:2283" = { max_fails = 0; };
+
     virtualHosts = {
       "immich.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com"; # or per-cert, see below
         locations."/" = {
-          proxyPass = "http://localhost:2283";
+          proxyPass = "http://immich";
           proxyWebsockets = true;
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
