@@ -42,6 +42,7 @@ in {
     smartmontools
     powertop
     lm_sensors
+    intel-gpu-tools
   ];
 
   powerManagement.powertop.enable = true;
