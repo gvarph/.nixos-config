@@ -34,7 +34,6 @@
       "ab.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";
-        serverAliases = ["audiobooks.gvarph.com"];
         locations."/" = {
           proxyPass = "http://localhost:13378";
           proxyWebsockets = true;
