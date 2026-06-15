@@ -121,6 +121,17 @@
           '';
         };
       };
+      "grafana.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:3000";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
     };
   };
 
