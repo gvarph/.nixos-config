@@ -12,6 +12,8 @@
     # set up ssh server
     ./linux/features/ssh.nix
 
+    ./linux/features/docker.nix
+
     # Set up age secret key
     ./secrets/age.nix
   ];
@@ -26,7 +28,7 @@
   users.users.${username} = {
     isNormalUser = true;
     description = "Filip Krul";
-    extraGroups = ["networkmanager" "wheel" "nixeditors" "docker" "openvpn"];
+    extraGroups = ["networkmanager" "wheel" "nixeditors" "docker" "openvpn" "video" "render"];
     packages = [];
     shell = pkgs.fish;
     home = "/home/${username}";

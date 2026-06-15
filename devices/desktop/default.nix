@@ -48,6 +48,7 @@ in {
       47989
       47990
       48010
+      3003
     ];
     allowedUDPPorts = [
       5353 # mDNS (multicast discovery for Chromecast, AirPlay, some Sonos features)
@@ -108,6 +109,8 @@ in {
     mullvad-vpn
     nvtopPackages.amd
     vulkan-tools
+
+    rocmPackages.clr
   ];
 
   services.mullvad-vpn = {
