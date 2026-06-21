@@ -19,6 +19,16 @@
     upstreams.immich.servers."127.0.0.1:2283" = { max_fails = 0; };
 
     virtualHosts = {
+      # Catch-all default: any subdomain not matched below lands here and gets
+      # a 404 instead of silently falling through to the alphabetically-first
+      # vhost (which was Audiobookshelf at ab.gvarph.com).
+      "catchall" = {
+        default = true;
+        useACMEHost = "gvarph.com";
+        addSSL = true;
+        locations."/".return = "404";
+      };
+
       "immich.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com"; # or per-cert, see below
@@ -115,6 +125,28 @@
         useACMEHost = "gvarph.com";
         locations."/" = {
           proxyPass = "http://localhost:8096";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
+      "jf.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:8096";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
+      "js.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:5055";
           proxyWebsockets = true;
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
