@@ -16,7 +16,7 @@
     # browser tab still hitting the old /socket.io path after an immich
     # upgrade). Otherwise one failed websocket upgrade trips max_fails and
     # 502s the *entire* site with "no live upstreams".
-    upstreams.immich.servers."127.0.0.1:2283" = { max_fails = 0; };
+    upstreams.immich.servers."127.0.0.1:2283" = {max_fails = 0;};
 
     virtualHosts = {
       # Catch-all default: any subdomain not matched below lands here and gets
@@ -160,6 +160,20 @@
           proxyPass = "http://localhost:3000";
           proxyWebsockets = true;
           extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
+      "qbit.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:8080";
+          proxyWebsockets = true;
+          extraConfig = ''
+            allow 10.0.0.0/8;   # LAN VLANs only
+            deny all;           # block public, even if :443 is port-forwarded
+            client_max_body_size 100M;
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
           '';
         };
