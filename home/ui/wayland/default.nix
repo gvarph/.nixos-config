@@ -25,6 +25,7 @@
     ./hyprlock
     ./polkit
     ./mako
+    ./udiskie
   ];
 
   home.sessionVariables = {

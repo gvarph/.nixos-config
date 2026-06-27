@@ -149,6 +149,10 @@ in {
 
   services.lact.enable = true;
 
+  # D-Bus daemon that mounts removable media; the user-level udiskie service
+  # (home/ui/wayland/udiskie) drives it to auto-mount USB drives on insert.
+  services.udisks2.enable = true;
+
   services.sunshine = {
     enable = true;
     autoStart = true;
