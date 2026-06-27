@@ -45,6 +45,8 @@
     };
 
     claude-code.url = "github:sadjow/claude-code-nix";
+
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
   };
 
   outputs = {
@@ -73,6 +75,9 @@
       })
 
       claude-code.overlays.default
+
+      # CachyOS kernel packages (exposes pkgs.cachyosKernels.*)
+      inputs.nix-cachyos-kernel.overlays.pinned
     ];
 
     # Helper to create NixOS configurations

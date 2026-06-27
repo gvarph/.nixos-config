@@ -15,11 +15,19 @@ in {
     #    ../../linux/displaylink.nix
     ../../linux/features/gaming.nix
     ../../modules/nix-maintenance.nix
-    (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.linuxPackages_latest;})
+    (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest;})
   ];
 
   networking.hostName = "desktop";
   networking.networkmanager.enable = true;
+
+  # Binary cache for the CachyOS kernel (nix-cachyos-kernel) so it isn't
+  # compiled from source on every kernel bump.
+  nix.settings = {
+    substituters = ["https://attic.xuyh0120.win/lantian"];
+    trusted-substituters = ["https://attic.xuyh0120.win/lantian"];
+    trusted-public-keys = ["lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="];
+  };
 
   # Framebuffer resolution for console (fixes small quadrant issue on 4K)
   boot.kernelParams = ["video=3840x2160@60"];
