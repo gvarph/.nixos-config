@@ -1,9 +1,5 @@
-{
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   home.packages = with pkgs; [
-    microsoft-edge
     chromium
     (pkgs.symlinkJoin {
       name = "mongodb-compass";
