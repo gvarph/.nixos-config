@@ -46,6 +46,18 @@
     '';
 
     functions = {
+      kwork = {
+        body = ''
+          set -gx KUBECONFIG $HOME/.kube/config
+        '';
+        description = "Use the work (gcloud-managed) kubernetes cluster in this shell";
+      };
+      kserv = {
+        body = ''
+          set -gx KUBECONFIG /etc/rancher/k3s/k3s.yaml
+        '';
+        description = "Use the local serv1 k3s cluster in this shell";
+      };
       mcd = {
         body = ''
           mkdir -p $argv[1]; and cd $argv[1]

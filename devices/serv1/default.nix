@@ -13,7 +13,7 @@ in {
     ../../linux/features/docker.nix
     ../../modules/nix-maintenance.nix
     (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.linuxPackages_latest;})
-    #../../linux/features/kubernetes.nix
+    ../../linux/features/kubernetes.nix
   ];
 
   environment.systemPackages = [
