@@ -1,9 +1,6 @@
 return {
-	"monkoose/neocodeium",
-	event = "VeryLazy",
+	"supermaven-inc/supermaven-nvim",
 	config = function()
-		local neocodeium = require("neocodeium")
-		neocodeium.setup()
-		vim.keymap.set("i", "<Tab>", neocodeium.accept)
+		require("supermaven-nvim").setup({})
 	end,
 }
