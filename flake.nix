@@ -32,11 +32,11 @@
       };
     };
 
+    # Don't make nixpkgs follow ours: catppuccin's binary cache
+    # (catppuccin.cachix.org) only has whiskers built against its own pinned
+    # nixpkgs, so following ours forces a local rebuild every update.
     catppuccin = {
       url = "git+https://github.com/catppuccin/nix.git";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-      };
     };
 
     disko = {
