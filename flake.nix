@@ -73,6 +73,18 @@
       (final: prev: {
         zen-browser = inputs.zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
       })
+      # debugpy: pin to stable. On nixos-unstable, cache.nixos.org often lacks
+      # a prebuilt debugpy (its heavy/flaky test suite regularly lags or fails
+      # on Hydra), so the Cython extensions get recompiled from source on nearly
+      # every flake bump. Stable's debugpy is cached and stable across updates,
+      # and this is just the DAP adapter binary so the exact version doesn't matter.
+      (final: prev: {
+        python312Packages =
+          prev.python312Packages
+          // {
+            debugpy = inputs.nixpkgs-stable.legacyPackages.${final.stdenv.hostPlatform.system}.python312Packages.debugpy;
+          };
+      })
 
       claude-code.overlays.default
 
