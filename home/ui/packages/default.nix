@@ -13,6 +13,7 @@
     slurp
     grim
     wl-clipboard
+    cliphist
 
     whatsapp-electron
 
