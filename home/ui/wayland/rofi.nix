@@ -79,8 +79,11 @@ in {
       # Rounded, translucent surface so Hyprland's blur shows through,
       # matching the look of your tiled windows.
       "window" = {
-        location = mkLiteral "center";
-        anchor = mkLiteral "center";
+        # Anchor to the top so the search bar stays put as the list resizes
+        # (a centered window re-centers on every keystroke).
+        location = mkLiteral "north";
+        anchor = mkLiteral "north";
+        y-offset = mkLiteral "25%";
         width = mkLiteral "42%";
         border = mkLiteral "2px";
         border-color = mkLiteral "@mauve";
