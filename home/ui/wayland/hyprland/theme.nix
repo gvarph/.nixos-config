@@ -56,6 +56,8 @@
         size = 8;
         passes = 2;
         new_optimizations = true;
+        # Blur layer-shell popups (menus, tooltips) too
+        popups = true;
       };
     };
 
@@ -65,6 +67,15 @@
       "ignore_alpha 0.5, match:namespace rofi"
       # No animation, so the launcher snaps instead of animating its resize as you type
       "no_anim true, match:namespace rofi"
+
+      # Waybar: its bar background is already translucent (rgba .3), so blur
+      # what's behind it; low ignore_alpha so the faint bar bg still blurs
+      "blur true, match:namespace waybar"
+      "ignore_alpha 0.2, match:namespace waybar"
+
+      # Mako notifications (translucency set in mako's own config)
+      "blur true, match:namespace notifications"
+      "ignore_alpha 0.5, match:namespace notifications"
     ];
 
     animations = {

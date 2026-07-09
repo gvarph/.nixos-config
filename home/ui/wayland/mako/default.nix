@@ -22,6 +22,14 @@
       width = 350;
       padding = 10;
       margin = 10;
+
+      # Catppuccin base at ~90% opacity so Hyprland's blur shows through,
+      # matching rofi's window background. Done per-urgency because these
+      # sections render after the catppuccin `include`, which would
+      # otherwise re-pin the opaque background-color.
+      "urgency=low"."background-color" = "#1e1e2ee6";
+      "urgency=normal"."background-color" = "#1e1e2ee6";
+      "urgency=high"."background-color" = "#1e1e2ee6";
     };
   };
 }
