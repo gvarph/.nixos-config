@@ -83,6 +83,8 @@
     gdu
     grc
 
+    github-cli
+
     #lm_sensors
   ];
 
