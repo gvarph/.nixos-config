@@ -40,6 +40,20 @@
     # Fallback for any other monitors
     monitor = [",preferred,auto,1"];
 
+    # Pin workspaces to monitors: left column (1,4,7), main (2,5,8),
+    # vertical (3,6,9). Each monitor starts on its `default:true` one.
+    workspace = [
+      "1, monitor:DP-1, default:true"
+      "4, monitor:DP-1"
+      "7, monitor:DP-1"
+      "2, monitor:DP-2, default:true"
+      "5, monitor:DP-2"
+      "8, monitor:DP-2"
+      "3, monitor:HDMI-A-1, default:true"
+      "6, monitor:HDMI-A-1"
+      "9, monitor:HDMI-A-1"
+    ];
+
     xwayland = {
       force_zero_scaling = true;
       use_nearest_neighbor = true;
