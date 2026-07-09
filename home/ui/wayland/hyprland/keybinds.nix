@@ -17,7 +17,6 @@
 
       # Window management
       "$mod, C, killactive,"
-      "$mod, M, exit,"
       "$mod, W, togglefloating,"
       "$mod, P, pseudo," # dwindle
       "$mod, T, layoutmsg, togglesplit" # dwindle
