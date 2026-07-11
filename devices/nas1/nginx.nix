@@ -164,6 +164,17 @@
           '';
         };
       };
+      "id.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:1411";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
       "qbit.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";
@@ -193,6 +204,16 @@
         "CF_DNS_API_TOKEN_FILE" = config.age.secrets.cloudflare_dns_api_token.path;
       };
       group = "nginx";
+    };
+  };
+
+  services.pocket-id = {
+    enable = true;
+    credentials.ENCRYPTION_KEY = config.age.secrets.pocket-id_encryption_key.path;
+    dataDir = "/flash/pocket-id/";
+    settings = {
+      APP_URL = "https://id.gvarph.com";
+      TRUST_PROXY = true;
     };
   };
 }

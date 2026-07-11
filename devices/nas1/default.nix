@@ -111,4 +111,5 @@ in {
   boot.initrd.supportedFilesystems = ["zfs"];
 
   age.secrets.cloudflare_dns_api_token.file = ../../secrets/cloudflare_dns_api_token.age;
+  age.secrets.pocket-id_encryption_key.file = ../../secrets/pocket-id_encryption_key.age;
 }
