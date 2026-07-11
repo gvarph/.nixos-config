@@ -19,6 +19,7 @@
     "rpool/flash/nextcloud"
     "rpool/flash/obsidian"
     "rpool/flash/paperless"
+    "rpool/flash/pocket-id"
 
     # HDD datasets
     "tank/immich"
