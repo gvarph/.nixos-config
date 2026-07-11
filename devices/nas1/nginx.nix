@@ -175,6 +175,16 @@
           '';
         };
       };
+      # Dedicated forward-auth endpoint. oauth2-proxy's nginx integration
+      # (below) mounts /oauth2/* here; every protected vhost bounces its 401s
+      # to auth.gvarph.com/oauth2/start. Keeping it on its own host + a
+      # .gvarph.com cookie means SSO is shared across all protected services.
+      "auth.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/".return = "404";
+      };
+
       "qbit.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";
@@ -216,4 +226,58 @@
       TRUST_PROXY = true;
     };
   };
+
+  # Forward-auth gateway: puts a Pocket ID (OIDC) login in front of any service
+  # that lacks decent built-in auth. Protect another service by adding its vhost
+  # to `nginx.virtualHosts` below — nothing else needed.
+  services.oauth2-proxy = {
+    enable = true;
+    provider = "oidc";
+    oidcIssuerUrl = "https://id.gvarph.com";
+
+    # Public identifier from the Pocket ID OIDC client. Not a secret.
+    clientID = "7fbac957-57dd-4ca5-919d-8655e2fb6b64";
+    clientSecretFile = config.age.secrets.oauth2-proxy_client_secret.path;
+
+    # Signs/encrypts the session cookie. Generate once (see notes), unrelated
+    # to Pocket ID.
+    cookie = {
+      secretFile = config.age.secrets.oauth2-proxy_cookie_secret.path;
+      domain = ".gvarph.com"; # share the session across all *.gvarph.com
+    };
+
+    # Single callback registered in Pocket ID; all protected hosts funnel here.
+    redirectURL = "https://auth.gvarph.com/oauth2/callback";
+
+    # Any account Pocket ID will authenticate is allowed. Tighten later with
+    # per-vhost allowed_groups (needs the "groups" scope + a group in Pocket ID).
+    email.domains = ["*"];
+
+    reverseProxy = true;
+    setXauthrequest = true;
+    # nginx is the only thing that reaches oauth2-proxy (loopback); trust only
+    # it to set X-Forwarded-* so clients can't spoof those headers.
+    trustedProxyIP = ["127.0.0.1/32" "::1/128"];
+
+    extraConfig = {
+      # Permit post-login back-redirects to sibling subdomains.
+      whitelist-domain = ".gvarph.com";
+      # Pocket ID doesn't set email_verified=true; it's our trusted IdP and we
+      # control every account, so accept its tokens anyway.
+      insecure-oidc-allow-unverified-email = true;
+    };
+
+    nginx = {
+      domain = "auth.gvarph.com";
+      virtualHosts = {};
+    };
+  };
+
+  # LoadCredential reads the secret files only at process start, and the module
+  # only auto-restarts on keyFile changes. Tie the unit to these secrets so
+  # `nixos-rebuild switch` restarts it when either rotates.
+  systemd.services.oauth2-proxy.restartTriggers = [
+    config.age.secrets.oauth2-proxy_client_secret.file
+    config.age.secrets.oauth2-proxy_cookie_secret.file
+  ];
 }
