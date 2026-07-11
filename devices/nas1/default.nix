@@ -112,4 +112,6 @@ in {
 
   age.secrets.cloudflare_dns_api_token.file = ../../secrets/cloudflare_dns_api_token.age;
   age.secrets.pocket-id_encryption_key.file = ../../secrets/pocket-id_encryption_key.age;
+  age.secrets.oauth2-proxy_client_secret.file = ../../secrets/oauth2-proxy_client_secret.age;
+  age.secrets.oauth2-proxy_cookie_secret.file = ../../secrets/oauth2-proxy_cookie_secret.age;
 }

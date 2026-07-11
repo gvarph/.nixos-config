@@ -6,4 +6,6 @@ in {
   "homelab_k3s_token.age".publicKeys = [serv1 desktop nas1];
   "cloudflare_dns_api_token.age".publicKeys = [nas1];
   "pocket-id_encryption_key.age".publicKeys = [nas1];
+  "oauth2-proxy_client_secret.age".publicKeys = [nas1];
+  "oauth2-proxy_cookie_secret.age".publicKeys = [nas1];
 }
