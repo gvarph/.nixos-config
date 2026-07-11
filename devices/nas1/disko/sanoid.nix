@@ -20,6 +20,7 @@
     "rpool/flash/obsidian"
     "rpool/flash/paperless"
     "rpool/flash/pocket-id"
+    "rpool/flash/dawarich"
 
     # HDD datasets
     "tank/immich"

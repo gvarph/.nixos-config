@@ -199,6 +199,19 @@
           '';
         };
       };
+
+      "dawarich.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:8090";
+          proxyWebsockets = true;
+          extraConfig = ''
+            client_max_body_size 100M;
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
     };
   };
 
