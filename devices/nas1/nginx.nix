@@ -188,12 +188,12 @@
       "qbit.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";
+        # Now gated by oauth2-proxy (services.oauth2-proxy.nginx.virtualHosts
+        # below) instead of the old LAN-only allow/deny.
         locations."/" = {
           proxyPass = "http://localhost:8080";
           proxyWebsockets = true;
           extraConfig = ''
-            allow 10.0.0.0/8;   # LAN VLANs only
-            deny all;           # block public, even if :443 is port-forwarded
             client_max_body_size 100M;
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
           '';
@@ -269,7 +269,7 @@
 
     nginx = {
       domain = "auth.gvarph.com";
-      virtualHosts = {};
+      virtualHosts."qbit.gvarph.com" = {};
     };
   };
 
