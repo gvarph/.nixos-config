@@ -25,8 +25,11 @@ in {
     enable = true;
     servers =
       {
+        # "http" is the streamable-HTTP transport Claude Code expects for
+        # remote servers; "remote" is NOT a valid type (Claude Code silently
+        # drops the server and it never shows in /mcp).
         context7 = {
-          type = "remote";
+          type = "http";
           url = "https://mcp.context7.com/mcp";
         };
         # Self-hosted TREK trip planner's built-in MCP endpoint. Auth is TREK's
@@ -34,7 +37,7 @@ in {
         # connect, so there's no token/header to configure here. Not behind the
         # oauth2-proxy gateway (that would hijack the MCP OAuth flow).
         trek = {
-          type = "remote";
+          type = "http";
           url = "https://trek.gvarph.com/mcp";
         };
         playwright = {
