@@ -114,4 +114,10 @@ in {
   age.secrets.pocket-id_encryption_key.file = ../../secrets/pocket-id_encryption_key.age;
   age.secrets.oauth2-proxy_client_secret.file = ../../secrets/oauth2-proxy_client_secret.age;
   age.secrets.oauth2-proxy_cookie_secret.file = ../../secrets/oauth2-proxy_cookie_secret.age;
+  # Read by the grafana MCP server, which runs as user gvarph (not a system
+  # service), so it needs to be user-readable rather than the default root-only.
+  age.secrets.grafana_mcp_token = {
+    file = ../../secrets/grafana_mcp_token.age;
+    owner = "gvarph";
+  };
 }
