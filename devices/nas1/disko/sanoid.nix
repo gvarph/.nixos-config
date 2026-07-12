@@ -21,6 +21,7 @@
     "rpool/flash/paperless"
     "rpool/flash/pocket-id"
     "rpool/flash/dawarich"
+    "rpool/flash/trek"
 
     # HDD datasets
     "tank/immich"

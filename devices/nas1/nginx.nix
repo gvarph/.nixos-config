@@ -212,6 +212,22 @@
           '';
         };
       };
+
+      "trek.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:3100";
+          # TREK uses a websocket at /ws for real-time collaboration.
+          proxyWebsockets = true;
+          extraConfig = ''
+            # File attachments up to 500 MB + backup archive uploads
+            # (BACKUP_UPLOAD_LIMIT_MB defaults to 500).
+            client_max_body_size 500M;
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
     };
   };
 
