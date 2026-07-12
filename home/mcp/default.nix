@@ -29,6 +29,14 @@ in {
           type = "remote";
           url = "https://mcp.context7.com/mcp";
         };
+        # Self-hosted TREK trip planner's built-in MCP endpoint. Auth is TREK's
+        # own OAuth 2.1: Claude Code runs the browser consent flow on first
+        # connect, so there's no token/header to configure here. Not behind the
+        # oauth2-proxy gateway (that would hijack the MCP OAuth flow).
+        trek = {
+          type = "remote";
+          url = "https://trek.gvarph.com/mcp";
+        };
         playwright = {
           command = "${pkgs.playwright-mcp}/bin/playwright-mcp";
           args = [
