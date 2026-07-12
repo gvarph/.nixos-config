@@ -11,11 +11,28 @@
   # Chromium that ships with playwright-driver.browsers (same store path the
   # playwright-mcp wrapper already exports as PLAYWRIGHT_BROWSERS_PATH) and give
   # it a writable user-data-dir under $HOME.
-  #
-  # NOTE: bump this revision when nixpkgs updates playwright-driver. Check with:
-  #   ls ${pkgs.playwright-driver.browsers}
-  chromeBin = "${pkgs.playwright-driver.browsers}/chromium-1217/chrome-linux64/chrome";
   pwUserDataDir = "${config.home.homeDirectory}/.local/share/playwright-mcp/profile";
+
+  # The chromium-<rev> subdir version changes whenever nixpkgs bumps
+  # playwright-driver, so resolve it with a glob at launch time rather than
+  # hardcoding the revision (which used to go stale and silently break the
+  # browser on every update). The store path itself stays nix-pinned, so this
+  # is still fully reproducible; only the version subdir is discovered. The
+  # glob matches chromium-<rev> but not chromium_headless_shell-<rev>.
+  playwrightMcpWrapped = pkgs.writeShellScriptBin "playwright-mcp-wrapped" ''
+    set -euo pipefail
+    shopt -s nullglob
+    matches=(${pkgs.playwright-driver.browsers}/chromium-*/chrome-linux64/chrome)
+    if [ ''${#matches[@]} -eq 0 ]; then
+      echo "playwright-mcp: no chromium-* found in ${pkgs.playwright-driver.browsers}" >&2
+      exit 1
+    fi
+    exec ${pkgs.playwright-mcp}/bin/playwright-mcp \
+      --browser chromium \
+      --executable-path "''${matches[0]}" \
+      --user-data-dir "${pwUserDataDir}" \
+      "$@"
+  '';
 in {
   home.packages = with pkgs; [
     playwright-mcp
@@ -41,15 +58,7 @@ in {
           url = "https://trek.gvarph.com/mcp";
         };
         playwright = {
-          command = "${pkgs.playwright-mcp}/bin/playwright-mcp";
-          args = [
-            "--browser"
-            "chromium"
-            "--executable-path"
-            chromeBin
-            "--user-data-dir"
-            pwUserDataDir
-          ];
+          command = "${playwrightMcpWrapped}/bin/playwright-mcp-wrapped";
           env = {
             PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
             PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
