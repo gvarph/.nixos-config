@@ -86,6 +86,20 @@
           };
       })
 
+      # mongodb-compass: nixos-unstable's build is currently broken (patchelf/
+      # wrapGAppsHook chokes on bundled non-ELF binaries in the Electron app).
+      # Pin to stable until upstream fixes it. mongodb-compass is unfree, so
+      # this needs its own nixpkgs instantiation with allowUnfree set —
+      # nixpkgs-stable.legacyPackages doesn't inherit our nixpkgs.config.
+      (final: prev: {
+        mongodb-compass =
+          (import inputs.nixpkgs-stable {
+            system = final.stdenv.hostPlatform.system;
+            config.allowUnfree = true;
+          })
+          .mongodb-compass;
+      })
+
       claude-code.overlays.default
 
       # CachyOS kernel packages (exposes pkgs.cachyosKernels.*)
