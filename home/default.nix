@@ -72,7 +72,9 @@
 
     skaffold
     minikube
-    kubectl
+    # minikube bundles its own bin/kubectl, which conflicts with the
+    # standalone kubectl package in buildEnv; prioritize the standalone one.
+    (pkgs.lib.hiPrio kubectl)
 
     wget
     curl
@@ -84,6 +86,8 @@
     grc
 
     github-cli
+
+    coreutils
 
     #lm_sensors
   ];
