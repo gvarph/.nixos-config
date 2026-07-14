@@ -79,6 +79,9 @@ in {
             GRAFANA_SERVICE_ACCOUNT_TOKEN.file = osConfig.age.secrets.grafana_mcp_token.path;
           };
         };
+        gcloud = {
+          command = "${gcloudMcp}/bin/gcloud-mcp-wrapped";
+        };
       };
   };
 }
