@@ -60,6 +60,9 @@
   programs.fish.enable = true;
 
   nix.settings = {
+    max-jobs = "auto";
+    cores = 0;
+
     substituters = [
       "https://hyprland.cachix.org"
       "https://catppuccin.cachix.org"
