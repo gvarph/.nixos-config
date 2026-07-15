@@ -33,9 +33,34 @@
       --user-data-dir "${pwUserDataDir}" \
       "$@"
   '';
+
+  gcloudMcp = pkgs.writeShellScriptBin "gcloud-mcp-wrapped" ''
+    export PATH=${lib.makeBinPath [pkgs.nodejs pkgs.google-cloud-sdk]}:$PATH
+    exec ${pkgs.nodejs}/bin/npx -y @google-cloud/gcloud-mcp "$@"
+  '';
+
+  # Community Gmail MCP server that talks to the plain Gmail REST API
+  # (gmail.googleapis.com). We deliberately do NOT use Google's hosted
+  # gmailmcp.googleapis.com endpoint: that gateway gates every tools/call behind
+  # the cloud-platform scope + the mcp.tools.call IAM permission, and Google's
+  # consent flow refuses to issue cloud-platform to an unverified OAuth client,
+  # so tools/call always 403s ("caller does not have permission") even though
+  # the same token works fine against the REST API. This server needs only
+  # gmail.readonly/compose. GMAIL_OAUTH_PATH holds the OAuth *client* keys
+  # (clientId/secret); GMAIL_CREDENTIALS_PATH holds the user refresh token
+  # minted by the one-time `personal-gmail-mcp-wrapped auth` browser flow. The
+  # fallbacks make that bootstrap runnable without exporting env by hand.
+  personalGmailMcp = pkgs.writeShellScriptBin "personal-gmail-mcp-wrapped" ''
+    export PATH=${lib.makeBinPath [pkgs.nodejs]}:$PATH
+    export GMAIL_OAUTH_PATH="''${GMAIL_OAUTH_PATH:-/run/agenix/personal-gmail-oauth-keys}"
+    export GMAIL_CREDENTIALS_PATH="''${GMAIL_CREDENTIALS_PATH:-${config.home.homeDirectory}/.gmail-mcp/credentials.json}"
+    exec ${pkgs.nodejs}/bin/npx -y @gongrzhe/server-gmail-autoauth-mcp "$@"
+  '';
 in {
   home.packages = with pkgs; [
     playwright-mcp
+    # on PATH so the one-time OAuth bootstrap is just `personal-gmail-mcp-wrapped auth`
+    personalGmailMcp
   ];
 
   programs.mcp = {
@@ -81,6 +106,15 @@ in {
         };
         gcloud = {
           command = "${gcloudMcp}/bin/gcloud-mcp-wrapped";
+        };
+        # Kept in the nas1 block because it references the nas1-only agenix
+        # secret below; move the secret to more hosts to widen availability.
+        personal-gmail = {
+          command = "${personalGmailMcp}/bin/personal-gmail-mcp-wrapped";
+          env = {
+            GMAIL_OAUTH_PATH = osConfig.age.secrets."personal-gmail-oauth-keys".path;
+            GMAIL_CREDENTIALS_PATH = "${config.home.homeDirectory}/.gmail-mcp/credentials.json";
+          };
         };
       };
   };

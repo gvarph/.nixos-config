@@ -9,4 +9,6 @@ in {
   "oauth2-proxy_client_secret.age".publicKeys = [nas1];
   "oauth2-proxy_cookie_secret.age".publicKeys = [nas1];
   "grafana_mcp_token.age".publicKeys = [nas1];
+  # gcp-oauth.keys.json (OAuth client id + secret) for the personal-gmail MCP.
+  "personal-gmail-oauth-keys.age".publicKeys = [nas1];
 }

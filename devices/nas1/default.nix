@@ -120,4 +120,9 @@ in {
     file = ../../secrets/grafana_mcp_token.age;
     owner = "gvarph";
   };
+  # Read by the personal-gmail MCP server, which runs as user gvarph.
+  age.secrets."personal-gmail-oauth-keys" = {
+    file = ../../secrets/personal-gmail-oauth-keys.age;
+    owner = "gvarph";
+  };
 }
