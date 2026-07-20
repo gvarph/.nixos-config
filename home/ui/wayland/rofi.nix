@@ -17,9 +17,9 @@
 
     pick=$(${pkgs.cliphist}/bin/cliphist list \
       | ${pkgs.gawk}/bin/gawk -v dir="$tmp" -v cli="${pkgs.cliphist}/bin/cliphist" '
-          match($0, /^([0-9]+)\t\[\[ ?binary data .*image\/([[:alnum:]]+)/, m) {
+          match($0, /^([0-9]+)\t\[\[ ?binary data [0-9.]+ ?[KMGT]?iB ([[:alpha:]]+) [0-9]+x[0-9]+/, m) {
             file = dir "/" m[1] "." m[2]
-            system("echo " m[1] " | " cli " decode > " file)
+            system("printf %s " m[1] " | " cli " decode > " file)
             printf "%s%cicon%c%s\n", $0, 0, 31, file
             next
           }
