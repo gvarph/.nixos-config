@@ -66,6 +66,10 @@ in {
       no-show-match = true;
       # Keeps the calculation at the top
       no-sort = true;
+      # Score matches by fuzzy relevance instead of default levenshtein, so a
+      # strong name match (e.g. "Steam" for "steam") outranks history-boosted
+      # entries (e.g. frequently-launched Steam games)
+      sorting-method = "fzf";
 
       # Calculator specific logic
       calc-command = "echo -n '{result}' | xclip -selection clipboard";
