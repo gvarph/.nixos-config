@@ -159,4 +159,5 @@ in {
     capSysAdmin = true;
     openFirewall = true;
   };
+  programs.kdeconnect.enable = true;
 }
