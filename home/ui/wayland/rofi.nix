@@ -70,6 +70,11 @@ in {
       # strong name match (e.g. "Steam" for "steam") outranks history-boosted
       # entries (e.g. frequently-launched Steam games)
       sorting-method = "fzf";
+      # Default also matches exec/categories/keywords, which is why e.g.
+      # Discord (Keywords contain "chat") or Steam games (Categories/Exec
+      # mention "steam") show up for queries that only describe them, not
+      # name them. Restrict to the name fields users actually type.
+      drun-match-fields = "name,generic";
 
       # Calculator specific logic
       calc-command = "echo -n '{result}' | xclip -selection clipboard";
