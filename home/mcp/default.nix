@@ -89,6 +89,9 @@ in {
             PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
           };
         };
+        gcloud = {
+          command = "${gcloudMcp}/bin/gcloud-mcp-wrapped";
+        };
       }
       # nas1 runs Grafana locally; this server is only useful while SSH'd into
       # it. Referencing osConfig.age.secrets.grafana_mcp_token (a nas1-only
@@ -103,9 +106,6 @@ in {
             GRAFANA_URL = "http://localhost:3000";
             GRAFANA_SERVICE_ACCOUNT_TOKEN.file = osConfig.age.secrets.grafana_mcp_token.path;
           };
-        };
-        gcloud = {
-          command = "${gcloudMcp}/bin/gcloud-mcp-wrapped";
         };
         # Kept in the nas1 block because it references the nas1-only agenix
         # secret below; move the secret to more hosts to widen availability.
