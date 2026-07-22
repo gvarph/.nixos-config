@@ -9,16 +9,12 @@
     "custom/launcher",
     "hyprland/workspaces",
     "custom/weather",
-    "custom/updates",
     "custom/cava"
   ],
   
   // "modules-center": [
   //   "memory",
   //   "cpu",
-  //   "temperature#cpu",
-  //   "gpu",
-  //   "temperature#gpu",
   // ],
   
   "modules-right": [
@@ -29,7 +25,6 @@
     "network",
     "custom/vpn",
     "clock",
-    "custom/notification",
     "tray"
   ],
 
