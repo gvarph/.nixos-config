@@ -90,6 +90,7 @@
     coreutils
 
     #lm_sensors
+    wakeonlan
   ];
 
   home.stateVersion = "23.11";
