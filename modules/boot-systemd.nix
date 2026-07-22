@@ -1,8 +1,5 @@
 # Standard systemd-boot configuration with configurable kernel packages
-{
-  kernelPackages,
-  ...
-}: {
+{kernelPackages, ...}: {
   boot = {
     loader = {
       systemd-boot.enable = true;
