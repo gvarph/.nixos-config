@@ -13,16 +13,17 @@
       enable = true;
     };
 
+    # Sign all commits with the ssh key; allowed_signers is generated above
     signing = {
       signByDefault = true;
-      format = null;
+      format = "ssh";
+      key = config.home.homeDirectory + "/.ssh/id_ed25519";
     };
 
     settings = {
       user = {
         name = "Filip Krul";
         email = "gvarph006@gmail.com";
-        signingkey = config.home.homeDirectory + "/.ssh/id_ed25519";
       };
 
       alias = {
@@ -67,12 +68,7 @@
         sort = "-committerdate";
       };
 
-      commit = {
-        gpgSign = true;
-      };
-
       gpg = {
-        format = "ssh";
         ssh.allowedSignersFile = config.home.homeDirectory + "/.ssh/allowed_signers";
       };
     };
