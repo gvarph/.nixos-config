@@ -9,8 +9,8 @@ in {
   imports = [
     ./hardware-configuration.nix
 
+    # ../../default.nix already imports docker.nix
     (import ../../default.nix {inherit config pkgs inputs username;})
-    ../../linux/features/docker.nix
     ../../modules/nix-maintenance.nix
     (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.linuxPackages_latest;})
     ../../linux/features/kubernetes.nix

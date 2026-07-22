@@ -27,8 +27,8 @@ in {
     ./disko
     ./nginx.nix
 
+    # ../../default.nix already imports docker.nix
     (import ../../default.nix {inherit config pkgs inputs username;})
-    ../../linux/features/docker.nix
     ../../modules/nix-maintenance.nix
     (import ../../modules/boot-systemd.nix {kernelPackages = latestKernelPackage;})
     #../../linux/features/kubernetes.nix
