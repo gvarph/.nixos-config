@@ -46,6 +46,45 @@
       exec gamescope "''${args[@]}"
     fi
   '';
+  # Steam launch-option helper for PoE: `with-apt %command%` runs the game
+  # with Awakened PoE Trade as a sidecar that lives and dies with it.
+  #  - APT starts only once the actual game window exists (matching by the
+  #    steam_app class — the Steam client window is also titled "Path of
+  #    Exile", and APT started before the game has been seen to hold a
+  #    stale keyboard map and inject wrong keys).
+  #  - APT must not inherit Steam's library env: the ubuntu12 runtime's
+  #    libnss3 is too old for its Electron and crashes it on startup.
+  #  - When the game exits, APT is killed.
+  with-apt = pkgs.writeShellScriptBin "with-apt" ''
+    apt_job=
+    # Skip the sidecar if an APT instance already runs (Electron enforces a
+    # single instance anyway; don't adopt or kill one we didn't start).
+    if ! pgrep -f 'awakened-poe-[t]rade.*app\.asar' >/dev/null 2>&1; then
+      # setsid: own process group, so the whole Electron tree can be killed
+      # as a group when the game exits.
+      ${pkgs.util-linux}/bin/setsid bash -c '
+        for _ in $(seq 1 180); do
+          ${pkgs.xdotool}/bin/xdotool search --class steam_app_238960 >/dev/null 2>&1 && break
+          sleep 1
+        done
+        exec env -u LD_LIBRARY_PATH -u LD_PRELOAD \
+          ${pkgs.awakened-poe-trade}/bin/awakened-poe-trade
+      ' &
+      apt_job=$!
+    fi
+    "$@"
+    status=$?
+    if [ -n "$apt_job" ]; then
+      # APT ignores SIGTERM, so give it a short grace then SIGKILL the group.
+      kill -TERM -- "-$apt_job" 2>/dev/null
+      for _ in 1 2 3; do
+        kill -0 "$apt_job" 2>/dev/null || break
+        sleep 1
+      done
+      kill -KILL -- "-$apt_job" 2>/dev/null
+    fi
+    exit $status
+  '';
 in {
   # Steam's gamescope micro-compositor session.
   # (Merges with the main programs.steam block in the host config.)
@@ -66,6 +105,7 @@ in {
     gamescope
     gamescope-run
     gamescope-wsi # HDR won't work without this
+    with-apt
     mangohud # FPS/temp/usage overlay; run with `mangohud %command%`
   ];
 }
