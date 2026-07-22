@@ -46,6 +46,18 @@
         size = "800 600";
         center = true;
       }
+      # Awakened PoE Trade: floating overlay with no chrome or effects
+      {
+        name = "apt-rule";
+        "match:class" = "^(awakened-poe-trade|Awakened-poe-trade)$";
+        float = true;
+        border_size = 0;
+        no_blur = true;
+        no_shadow = true;
+        no_anim = true;
+        # might be unnecessary
+        no_follow_mouse = true;
+      }
     ];
 
     decoration = {
