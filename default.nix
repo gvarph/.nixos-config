@@ -24,6 +24,11 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # User password lives in an agenix secret so the hash isn't world-readable
+  # via the nix store / git. To change it: mkpasswd -m sha-512, then re-encrypt
+  # with agenix -e gvarph_password.age (recipients in secrets/secrets.nix).
+  age.secrets.gvarph_password.file = ./secrets/gvarph_password.age;
+
   users.mutableUsers = false;
   users.users.${username} = {
     isNormalUser = true;
@@ -32,7 +37,7 @@
     packages = [];
     shell = pkgs.fish;
     home = "/home/${username}";
-    hashedPassword = "$6$nDwj1uS.gupSHUbz$c5Noj0SE.ala4h/sgfREH2TlBo92ry8EBaiCiGvsVyIqE7jlwIb4KtLHypjkYwwIawgGfy5H0KS7lpTyFa/QJ0";
+    hashedPasswordFile = config.age.secrets.gvarph_password.path;
 
     openssh.authorizedKeys.keys = import ./ssh_keys.nix;
   };

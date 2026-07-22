@@ -4,6 +4,8 @@ let
   nas1 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHwVmeHSQbpv6hMfnY3ZsXUPIbCWYtYf6oY1DLEuPC4y gvarph@nas1";
 in {
   "homelab_k3s_token.age".publicKeys = [serv1 desktop nas1];
+  # sha512crypt hash for the gvarph account (users.users.gvarph.hashedPasswordFile)
+  "gvarph_password.age".publicKeys = [serv1 desktop nas1];
   "cloudflare_dns_api_token.age".publicKeys = [nas1];
   "pocket-id_encryption_key.age".publicKeys = [nas1];
   "oauth2-proxy_client_secret.age".publicKeys = [nas1];
