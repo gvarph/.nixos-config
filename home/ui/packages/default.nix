@@ -15,6 +15,9 @@
     wl-clipboard
     cliphist
 
+    # Qt theming config tool; QT_QPA_PLATFORMTHEME=qt6ct is set in hyprland/input.nix
+    qt6Packages.qt6ct
+
     whatsapp-electron
 
     (prismlauncher.override {
