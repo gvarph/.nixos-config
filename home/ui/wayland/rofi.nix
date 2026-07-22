@@ -29,6 +29,10 @@
 
     [ -z "$pick" ] && exit 0
     printf '%s' "$pick" | ${pkgs.cliphist}/bin/cliphist decode | ${pkgs.wl-clipboard}/bin/wl-copy
+
+    # Give focus a moment to return to the window behind rofi, then paste.
+    sleep 0.1
+    ${pkgs.wtype}/bin/wtype -M ctrl v -m ctrl
   '';
 in {
   home.packages = with pkgs; [
@@ -36,6 +40,7 @@ in {
     xclip # Required for the calc copy-to-clipboard command
     papirus-icon-theme # icon theme used by rofi's `show-icons`
     gawk # used by the clipboard picker
+    wtype # used by the clipboard picker to auto-paste on selection
     clipboard-picker
   ];
 
