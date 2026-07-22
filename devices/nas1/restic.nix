@@ -16,6 +16,9 @@
     "tank/paperless"
   ];
   datasetArgs = builtins.concatStringsSep " " datasets;
+
+  # Systemd units run with a minimal PATH that lacks zfs
+  zfs = "${config.boot.zfs.package}/bin/zfs";
 in {
   age.secrets.hetzner_storagebox_ssh_key.file = ../../secrets/hetzner_storagebox_ssh_key.age;
   age.secrets.restic_hetzner_password.file = ../../secrets/restic_hetzner_password.age;
@@ -40,20 +43,20 @@ in {
     # single instant. Stable .zfs/snapshot/restic paths keep restic's
     # parent-snapshot detection and dedup working across runs.
     backupPrepareCommand = ''
-      zfs destroy -r rpool/flash@restic 2>/dev/null || true
-      zfs destroy rpool/home@restic tank/immich@restic tank/storage@restic tank/paperless@restic 2>/dev/null || true
-      zfs snapshot -r rpool/flash@restic
-      zfs snapshot rpool/home@restic tank/immich@restic tank/storage@restic tank/paperless@restic
+      ${zfs} destroy -r rpool/flash@restic 2>/dev/null || true
+      ${zfs} destroy rpool/home@restic tank/immich@restic tank/storage@restic tank/paperless@restic 2>/dev/null || true
+      ${zfs} snapshot -r rpool/flash@restic
+      ${zfs} snapshot rpool/home@restic tank/immich@restic tank/storage@restic tank/paperless@restic
     '';
     backupCleanupCommand = ''
-      zfs destroy -r rpool/flash@restic 2>/dev/null || true
-      zfs destroy rpool/home@restic tank/immich@restic tank/storage@restic tank/paperless@restic 2>/dev/null || true
+      ${zfs} destroy -r rpool/flash@restic 2>/dev/null || true
+      ${zfs} destroy rpool/home@restic tank/immich@restic tank/storage@restic tank/paperless@restic 2>/dev/null || true
     '';
 
     # Emit the snapshot dir of every mounted dataset; unmounted/legacy
     # datasets (the bare rpool/flash parent) are skipped.
     dynamicFilesFrom = ''
-      zfs list -H -o mountpoint -r ${datasetArgs} \
+      ${zfs} list -H -o mountpoint -r ${datasetArgs} \
         | grep -v '^\(legacy\|none\|-\)$' \
         | sed 's|$|/.zfs/snapshot/restic|'
     '';
