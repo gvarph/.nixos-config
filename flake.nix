@@ -112,6 +112,25 @@
           .mongodb-compass;
       })
 
+      # awakened-poe-trade: must run under XWayland, not native Wayland —
+      # its input engine (libuiohook) is X11-only, so global hotkeys, item
+      # copying, and game-window tracking all break as a Wayland client.
+      # Upstream recommends XDG_SESSION_TYPE=x11 for just this app
+      # (Electron 39+ ignores ELECTRON_OZONE_PLATFORM_HINT):
+      # https://github.com/SnosMe/awakened-poe-trade/issues/1647
+      (final: prev: {
+        awakened-poe-trade = final.symlinkJoin {
+          name = "awakened-poe-trade-xwayland";
+          paths = [prev.awakened-poe-trade];
+          nativeBuildInputs = [final.makeWrapper];
+          postBuild = ''
+            wrapProgram $out/bin/awakened-poe-trade \
+              --set XDG_SESSION_TYPE x11 \
+              --add-flags "--ozone-platform=x11 --force-device-scale-factor=1"
+          '';
+        };
+      })
+
       claude-code.overlays.default
 
       # CachyOS kernel packages (exposes pkgs.cachyosKernels.*)
