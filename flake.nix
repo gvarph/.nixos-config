@@ -131,22 +131,6 @@
         };
       })
 
-      # rusty-path-of-building: third victim of the Mesa 26.1.5 RADV
-      # builtin-shader-cache flock self-deadlock (it also creates multiple
-      # Vulkan instances at startup and hangs before its window appears).
-      # Same workaround as PoE's Steam launch options carry.
-      (final: prev: {
-        rusty-path-of-building = final.symlinkJoin {
-          name = "rusty-path-of-building-mesa-workaround";
-          paths = [prev.rusty-path-of-building];
-          nativeBuildInputs = [final.makeWrapper];
-          postBuild = ''
-            wrapProgram $out/bin/rusty-path-of-building \
-              --set MESA_SHADER_CACHE_DISABLE true
-          '';
-        };
-      })
-
       claude-code.overlays.default
 
       # CachyOS kernel packages (exposes pkgs.cachyosKernels.*)
