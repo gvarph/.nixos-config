@@ -66,19 +66,16 @@ in {
       1900 # SSDP/UPnP (Sonos discovery)
     ];
 
+    # Wide open range needed for Sonos <-> Music Assistant connectivity
+    # (Sonos speakers connect back to arbitrary high ports). This bypasses
+    # nginx/oauth2-proxy for anything listening >= 8000 on the LAN — TODO:
+    # replace with an enumerated port list or a VLAN-scoped rule.
     allowedTCPPortRanges = [
       {
         from = 8000;
         to = 65535;
       }
     ];
-
-    # allowedUDPPortRanges = [
-    #   {
-    #     from = 8000;
-    #     to = 65535;
-    #   }
-    # ];
   };
 
   services.xserver.videoDrivers = ["modesetting"];
