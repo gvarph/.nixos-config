@@ -16,7 +16,7 @@ in {
   # Treesiter is configured as a locally developed plugin in lazy.nvim
   #   so we have to hardcode a symlink to the treesitter parsers
   #   to which we can refer to in the lazy.nvim config
-  home.file."./.local/share/nvim/nix/nvim-treesitter/" = {
+  home.file.".local/share/nvim/nix/nvim-treesitter" = {
     recursive = true;
     source = pkgs.vimPlugins.nvim-treesitter.withAllGrammars;
   };
