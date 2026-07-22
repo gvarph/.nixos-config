@@ -24,14 +24,6 @@
     }
   },
 
-  // Weather
-  "custom/weather": {
-    "exec": "~/.config/waybar/scripts/openweathermap.sh",
-    "interval": 1800,
-    "format": "{}",
-    "tooltip": false
-  },
-
   // CAVA Audio Visualizer
   "custom/cava": {
     "exec": "~/.config/waybar/scripts/cava.sh",
