@@ -3,7 +3,7 @@
   wayland.windowManager.hyprland.settings = {
     "$mod" = "SUPER";
     "$terminal" = "ghostty";
-    "$fileManager" = "dolphin";
+    "$fileManager" = "ghostty -e yazi";
     "$menu" = "rofi -show drun";
 
     bind = [
@@ -84,7 +84,7 @@
       # Screenshot (requires grim and slurp)
       "$mod SHIFT, S, exec, grim -g \"$(slurp)\" - | wl-copy"
       ", Print, exec, grim - | wl-copy"
-      "SHIFT, Print, exec, grim -g \"$(slurp)\" ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png"
+      "SHIFT, Print, exec, mkdir -p ~/Pictures/Screenshots && grim -g \"$(slurp)\" ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png"
 
       # Media keys
       ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
