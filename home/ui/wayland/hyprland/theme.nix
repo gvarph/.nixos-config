@@ -46,7 +46,12 @@
         size = "800 600";
         center = true;
       }
-      # Awakened PoE Trade: floating overlay with no chrome or effects
+      # Awakened PoE Trade: floating overlay with no chrome or effects.
+      # no_focus is load-bearing: the overlay is an invisible window covering
+      # the whole game monitor, and without it Hyprland gives it focus on
+      # click (clicks pass through to the game, so playing feels normal) —
+      # then APT's synthetic Ctrl+C lands on itself instead of the game and
+      # price checking silently fails.
       {
         name = "apt-rule";
         "match:class" = "^(awakened-poe-trade|Awakened-poe-trade)$";
@@ -55,6 +60,7 @@
         no_blur = true;
         no_shadow = true;
         no_anim = true;
+        no_focus = true;
         # might be unnecessary
         no_follow_mouse = true;
       }
