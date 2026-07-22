@@ -40,6 +40,10 @@ in {
       datasets);
   };
 
+  # TODO: everything replicates only within this machine (NVMe -> HDD).
+  # tank/* has no second copy at all — add an off-machine syncoid target
+  # (serv1 or cloud) at least for the irreplaceable datasets
+  # (immich, paperless, storage).
   services.syncoid = {
     enable = true;
 
