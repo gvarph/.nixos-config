@@ -1,4 +1,8 @@
-{config, ...}: let
+{
+  config,
+  lib,
+  ...
+}: let
   # Hetzner Storage Box BX11 (FSN1). SSH on port 23, key-only auth.
   # The box must have the "restic-nas1" public key added in the Hetzner
   # console (comment: restic-nas1).
@@ -19,6 +23,12 @@
 
   # Systemd units run with a minimal PATH that lacks zfs
   zfs = "${config.boot.zfs.package}/bin/zfs";
+
+  # One command per dataset: `zfs snapshot` with several args only works
+  # within a single pool, and `zfs destroy` takes a single argument.
+  # rpool/flash gets -r so its per-app children are covered.
+  destroySnapshots = lib.concatMapStringsSep "\n" (d: "${zfs} destroy ${lib.optionalString (d == "rpool/flash") "-r "}${d}@restic 2>/dev/null || true") datasets;
+  createSnapshots = lib.concatMapStringsSep "\n" (d: "${zfs} snapshot ${lib.optionalString (d == "rpool/flash") "-r "}${d}@restic") datasets;
 in {
   age.secrets.hetzner_storagebox_ssh_key.file = ../../secrets/hetzner_storagebox_ssh_key.age;
   age.secrets.restic_hetzner_password.file = ../../secrets/restic_hetzner_password.age;
@@ -47,14 +57,11 @@ in {
     # single instant. Stable .zfs/snapshot/restic paths keep restic's
     # parent-snapshot detection and dedup working across runs.
     backupPrepareCommand = ''
-      ${zfs} destroy -r rpool/flash@restic 2>/dev/null || true
-      ${zfs} destroy rpool/home@restic tank/immich@restic tank/storage@restic tank/paperless@restic 2>/dev/null || true
-      ${zfs} snapshot -r rpool/flash@restic
-      ${zfs} snapshot rpool/home@restic tank/immich@restic tank/storage@restic tank/paperless@restic
+      ${destroySnapshots}
+      ${createSnapshots}
     '';
     backupCleanupCommand = ''
-      ${zfs} destroy -r rpool/flash@restic 2>/dev/null || true
-      ${zfs} destroy rpool/home@restic tank/immich@restic tank/storage@restic tank/paperless@restic 2>/dev/null || true
+      ${destroySnapshots}
     '';
 
     # Emit the snapshot dir of every mounted dataset; unmounted/legacy
