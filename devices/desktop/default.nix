@@ -12,7 +12,6 @@ in {
     (import ../../default.nix {inherit config pkgs inputs username;})
     (import ../../home/ui {inherit pkgs username;})
     ../../linux/fonts.nix
-    #    ../../linux/displaylink.nix
     ../../linux/features/gaming.nix
     ../../modules/nix-maintenance.nix
     (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest;})
