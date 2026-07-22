@@ -25,7 +25,7 @@ return { -- Autoformat
 		end,
 		formatters_by_ft = {
 			lua = { "stylua" },
-			python = { "ruff_format", "ruff_organaize_imports" },
+			python = { "ruff_format", "ruff_organize_imports" },
 			nix = { "alejandra" },
 			typst = { "typstyle" },
 			sql = { "sqruff" },
