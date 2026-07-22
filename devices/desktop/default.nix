@@ -45,34 +45,19 @@ in {
 
   networking.firewall = {
     enable = true;
+    # Sunshine ports come from services.sunshine.openFirewall,
+    # mDNS (5353) from services.avahi.openFirewall
     allowedTCPPorts = [
       80
       443
       1194
       1195
-      # Sunshine
-      47984
-      47989
-      47990
-      48010
       3003
-    ];
-    allowedUDPPorts = [
-      5353 # mDNS (multicast discovery for Chromecast, AirPlay, some Sonos features)
     ];
     allowedUDPPortRanges = [
       {
         from = 4000;
         to = 4007;
-      }
-      {
-        from = 8000;
-        to = 8010;
-      }
-      # Sunshine
-      {
-        from = 47998;
-        to = 48000;
       }
       {
         from = 8000;
