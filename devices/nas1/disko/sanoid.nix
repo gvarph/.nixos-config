@@ -27,6 +27,7 @@
     "tank/immich"
     "tank/storage"
     "tank/paperless"
+    "tank/media"
   ];
 in {
   services.sanoid = {
