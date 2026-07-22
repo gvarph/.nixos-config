@@ -34,6 +34,10 @@ in {
     initialize = true;
     repository = "sftp:${storageBoxUser}@${storageBoxHost}:restic-nas1";
     passwordFile = config.age.secrets.restic_hetzner_password.path;
+
+    # Cap upload at 4 MiB/s (~32 Mbit): ~2/3 of the 50 Mbit uplink, so
+    # backups (especially the initial seed) don't starve everything else
+    extraBackupArgs = ["--limit-upload=4096"];
     extraOptions = [
       "sftp.command='ssh -p 23 -i ${config.age.secrets.hetzner_storagebox_ssh_key.path} ${storageBoxUser}@${storageBoxHost} -s sftp'"
     ];
