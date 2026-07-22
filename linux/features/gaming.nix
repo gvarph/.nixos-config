@@ -90,6 +90,15 @@ in {
   # (Merges with the main programs.steam block in the host config.)
   programs.steam.gamescopeSession.enable = true;
 
+  # sched-ext userspace scheduler (kernel has CONFIG_SCHED_CLASS_EXT via
+  # CachyOS kernel). scx_lavd is the latency-aware scheduler CachyOS ships
+  # for gaming (built for the Steam Deck) — better frame pacing under load.
+  # Disable with `systemctl stop scx` if anything misbehaves.
+  services.scx = {
+    enable = true;
+    scheduler = "scx_lavd";
+  };
+
   # Feral GameMode: system-level tuning (CPU governor, scheduling) while a
   # game runs. Activate per-game with `gamemoderun %command%` in Steam.
   # GPU performance-level forcing is intentionally left off: LACT owns the
