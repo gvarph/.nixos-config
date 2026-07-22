@@ -41,10 +41,6 @@
       }
     ];
 
-    interactiveShellInit = ''
-      direnv hook fish | source
-    '';
-
     functions = {
       kwork = {
         body = ''
