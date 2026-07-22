@@ -25,7 +25,6 @@ require("lazy").setup("plugins", {
 require("gvarph")
 
 local lsps = {
-	"denols", -- JS, TS, JSX, TSX
 	"helm_ls", -- Helm
 	"lua_ls", -- Lua
 	"nil_ls", -- Nix
