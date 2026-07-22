@@ -13,4 +13,9 @@ in {
   "grafana_mcp_token.age".publicKeys = [nas1];
   # gcp-oauth.keys.json (OAuth client id + secret) for the personal-gmail MCP.
   "personal-gmail-oauth-keys.age".publicKeys = [nas1];
+  # Dedicated SSH key for the Hetzner Storage Box (restic offsite backup).
+  "hetzner_storagebox_ssh_key.age".publicKeys = [nas1];
+  # Restic repository password. ALSO stored outside this machine — the
+  # repo must be recoverable when nas1 is dead.
+  "restic_hetzner_password.age".publicKeys = [nas1];
 }

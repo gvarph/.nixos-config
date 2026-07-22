@@ -40,10 +40,9 @@ in {
       datasets);
   };
 
-  # TODO: everything replicates only within this machine (NVMe -> HDD).
-  # tank/* has no second copy at all — add an off-machine syncoid target
-  # (serv1 or cloud) at least for the irreplaceable datasets
-  # (immich, paperless, storage).
+  # Off-machine copies of the irreplaceable datasets go to a Hetzner
+  # Storage Box via restic (see ../restic.nix). TODO: buddy-NAS
+  # replication with a friend's NAS as a second off-site leg.
   services.syncoid = {
     enable = true;
 
