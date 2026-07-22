@@ -21,3 +21,6 @@ result-*
 # Ignore automatically generated direnv output
 .direnv
 
+# Playwright MCP session artifacts (page snapshots, console logs)
+.playwright-mcp/
+
