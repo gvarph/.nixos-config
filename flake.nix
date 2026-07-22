@@ -47,6 +47,11 @@
     claude-code.url = "github:sadjow/claude-code-nix";
 
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
+
+    # Bleeding-edge packages (mesa_git): works around a Mesa 26.1.5 RADV
+    # builtin-shader-cache flock self-deadlock that black-screens games and
+    # hangs gamescope on the desktop.
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
   };
 
   outputs = {
