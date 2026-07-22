@@ -7,7 +7,9 @@
     enable = true;
     role = "server";
     extraFlags = toString [
-      "--write-kubeconfig-mode=644"
+      # Readable by wheel (for kubectl as the regular user) but not world-readable
+      "--write-kubeconfig-mode=640"
+      "--write-kubeconfig-group=wheel"
       "--cluster-init"
     ];
   };
