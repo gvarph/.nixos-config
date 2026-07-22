@@ -1,8 +1,4 @@
-{
-  pkgs,
-  custom,
-  ...
-}: {
+{...}: {
   services.zfs.autoScrub.enable = true;
 
   imports = [
