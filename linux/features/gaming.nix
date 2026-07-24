@@ -100,6 +100,14 @@ in {
   # the "gamemode" group, so the user must be in it — otherwise the governor
   # change silently fails (polkit denies).
   users.users.gvarph.extraGroups = ["gamemode"];
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      if (action.id == "org.freedesktop.policykit.exec" &&
+          subject.user == "gvarph") {
+        return polkit.Result.YES;
+      }
+    });
+  '';
 
   environment.systemPackages = with pkgs; [
     gamescope
@@ -107,5 +115,6 @@ in {
     gamescope-wsi # HDR won't work without this
     with-apt
     mangohud # FPS/temp/usage overlay; run with `mangohud %command%`
+    protonplus
   ];
 }
