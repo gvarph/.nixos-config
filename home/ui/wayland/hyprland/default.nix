@@ -1,14 +1,9 @@
 {...}: {
-  # Hyprland config managed by home-manager (ported from the old
-  # out-of-store-symlinked hyprland/config/*.conf files).
-  # Note: changes now require a rebuild; `hyprctl reload` alone is not enough.
-  imports = [
-    ./theme.nix
-    ./keybinds.nix
-    ./monitors.nix
-    ./input.nix
-  ];
-
+  # Hyprland config managed by home-manager. Hyprland 0.56 (git, 2026-07-24)
+  # removed hyprlang support entirely — it only reads hyprland.lua — so the
+  # config lives in the Lua files under ./lua, written to ~/.config/hypr and
+  # require()d from the generated hyprland.lua.
+  # Note: changes require a rebuild; the running session then auto-reloads.
   wayland.windowManager.hyprland = {
     enable = true;
 
@@ -17,36 +12,30 @@
     package = null;
     portalPackage = null;
 
-    # Keep the classic hyprland.conf. Hyprland 0.55 deprecates hyprlang in
-    # favour of Lua; the HM default flips to "lua" at stateVersion 26.05,
-    # so pin hyprlang explicitly until this config is ported to Lua.
-    configType = "hyprlang";
+    configType = "lua";
 
     # The session (graphical-session.target, env import) is managed by UWSM
     # (programs.hyprland.withUWSM), so HM's own systemd integration would
     # fight it over the same targets.
     systemd.enable = false;
 
-    settings = {
-      exec-once = [
-        "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "uwsm app -- waybar"
-        # Clipboard history daemon
-        "wl-paste --type text --watch cliphist store"
-        "wl-paste --type image --watch cliphist store"
-      ];
+    extraLuaFiles = {
+      autostart = ./lua/autostart.lua;
+      input = ./lua/input.lua;
+      keybinds = ./lua/keybinds.lua;
+      monitors = ./lua/monitors.lua;
+      theme = ./lua/theme.lua;
     };
   };
 
-  # The still-running session regenerates a stub hyprland.conf (through the
-  # previous generation's out-of-store symlink) whenever the file goes
-  # missing, which trips HM's clobber check during the switchover; overwrite
-  # it instead of aborting activation.
-  xdg.configFile."hypr/hyprland.conf".force = true;
+  # A running Hyprland generates a default hyprland.lua whenever its config
+  # file goes missing (this is how the 0.56 upgrade left a stub behind),
+  # which trips HM's clobber check during the switchover; overwrite it
+  # instead of aborting activation.
+  xdg.configFile."hypr/hyprland.lua".force = true;
 
-  # The catppuccin hyprland module only supports configType = "lua" (it
-  # injects a mkLuaInline theme import, which would corrupt a hyprlang
-  # config). Colors in theme.nix are set directly anyway.
+  # Colors are set directly in lua/theme.lua. The catppuccin hyprland module
+  # could now be enabled (it requires configType = "lua"), but that would
+  # change border colors — revisit separately.
   catppuccin.hyprland.enable = false;
 }
