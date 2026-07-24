@@ -1,7 +1,6 @@
 return {
 	"mfussenegger/nvim-dap",
 	dependencies = {
-		"mfussenegger/nvim-dap-python",
 		"rcarriga/nvim-dap-ui",
 		"theHamsta/nvim-dap-virtual-text",
 		"nvim-neotest/nvim-nio",
@@ -97,13 +96,6 @@ return {
 			end,
 			desc = "[D]ebug - toggle UI",
 		},
-		{
-			"<leader>dpr",
-			function()
-				require("dap-python").test_method()
-			end,
-			desc = "[D]ebug - [P]ython [R]un test method",
-		},
 	},
 	config = function()
 		require("nvim-dap-virtual-text").setup({
@@ -185,29 +177,5 @@ return {
 		dap.listeners.before.event_exited.dapui_config = function()
 			dapui.close()
 		end
-
-		local shims_dir = require("common").shims_dir
-
-		require("dap-python").resolve_python = function()
-			local venv_dir = vim.fn.system({ "poetry", "env", "info", "--path" }):gsub("\n", "")
-			return venv_dir .. "/bin/python"
-		end
-		require("dap-python").setup(shims_dir .. "python")
-		require("dap-python").test_runner = "pytest"
-
-		require("dap").configurations.python = {
-			{
-				name = "Pytest: Current File",
-				type = "python",
-				request = "launch",
-				module = "pytest",
-				args = {
-					"${file}",
-					"-sv",
-					"--log-cli-level=INFO",
-				},
-				console = "integratedTerminal",
-			},
-		}
 	end,
 }

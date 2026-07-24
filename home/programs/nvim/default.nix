@@ -58,9 +58,7 @@ in {
       # Python stuff
       # pyright
       basedpyright
-      poetry
       ruff
-      python312Packages.debugpy
       rust-analyzer
       yaml-language-server
       terraform-ls
