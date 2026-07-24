@@ -72,7 +72,7 @@
       ' &
       apt_job=$!
     fi
-    "$@"
+    gamemoderun "$@"
     status=$?
     if [ -n "$apt_job" ]; then
       # APT ignores SIGTERM, so give it a short grace then SIGKILL the group.
