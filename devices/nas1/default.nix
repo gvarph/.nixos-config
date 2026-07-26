@@ -108,6 +108,12 @@ in {
 
   boot.initrd.supportedFilesystems = ["zfs"];
 
+  # The agenix identity (/home/gvarph/.ssh/id_ed25519) lives on the home
+  # dataset. Mount it in the initrd so secrets — including the login password
+  # hash — decrypt during boot-time activation; otherwise the account comes up
+  # locked after a reboot (mutableUsers = false).
+  fileSystems."/home".neededForBoot = true;
+
   age.secrets.cloudflare_dns_api_token.file = ../../secrets/cloudflare_dns_api_token.age;
   age.secrets.pocket-id_encryption_key.file = ../../secrets/pocket-id_encryption_key.age;
   age.secrets.oauth2-proxy_client_secret.file = ../../secrets/oauth2-proxy_client_secret.age;
