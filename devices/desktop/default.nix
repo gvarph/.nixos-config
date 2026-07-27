@@ -28,6 +28,9 @@ in {
   # bug is fixed. Flip this on to retest a newer mesa_git.
   chaotic.mesa-git.enable = false;
 
+  # Default shader cache is 1G, which thrashes with big Vulkan titles.
+  environment.sessionVariables.MESA_SHADER_CACHE_MAX_SIZE = "16G";
+
   networking.hostName = "desktop";
   networking.networkmanager.enable = true;
 
