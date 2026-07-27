@@ -75,13 +75,15 @@ hl.window_rule({
 hl.window_rule({
 	name = "apt-rule",
 	match = { class = "^(awakened-poe-trade|Awakened-poe-trade)$" },
+	workspace = "2 silent",
+
 	float = true,
-	pin = true,
+	pin = false,
 	border_size = 0,
 	no_blur = true,
 	no_shadow = true,
 	no_anim = true,
-	no_focus = true,
+	no_focus = false,
 	-- might be unnecessary
 	no_follow_mouse = true,
 })
