@@ -2,7 +2,7 @@
   snapshotPolicy = {
     autosnap = true;
     autoprune = true;
-    hourly = 36;
+    hourly = 48;
     daily = 30;
     monthly = 12;
   };
