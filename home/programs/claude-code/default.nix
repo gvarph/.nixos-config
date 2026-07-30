@@ -11,13 +11,6 @@
     hash = "sha256-EAlKoqJuTMib+gcLscMtpS8Zzq/D/LmIRoG3g/XKThc=";
   };
 
-  vmSkills = pkgs.fetchFromGitHub {
-    owner = "VictoriaMetrics";
-    repo = "skills";
-    rev = "410c475d8b48621c1d1859a3234f859887cea412";
-    hash = "sha256-xpP9NW6YZW3qLB06MAcGuhpJmvv1qAVASeFo1VNv/ko=";
-  };
-
   # Wrapper providing the statusline's runtime deps on PATH and running it
   # under bash. The script itself is not strict-mode safe, so we launch it
   # directly rather than via writeShellApplication.
@@ -38,10 +31,8 @@ in {
     skills = {
       caveman = "${caveman}/skills/caveman";
     };
-    plugins = [
-      "${vmSkills}/plugins/query"
-      "${vmSkills}/plugins/diagnostics"
-    ];
+    # Dropped the VictoriaMetrics/skills query + diagnostics plugins: curl-only,
+    # superseded by home/mcp/victorialogs.nix.
   };
 
   # Materialise the statusline wrapper at the path settings.json references.

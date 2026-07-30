@@ -8,6 +8,7 @@
     ./gcloud.nix
     ./personal-gmail.nix
     ./grafana.nix
+    ./victorialogs.nix
   ];
 
   programs.mcp = {
