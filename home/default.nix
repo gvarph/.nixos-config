@@ -26,6 +26,7 @@
     ./programs/git
     ./programs/zoxide.nix
     ./programs/az-cli
+    ./programs/ssh.nix
 
     ./programs/claude-code
     ./mcp
