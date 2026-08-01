@@ -73,6 +73,12 @@ tooltip label {
 	border-color: @mauve;
 }
 
+#workspaces button.visible {
+	background: @surface2;
+	color: @text;
+	border-color: @mauve;
+}
+
 #workspaces button.active,
 #workspaces button.focused {
 	background: @mauve;
