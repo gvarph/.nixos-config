@@ -58,6 +58,7 @@
     unzip
     htop
     bottom
+    btop
     fastfetch
     tree
     ffmpeg
