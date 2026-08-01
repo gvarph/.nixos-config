@@ -112,18 +112,12 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
-    mullvad-vpn
     nvtopPackages.amd
     vulkan-tools
 
     rocmPackages.clr
     awakened-poe-trade
   ];
-
-  services.mullvad-vpn = {
-    enable = true;
-    package = pkgs.mullvad-vpn;
-  };
 
   security.polkit.enable = true;
 
