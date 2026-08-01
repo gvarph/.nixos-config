@@ -1,0 +1,18 @@
+--- a/src/modules/hyprland/workspace.cpp
++++ b/src/modules/hyprland/workspace.cpp
+@@ -73,13 +73,13 @@
+         if (m_workspaceManager.moveToMonitor()) {
+           m_ipc.getSocket1Reply("dispatch focusworkspaceoncurrentmonitor " + std::to_string(id()));
+         } else {
+-          m_ipc.getSocket1Reply("dispatch workspace " + std::to_string(id()));
++          m_ipc.getSocket1Reply("dispatch hl.dsp.focus({ workspace = " + std::to_string(id()) + " })");
+         }
+       } else if (!isSpecial()) {  // named (this includes persistent)
+         if (m_workspaceManager.moveToMonitor()) {
+           m_ipc.getSocket1Reply("dispatch focusworkspaceoncurrentmonitor name:" + name());
+         } else {
+-          m_ipc.getSocket1Reply("dispatch workspace name:" + name());
++          m_ipc.getSocket1Reply("dispatch hl.dsp.focus({ workspace = \"" + name() + "\" })");
+         }
+       } else if (id() != -99) {  // named special
+         m_ipc.getSocket1Reply("dispatch togglespecialworkspace " + name());

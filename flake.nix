@@ -131,6 +131,14 @@
         };
       })
 
+      # waybar: workspace clicks are no-ops on Hyprland 0.54+, which made the IPC
+      # dispatch payload Lua. Fixed upstream in Waybar#5013, not yet released.
+      (final: prev: {
+        waybar = prev.waybar.overrideAttrs (old: {
+          patches = (old.patches or []) ++ [./home/ui/wayland/waybar/hyprland-lua-dispatch.patch];
+        });
+      })
+
       claude-code.overlays.default
 
       # CachyOS kernel packages (exposes pkgs.cachyosKernels.*)
