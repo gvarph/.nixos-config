@@ -5,6 +5,10 @@
     # networks. We only want images cleaned, so we disable it and use the
     # dedicated timer below instead.
     autoPrune.enable = false;
+    # Containers otherwise inherit /etc/resolv.conf at start time. At boot dockerd
+    # beats DHCP, so autostarted containers bake in an empty resolver list and
+    # their 127.0.0.11 stub SERVFAILs until manually restarted.
+    daemon.settings.dns = ["10.0.1.1" "1.1.1.1"];
     extraOptions = ''
       --default-ulimit nofile=65535:65535
       --default-ulimit nproc=65535:65535
