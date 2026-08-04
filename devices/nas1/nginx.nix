@@ -61,6 +61,9 @@
           proxyWebsockets = true;
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
           '';
         };
       };

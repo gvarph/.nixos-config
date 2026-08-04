@@ -9,6 +9,7 @@
     ./personal-gmail.nix
     ./grafana.nix
     ./victorialogs.nix
+    ./home-assistant.nix
   ];
 
   programs.mcp = {
