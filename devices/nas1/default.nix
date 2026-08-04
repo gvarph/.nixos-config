@@ -108,6 +108,9 @@ in {
 
   boot.initrd.supportedFilesystems = ["zfs"];
 
+  # qbittorrent's VPN container needs wg0; it can't modprobe from inside a container.
+  boot.kernelModules = ["wireguard"];
+
   # The agenix identity (/home/gvarph/.ssh/id_ed25519) lives on the home
   # dataset. Mount it in the initrd so secrets — including the login password
   # hash — decrypt during boot-time activation; otherwise the account comes up
