@@ -215,6 +215,22 @@
         };
       };
 
+      "ntfy.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:8091";
+          # Subscribers (phone app, HA) hold long-lived websocket/JSON streams.
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+            # Clients ping every 45s; the default 60s read timeout is too tight
+            # a margin for slow cycles, and ntfy docs recommend 3m.
+            proxy_read_timeout 3m;
+          '';
+        };
+      };
+
       "trek.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";
