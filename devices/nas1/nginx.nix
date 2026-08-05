@@ -59,11 +59,12 @@
         locations."/" = {
           proxyPass = "http://10.0.30.117:8123";
           proxyWebsockets = true;
+          # Host / X-Forwarded-For / X-Forwarded-Proto come from
+          # recommendedProxySettings. Do not set them again here: nginx does not
+          # dedupe proxy_set_header within a level, so a second `Host` makes HA
+          # reject every request with "Duplicate 'Host' header found".
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
-            proxy_set_header Host $host;
-            proxy_set_header X-Forwarded-Proto https;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
           '';
         };
       };
