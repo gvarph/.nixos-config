@@ -13,6 +13,7 @@
 
   nas1Lan = "10.0.1.185";
   serv1Lan = "10.0.1.157";
+  ha-piLan = "10.0.30.117";
 
   # `nc -z -w1` exits 0 only if the LAN address answers on :22 within a second,
   # so this matches exactly when we are on the home network. macOS ships nc at
@@ -28,6 +29,10 @@ in {
 
     settings =
       {
+        ha-pi = {
+          HostName = ha-piLan;
+          User = "root";
+        };
         nas1 =
           if roaming
           # nas1 is what gvarph.com points at, so off-LAN we just go there.
