@@ -127,6 +127,13 @@ in {
     file = ../../secrets/grafana_mcp_token.age;
     owner = "gvarph";
   };
+  # Read by the claude wrapper in home/mcp/home-assistant.nix, which runs as
+  # user gvarph, so it needs to be user-readable rather than the default
+  # root-only.
+  age.secrets.ha_mcp_token = {
+    file = ../../secrets/ha_mcp_token.age;
+    owner = "gvarph";
+  };
   # Read by the personal-gmail MCP server, which runs as user gvarph.
   age.secrets."personal-gmail-oauth-keys" = {
     file = ../../secrets/personal-gmail-oauth-keys.age;

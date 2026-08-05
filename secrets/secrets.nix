@@ -11,6 +11,10 @@ in {
   "oauth2-proxy_client_secret.age".publicKeys = [nas1];
   "oauth2-proxy_cookie_secret.age".publicKeys = [nas1];
   "grafana_mcp_token.age".publicKeys = [nas1];
+  # Home Assistant long-lived access token for the home-assistant MCP server.
+  # HA's OAuth is unusable here (see home/mcp/home-assistant.nix), so this is
+  # the only way that server authenticates.
+  "ha_mcp_token.age".publicKeys = [nas1];
   # gcp-oauth.keys.json (OAuth client id + secret) for the personal-gmail MCP.
   "personal-gmail-oauth-keys.age".publicKeys = [nas1];
   # Dedicated SSH key for the Hetzner Storage Box (restic offsite backup).
