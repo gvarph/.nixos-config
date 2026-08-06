@@ -18,6 +18,7 @@
     "tank/immich"
     "tank/storage"
     "tank/paperless"
+    "tank/ha-backups"
   ];
   datasetArgs = builtins.concatStringsSep " " datasets;
 

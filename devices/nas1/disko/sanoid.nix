@@ -28,6 +28,7 @@
     "tank/storage"
     "tank/paperless"
     "tank/media"
+    "tank/ha-backups"
   ];
 in {
   services.sanoid = {

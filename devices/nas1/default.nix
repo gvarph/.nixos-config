@@ -27,6 +27,7 @@ in {
     ./disko
     ./nginx.nix
     ./restic.nix
+    ./nfs.nix
 
     # ../../default.nix already imports docker.nix
     (import ../../default.nix {inherit config pkgs inputs username;})
