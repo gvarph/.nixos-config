@@ -20,6 +20,10 @@ in {
     pkgs.xdummy
   ];
 
+  # azure-cli is only used on serv1, and it's a big closure that regularly
+  # misses the binary cache — keep it off the other hosts.
+  home-manager.users.${username}.imports = [../../home/programs/az-cli];
+
   networking.hostName = "serv1";
   networking.networkmanager.enable = true;
 
