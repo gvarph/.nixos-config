@@ -29,6 +29,7 @@
     ./programs/ssh.nix
 
     ./programs/claude-code
+
     ./mcp
   ];
 
@@ -64,6 +65,7 @@
     ffmpeg
     k9s
     dust
+    herdr
 
     (
       google-cloud-sdk.withExtraComponents
