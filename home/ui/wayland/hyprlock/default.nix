@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   # Lock screen for Hyprland.
   # The Catppuccin module (autoEnable) sources the Mocha palette and defines
   # $accent/$accentAlpha (= mauve, the default accent), replacing the old
@@ -71,6 +71,19 @@
           position = "-30, -150";
           halign = "right";
           valign = "top";
+        }
+        # Caps lock warning. hyprlock has no $CAPSLOCK label variable (only
+        # capslock_color on the input field), so poll the keyboard LED instead.
+        # Empty output = no label drawn, so this is invisible when caps is off.
+        {
+          monitor = "";
+          text = "cmd[update:250] ${pkgs.gnugrep}/bin/grep -qx 1 /sys/class/leds/*::capslock/brightness 2>/dev/null && echo '󰪛 CAPS LOCK'";
+          color = "$yellow";
+          font_size = 18;
+          font_family = "$font";
+          position = "0, -110";
+          halign = "center";
+          valign = "center";
         }
         # Keyboard layout
         {
