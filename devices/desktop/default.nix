@@ -8,6 +8,7 @@
 in {
   imports = [
     ./hardware-configuration.nix
+    ./audio.nix
 
     (import ../../default.nix {inherit config pkgs inputs username;})
     (import ../../home/ui {inherit pkgs username;})
