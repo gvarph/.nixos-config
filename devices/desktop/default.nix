@@ -118,6 +118,8 @@ in {
 
     rocmPackages.clr
     awakened-poe-trade
+
+    android-tools
   ];
 
   security.polkit.enable = true;
