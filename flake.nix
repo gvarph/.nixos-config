@@ -7,6 +7,12 @@
     # Stable nixpkgs for Azure CLI
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
 
+    # Mesa 26.2.1 for the desktop's AMD GPU drivers only (see
+    # devices/desktop/default.nix). nixos-unstable is still on 26.2.0, which
+    # has the AV1 decode bug; unstable-small already carries the fix. Drop
+    # this input once nixos-unstable reaches >= 26.2.1.
+    nixpkgs-unstable-small.url = "github:nixos/nixpkgs/nixos-unstable-small";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
