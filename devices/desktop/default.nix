@@ -177,4 +177,6 @@ in {
     openFirewall = true;
   };
   programs.kdeconnect.enable = true;
+
+  programs.appimage.binfmt = true;
 }

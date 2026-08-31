@@ -32,6 +32,8 @@
         jdk17
       ];
     })
+
+    thunar
   ];
 
   imports = [
