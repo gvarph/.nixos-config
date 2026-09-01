@@ -216,6 +216,21 @@
         };
       };
 
+      # hevy2garmin dashboard (docker on 127.0.0.1:8124). No app login: the
+      # container binds loopback only and auth is oauth2-proxy -> Pocket ID
+      # (services.oauth2-proxy.nginx.virtualHosts below), like the other apps.
+      "hevy.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:8124";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
+
       "ntfy.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";
@@ -232,6 +247,23 @@
         };
       };
 
+      "fitness.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:3004";
+          proxyWebsockets = true;
+          extraConfig = ''
+            # Profile pictures, exercise images, and backup restore uploads.
+            client_max_body_size 100M;
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+            # The frontend image's own nginx already rate-limits at 5r/s, so the
+            # X-Forwarded-For it sees must be the real client, not this proxy.
+            proxy_set_header X-Forwarded-Ssl on;
+          '';
+        };
+      };
+
       "trek.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";
@@ -243,6 +275,95 @@
             # File attachments up to 500 MB + backup archive uploads
             # (BACKUP_UPLOAD_LIMIT_MB defaults to 500).
             client_max_body_size 500M;
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
+
+      # --- music / books stack (docker_storage: navidrome, arr, shelfarr) ---
+
+      # Navidrome web UI is gated by oauth2-proxy (see below) and auto-logs the
+      # Pocket ID user in via X-Forwarded-User (ND_EXTAUTH_USERHEADER). The
+      # Subsonic API and public shares must stay reachable for mobile apps that
+      # authenticate with Navidrome credentials, so they opt out of auth_request.
+      "navidrome.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:4533";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+            auth_request_set $preferred_username $upstream_http_x_auth_request_preferred_username;
+            proxy_set_header X-Forwarded-User $preferred_username;
+          '';
+        };
+        locations."/rest/" = {
+          proxyPass = "http://localhost:4533";
+          extraConfig = ''
+            auth_request off;
+            proxy_set_header X-Forwarded-User "";
+          '';
+        };
+        locations."/share/" = {
+          proxyPass = "http://localhost:4533";
+          extraConfig = ''
+            auth_request off;
+            proxy_set_header X-Forwarded-User "";
+          '';
+        };
+      };
+
+      # Lidify has no authentication of its own: oauth2-proxy is the only gate.
+      "lidify.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:5000";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
+
+      # SABnzbd (host_whitelist in sabnzbd.ini includes this name).
+      "sab.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:8085";
+          proxyWebsockets = true;
+          extraConfig = ''
+            client_max_body_size 100M; # manual .nzb uploads
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
+
+      "lidarr.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:8686";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
+
+      # Shelfarr has native OIDC (Pocket ID client, callback
+      # /auth/oidc/callback) and a public request/login page, so it is NOT
+      # behind oauth2-proxy.
+      "shelfarr.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:5056";
+          proxyWebsockets = true;
+          extraConfig = ''
+            client_max_body_size 500M; # manual ebook/audiobook uploads
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
           '';
         };
@@ -318,6 +439,11 @@
     nginx = {
       domain = "auth.gvarph.com";
       virtualHosts."qbit.gvarph.com" = {};
+      virtualHosts."hevy.gvarph.com" = {};
+      virtualHosts."navidrome.gvarph.com" = {};
+      virtualHosts."lidify.gvarph.com" = {};
+      virtualHosts."sab.gvarph.com" = {};
+      virtualHosts."lidarr.gvarph.com" = {};
     };
   };
 

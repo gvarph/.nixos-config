@@ -22,6 +22,7 @@
     "rpool/flash/pocket-id"
     "rpool/flash/dawarich"
     "rpool/flash/trek"
+    "rpool/flash/hevy2garmin"
 
     # HDD datasets
     "tank/immich"
