@@ -94,6 +94,8 @@
 
     #lm_sensors
     wakeonlan
+
+    jdupes
   ];
 
   home.stateVersion = "23.11";
