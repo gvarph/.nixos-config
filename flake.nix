@@ -80,10 +80,6 @@
         azure-cli = inputs.nixpkgs-stable.legacyPackages.${final.stdenv.hostPlatform.system}.azure-cli;
         azure-cli-extensions = inputs.nixpkgs-stable.legacyPackages.${final.stdenv.hostPlatform.system}.azure-cli-extensions;
       })
-      # Zen browser
-      (final: prev: {
-        zen-browser = inputs.zen-browser.packages.${final.stdenv.hostPlatform.system}.default;
-      })
       # debugpy: pin to stable AND skip its test suite. debugpy's build runs a
       # heavy pytestCheckPhase that regularly hangs for 15+ min in teardown
       # (lingering debug-adapter subprocesses / gevent greenlets waiting on
@@ -152,6 +148,7 @@
           ./devices/${hostname}
           {
             nixpkgs.overlays = overlays;
+            home-manager.extraSpecialArgs = {inherit inputs;};
             home-manager.users.gvarph.imports = [catppuccin.homeModules.catppuccin];
             catppuccin.enable = true;
             catppuccin.autoEnable = true;

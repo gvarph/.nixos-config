@@ -2,6 +2,7 @@
   imports = [
     ./ghostty.nix
     ./yazi.nix
+    ./zen.nix
   ];
 
   home.packages = with pkgs; [
@@ -9,7 +10,6 @@
     libation
     libreoffice
 
-    zen-browser
     qbittorrent-enhanced
 
     r2modman
