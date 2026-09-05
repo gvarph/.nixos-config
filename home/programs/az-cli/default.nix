@@ -1,9 +1,10 @@
 {
-  config,
+  inputs,
   pkgs,
   ...
 }: let
-  az-cli-with-extensions = pkgs.azure-cli.withExtensions (with pkgs.azure-cli-extensions; [fzf ai-examples azure-devops]);
+  pkgsStable = inputs.nixpkgs-stable.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  az-cli-with-extensions = pkgsStable.azure-cli.withExtensions (with (inputs.nixpkgs-stable.legacyPackages.${pkgs.stdenv.hostPlatform.system}).azure-cli-extensions; [fzf ai-examples azure-devops]);
 in {
   home.packages = [
     az-cli-with-extensions

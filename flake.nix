@@ -75,11 +75,6 @@
   } @ inputs: let
     # Define all overlays in one place
     overlays = [
-      # Azure CLI
-      (final: prev: {
-        azure-cli = inputs.nixpkgs-stable.legacyPackages.${final.stdenv.hostPlatform.system}.azure-cli;
-        azure-cli-extensions = inputs.nixpkgs-stable.legacyPackages.${final.stdenv.hostPlatform.system}.azure-cli-extensions;
-      })
       # debugpy: pin to stable AND skip its test suite. debugpy's build runs a
       # heavy pytestCheckPhase that regularly hangs for 15+ min in teardown
       # (lingering debug-adapter subprocesses / gevent greenlets waiting on
