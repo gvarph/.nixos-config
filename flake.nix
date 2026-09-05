@@ -157,7 +157,6 @@
           name = "nix-config";
           packages = [
             pkgs.alejandra # Nix formatter
-            pkgs.disko
             pkgs.nh
             agenix.packages.${system}.default # Agenix CLI tool
             disko.packages.${system}.disko
