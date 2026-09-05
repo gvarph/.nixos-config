@@ -62,10 +62,8 @@
     claude-code,
     disko,
     home-manager,
-    hyprland,
     nix-darwin,
     nixpkgs,
-    nixpkgs-stable,
     ...
   } @ inputs: let
     # Define all overlays in one place
@@ -106,10 +104,7 @@
     # Helper to create NixOS configurations
     mkNixos = hostname:
       nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit inputs;
-          age = agenix.packages."x86_64-linux".default;
-        };
+        specialArgs = {inherit inputs;};
         modules = [
           home-manager.nixosModules.default
           catppuccin.nixosModules.catppuccin
@@ -134,10 +129,7 @@
 
     #darwin-rebuild switch --flake .#mba --show-trace
     darwinConfigurations."mba" = nix-darwin.lib.darwinSystem {
-      specialArgs =
-        inputs
-        // {
-        };
+      specialArgs = inputs;
 
       modules = [
         ./devices/mba
