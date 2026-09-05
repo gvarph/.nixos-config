@@ -140,4 +140,8 @@ in {
     file = ../../secrets/personal-gmail-oauth-keys.age;
     owner = "gvarph";
   };
+
+  hardware.bluetooth = {
+    enable = true;
+  };
 }
