@@ -22,18 +22,7 @@ in {
     ../../linux/features/gaming.nix
     ../../modules/nix-maintenance.nix
     (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest;})
-
-    # Chaotic-Nyx: overlay + binary cache + mesa-git module
-    inputs.chaotic.nixosModules.default
   ];
-
-  # Mesa 26.1.5 (and git main as of 2026-07, tested via mesa_git) has a RADV
-  # builtin-shader-cache flock self-deadlock that black-screens Vulkan games
-  # (PoE) and hangs gamescope whenever one process creates two Vulkan
-  # instances. mesa_git doesn't fix it, so stay on stock Mesa and use the
-  # per-game workaround MESA_SHADER_CACHE_DISABLE=true until the upstream
-  # bug is fixed. Flip this on to retest a newer mesa_git.
-  chaotic.mesa-git.enable = false;
 
   # linux-firmware 20260810 shipped new amdgpu VCN blobs that exposed a Mesa
   # bug: AV1 hardware decode fills the quantization-matrix params in wrong, so
