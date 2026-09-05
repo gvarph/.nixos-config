@@ -35,11 +35,22 @@ in {
   services.sanoid = {
     enable = true;
 
-    datasets = builtins.listToAttrs (map (name: {
-        inherit name;
-        value = snapshotPolicy;
-      })
-      datasets);
+    datasets =
+      builtins.listToAttrs (map (name: {
+          inherit name;
+          value = snapshotPolicy;
+        })
+        datasets)
+      // {
+        # syncoid replication target: syncoid delivers the snapshots, sanoid
+        # only expires them. Without this they accumulate forever.
+        "tank/snapshots/flash" =
+          snapshotPolicy
+          // {
+            autosnap = false;
+            recursive = true;
+          };
+      };
   };
 
   # Off-machine copies of the irreplaceable datasets go to a Hetzner
