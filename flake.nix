@@ -75,26 +75,6 @@
   } @ inputs: let
     # Define all overlays in one place
     overlays = [
-      # debugpy: pin to stable AND skip its test suite. debugpy's build runs a
-      # heavy pytestCheckPhase that regularly hangs for 15+ min in teardown
-      # (lingering debug-adapter subprocesses / gevent greenlets waiting on
-      # socket timeouts) — which is why cache.nixos.org / Hydra often lacks a
-      # prebuilt debugpy, forcing a from-source rebuild on nearly every flake
-      # bump. Pinning to stable alone isn't enough: right after a stable channel
-      # bump the new debugpy isn't cached either, so it still builds from source
-      # and hangs. Since this is just the DAP adapter binary (the exact version
-      # doesn't matter and we don't ship its tests), disable doCheck so the build
-      # is a fast, deterministic Cython compile regardless of cache state.
-      (final: prev: {
-        python312Packages =
-          prev.python312Packages
-          // {
-            debugpy =
-              (inputs.nixpkgs-stable.legacyPackages.${final.stdenv.hostPlatform.system}.python312Packages.debugpy)
-              .overridePythonAttrs (_: {doCheck = false;});
-          };
-      })
-
       # awakened-poe-trade: must run under XWayland, not native Wayland —
       # its input engine (libuiohook) is X11-only, so global hotkeys, item
       # copying, and game-window tracking all break as a Wayland client.
