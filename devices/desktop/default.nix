@@ -5,12 +5,6 @@
   ...
 }: let
   username = "gvarph";
-
-  # Mesa from nixos-unstable-small, matched to this host's system. See the
-  # hardware.graphics override below for why.
-  pkgsSmall = inputs.nixpkgs-unstable-small.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-  mesaFixed = pkgsSmall.mesa;
-  mesaFixed32 = pkgsSmall.pkgsi686Linux.mesa;
 in {
   imports = [
     ./hardware-configuration.nix
@@ -23,21 +17,6 @@ in {
     ../../modules/nix-maintenance.nix
     (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest;})
   ];
-
-  # linux-firmware 20260810 shipped new amdgpu VCN blobs that exposed a Mesa
-  # bug: AV1 hardware decode fills the quantization-matrix params in wrong, so
-  # AV1 video (YouTube) renders with color banding splitting the frame in half.
-  # Navi 48 is affected. Arch worked around it by reverting the VCN firmware,
-  # but the real fix is Mesa's, released in 26.2.1:
-  #   https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/43787
-  #   https://github.com/NixOS/nixpkgs/issues/553701
-  # nixos-unstable is still on 26.2.0, so take just the GPU drivers from
-  # unstable-small (which has 26.2.1). This overrides only what gets linked
-  # into /run/opengl-driver — the drivers are dlopened at runtime, so nothing
-  # in the closure has to rebuild against a foreign nixpkgs. Once
-  # nixos-unstable ships >= 26.2.1, delete this and the flake input.
-  hardware.graphics.package = mesaFixed;
-  hardware.graphics.package32 = mesaFixed32;
 
   # Default shader cache is 1G, which thrashes with big Vulkan titles.
   environment.sessionVariables.MESA_SHADER_CACHE_MAX_SIZE = "16G";
