@@ -33,7 +33,7 @@
   users.users.${username} = {
     isNormalUser = true;
     description = "Filip Krul";
-    extraGroups = ["networkmanager" "wheel" "nixeditors" "docker" "openvpn" "video" "render"];
+    extraGroups = ["networkmanager" "wheel" "nixeditors" "openvpn" "video" "render"];
     packages = [];
     shell = pkgs.fish;
     home = "/home/${username}";
