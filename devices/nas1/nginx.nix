@@ -231,6 +231,35 @@
         };
       };
 
+      # 9router AI proxy (docker on 127.0.0.1:20128). Dashboard is behind
+      # oauth2-proxy -> Pocket ID; the LLM API paths are opted out of SSO
+      # (auth_request off) because clients send 9router's own API key there
+      # (REQUIRE_API_KEY=true in docker_storage/9router/.env).
+      "9router.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:20128";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+        locations."~ ^/(v1|v1beta|api/v1|api/v1beta|codex|responses)(/|$)" = {
+          proxyPass = "http://127.0.0.1:20128";
+          extraConfig = ''
+            auth_request off;
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+            # SSE streaming and multi-minute completions.
+            proxy_buffering off;
+            proxy_read_timeout 10m;
+            proxy_send_timeout 10m;
+            # Large prompts / image inputs.
+            client_max_body_size 100M;
+          '';
+        };
+      };
+
       "ntfy.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";
@@ -440,6 +469,7 @@
       domain = "auth.gvarph.com";
       virtualHosts."qbit.gvarph.com" = {};
       virtualHosts."hevy.gvarph.com" = {};
+      virtualHosts."9router.gvarph.com" = {};
       virtualHosts."navidrome.gvarph.com" = {};
       virtualHosts."lidify.gvarph.com" = {};
       virtualHosts."sab.gvarph.com" = {};
