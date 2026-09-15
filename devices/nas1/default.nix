@@ -46,6 +46,8 @@ in {
     powertop
     lm_sensors
     intel-gpu-tools
+
+    nvtopPackages.intel
   ];
 
   powerManagement.powertop.enable = true;
@@ -106,12 +108,18 @@ in {
 
   # May help if FFmpeg/VAAPI/QSV init fails (esp. on Arc with i915):
   hardware.enableRedistributableFirmware = true;
+
+  # Arrow Lake-S iGPU (8086:7d67). i915 supports it fine, but udev never
+  # autoloads the module here, so nothing binds 00:02.0 and there is no
+  # /dev/dri. Loading it explicitly (boot.kernelModules below) is the whole
+  # fix. Do not force xe: it declines 7d67 as "not officially supported".
   boot.kernelParams = ["i915.enable_guc=3"];
 
   boot.initrd.supportedFilesystems = ["zfs"];
 
-  # qbittorrent's VPN container needs wg0; it can't modprobe from inside a container.
-  boot.kernelModules = ["wireguard"];
+  # wireguard: qbittorrent's VPN container needs wg0 and can't modprobe itself.
+  # i915: udev does not autoload it for the Arrow Lake iGPU (see above).
+  boot.kernelModules = ["wireguard" "i915"];
 
   # The agenix identity (/home/gvarph/.ssh/id_ed25519) lives on the home
   # dataset. Mount it in the initrd so secrets — including the login password
