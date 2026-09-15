@@ -378,6 +378,9 @@
           proxyWebsockets = true;
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
+
+            allow 10.0.0.0/8;
+            deny all;
           '';
         };
       };
