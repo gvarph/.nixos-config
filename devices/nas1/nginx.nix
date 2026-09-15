@@ -400,6 +400,26 @@
           '';
         };
       };
+
+      # WatchShelf sidecar (docker on 127.0.0.1:8081) for the Garmin app.
+      # No oauth2-proxy: Connect IQ can't do interactive SSO, the sidecar
+      # auths against ABS itself.
+      "watchshelf.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:8081";
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+            # /transcode streams an ffmpeg cut as it's produced.
+            proxy_buffering off;
+            proxy_request_buffering off;
+            proxy_read_timeout 600s;
+            proxy_send_timeout 600s;
+            send_timeout 600s;
+          '';
+        };
+      };
     };
   };
 
