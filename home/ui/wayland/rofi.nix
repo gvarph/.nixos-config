@@ -46,14 +46,15 @@ in {
 
   programs.rofi = {
     enable = true;
-    font = "FiraCode Nerd Font 12";
-    terminal = "ghostty";
     plugins = [
       pkgs.rofi-calc
     ];
 
     # This sets the default behavior when you launch rofi
-    extraConfig = {
+    settings = {
+      font = "FiraCode Nerd Font 12";
+      terminal = "ghostty";
+
       modi = "combi";
       combi-modi = "calc,drun";
 
