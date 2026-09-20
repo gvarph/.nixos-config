@@ -24,4 +24,10 @@
 
   # LobiShell on phone
   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFYvT8Qjs7ZOfmWUIPHcJhtuJ1r7jWaMiQ4v6KJ2xYnX"
+
+  # Bitwarden native key, not sure which of these is valid.
+  #   Bitwarden says it's the one with a / at the end,
+  #   but I'm not sure if that's a typo or if it's valid.
+  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFA25GEZ95h9bCDlg3RKY72WCbldvOxGCgHORCvPy7l"
+  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFA25GEZ95h9bCDlg3RKY72WCbldvOxGCgHORCvPy7l/"
 ]
