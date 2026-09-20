@@ -356,6 +356,22 @@
         };
       };
 
+      # slskd (Soulseek client feeding Lidarr via Soularr). It has its own
+      # login, but oauth2-proxy stays in front like the rest of the stack.
+      "slskd.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:5030";
+          # The UI streams search results and transfer progress over a
+          # SignalR websocket.
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
+
       # SABnzbd (host_whitelist in sabnzbd.ini includes this name).
       "sab.gvarph.com" = {
         forceSSL = true;
@@ -494,6 +510,7 @@
       virtualHosts."lidify.gvarph.com" = {};
       virtualHosts."sab.gvarph.com" = {};
       virtualHosts."lidarr.gvarph.com" = {};
+      virtualHosts."slskd.gvarph.com" = {};
     };
   };
 
