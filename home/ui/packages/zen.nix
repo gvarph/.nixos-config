@@ -20,6 +20,8 @@
       };
 
       userChrome = ''
+        @import "catppuccin/userChrome.css";
+
         profile-button {
           display: none !important;
         }
