@@ -52,15 +52,11 @@ end
 hl.bind(mod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mod .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
 
--- Screenshot (requires grim and slurp)
-hl.bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
-hl.bind("Print", hl.dsp.exec_cmd("grim - | wl-copy"))
-hl.bind(
-	"SHIFT + Print",
-	hl.dsp.exec_cmd(
-		'mkdir -p ~/Pictures/Screenshots && grim -g "$(slurp)" ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png'
-	)
-)
+-- Screenshots (home/ui/wayland/screenshot.nix): region mode freezes the
+-- screen before selecting, so hover-only UI stays visible
+hl.bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd("screenshot region"))
+hl.bind("Print", hl.dsp.exec_cmd("screenshot screen"))
+hl.bind("SHIFT + Print", hl.dsp.exec_cmd("screenshot region file"))
 
 -- Media keys
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"))

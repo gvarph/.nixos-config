@@ -98,6 +98,14 @@ hl.layer_rule({
 	no_anim = true,
 })
 
+-- Screenshot overlays: slurp's selection must not fade out into the
+-- capture, and the wayfreeze overlay should snap in
+hl.layer_rule({
+	name = "screenshot",
+	match = { namespace = "^(selection|wayfreeze)$" },
+	no_anim = true,
+})
+
 -- Waybar: its bar background is already translucent (rgba .3), so blur
 -- what's behind it; low ignore_alpha so the faint bar bg still blurs
 hl.layer_rule({

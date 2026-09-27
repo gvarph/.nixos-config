@@ -22,6 +22,7 @@
     ./polkit
     ./mako
     ./udiskie
+    ./screenshot.nix
   ];
 
   home.sessionVariables = {

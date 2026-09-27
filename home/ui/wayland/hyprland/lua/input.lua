@@ -32,10 +32,13 @@ hl.config({
 	},
 
 	cursor = {
-		-- Hyprland 0.56 clips custom hardware-cursor sprites (seen as a
-		-- cut-off mouse cursor in Path of Exile / XWayland games); render
-		-- the cursor in software instead. If the added latency ever
-		-- bothers, try use_cpu_buffer = 1 with hardware cursors instead.
-		no_hardware_cursors = 1,
+		-- Hardware cursors keep the cursor out of screenshots: a software
+		-- cursor (no_hardware_cursors = 1, and apparently use_cpu_buffer = 1
+		-- too) is baked into every screencopy frame, grim/wayfreeze included.
+		-- Hyprland 0.56 was clipping custom hardware-cursor sprites (a
+		-- cut-off cursor in Path of Exile / XWayland games); if that
+		-- returns, going back to 1 fixes it at the cost of cursors in
+		-- screenshots.
+		no_hardware_cursors = 0,
 	},
 })
