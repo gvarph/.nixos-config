@@ -40,6 +40,10 @@
       target = "127.0.0.1:8091";
     }
     {
+      job = "crowdsec";
+      target = "127.0.0.1:6060";
+    }
+    {
       job = "immich-api";
       target = "127.0.0.1:18081";
     }

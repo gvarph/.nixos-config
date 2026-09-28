@@ -54,4 +54,6 @@ in {
   "ntfy_grafana_token.age".publicKeys = [nas1];
   # Grafana's database encryption key (datasource secrets, SSO settings).
   "grafana_secret_key.age".publicKeys = [nas1];
+  # crowdsec-web-ui: LAPI machine password (+ OIDC client once configured).
+  "crowdsec-web-ui_env.age".publicKeys = [nas1];
 }

@@ -27,6 +27,7 @@ in {
     ./disko
     ./nginx.nix
     ./crowdsec.nix
+    ./crowdsec-web-ui.nix
     ./ddns.nix
     ./ntfy.nix
     ./navidrome.nix

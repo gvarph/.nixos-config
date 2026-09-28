@@ -290,6 +290,17 @@ in {
         };
       };
 
+      "crowdsec.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://localhost:3005";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
       "trek.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";

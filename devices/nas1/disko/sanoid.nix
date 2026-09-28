@@ -14,6 +14,7 @@
     "rpool/flash/arr"
     "rpool/flash/audiobookshelf"
     "rpool/flash/ble-scale-sync"
+    "rpool/flash/crowdsec-web-ui"
     "rpool/flash/immich"
     "rpool/flash/jellyfin"
     "rpool/flash/music-assistant"
