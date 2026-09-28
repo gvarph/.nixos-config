@@ -1,8 +1,11 @@
 {
   pkgs,
   config,
+  lib,
   ...
-}: {
+}: let
+  cloudflareRanges = import ./cloudflare-ips.nix;
+in {
   services.nginx = {
     enable = true;
 
@@ -10,6 +13,13 @@
     recommendedTlsSettings = true;
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
+
+    # Every vhost but ab.gvarph.com is Cloudflare-proxied, so without this the
+    # access log and X-Forwarded-For carry edge IPs (fail2ban used to ban them).
+    commonHttpConfig = ''
+      real_ip_header CF-Connecting-IP;
+      ${lib.concatMapStringsSep "\n" (r: "set_real_ip_from ${r};") cloudflareRanges}
+    '';
 
     # Single backend: never eject it on a transient failure (e.g. a stale
     # browser tab still hitting the old /socket.io path after an immich
