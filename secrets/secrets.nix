@@ -40,4 +40,6 @@ in {
   # Immich: app env (DB credentials, paths) and the POSTGRES_* subset for its database.
   "immich_env.age".publicKeys = [nas1];
   "immich_db_env.age".publicKeys = [nas1];
+  # ble-scale-sync: HA token, Xiaomi bind key, MQTT and Garmin credentials.
+  "ble-scale-sync_env.age".publicKeys = [nas1];
 }

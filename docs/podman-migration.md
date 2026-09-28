@@ -34,7 +34,7 @@ a `rpool/flash` child dataset if it is not one (see "Backup blind spot" below).
 
 - [x] audiobookshelf (2026-09-28, `devices/nas1/audiobookshelf.nix`): upstream image pinned, runs as 1000:100 (shares the media tree, so no userns); WatchShelf sidecar built from the pinned commit; new dataset rpool/flash/audiobookshelf; root-owned leftovers needed a chown
 - [ ] shelfarr: static IP on servarr network, `AddHost=host.containers.internal`; needs the servarr `.network` first
-- [ ] ble_scale_sync: `.build` from `~/ble-scale-sync` fork, custom entrypoint, writes its own config; check host BLE access needs
+- [x] ble_scale_sync (2026-09-28, `devices/nas1/ble-scale-sync.nix`): upstream image 1.29.0 (both fork PRs shipped since 1.27.0), entrypoint override kept to skip the BT reset and pass --config, secrets via agenix (config.yaml only has `${VAR}` placeholders), state on rpool/flash/ble-scale-sync; `~/ble-scale-sync` no longer needed
 - [x] sparkyfitness (2026-09-28, `devices/nas1/sparkyfitness.nix`): 3 quadlets on a private network (exporter dropped), images pinned v1.7.3, POSTGRES_* split into its own secret; new dataset rpool/flash/sparkyfitness
 - [x] paperless (2026-09-28, `devices/nas1/paperless.nix`): 4 quadlets on a private network (exporters dropped), images pinned; paperless-gpt joins the 9router network and uses `ds/deepseek-v4.1-flash` via 9router; its entrypoint needs `userns=auto:size=65536`
 - [ ] geocoding-throttle: lives on dawarich's network, unhealthy today; migrate with dawarich or drop

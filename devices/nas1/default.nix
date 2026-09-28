@@ -40,6 +40,7 @@ in {
     ./sparkyfitness.nix
     ./jellyfin.nix
     ./immich.nix
+    ./ble-scale-sync.nix
     ./restic.nix
     ./nfs.nix
 

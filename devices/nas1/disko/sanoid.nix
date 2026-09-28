@@ -13,6 +13,7 @@
     "rpool/flash/9router"
     "rpool/flash/arr"
     "rpool/flash/audiobookshelf"
+    "rpool/flash/ble-scale-sync"
     "rpool/flash/immich"
     "rpool/flash/jellyfin"
     "rpool/flash/monitoring"
