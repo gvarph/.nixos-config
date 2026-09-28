@@ -211,22 +211,23 @@ in {
 
       # 4h for a first offense, +4h per prior decision, capped at 48h
       # (fail2ban's bantime-increment equivalent).
-      # Local decisions -> ntfy (topic "alerts", same token grafana uses). The
-      # token is a ${NTFY_TOKEN} placeholder here: crowdsec expands env vars in
-      # plugin configs, and the unit gets the secret as an EnvironmentFile.
+      # Local decisions -> ntfy topic "crowdsec" (own topic so it can be muted;
+      # the grafana user's token, granted write-only on it), batched over 10
+      # minutes at low priority. The token is a ${NTFY_TOKEN} placeholder:
+      # crowdsec expands env vars in plugin configs from the unit's EnvironmentFile.
       notifications = [
         {
           type = "http";
           name = "ntfy";
           log_level = "info";
-          group_wait = "30s";
-          url = "http://127.0.0.1:8091/alerts";
+          group_wait = "10m";
+          url = "http://127.0.0.1:8091/crowdsec";
           method = "POST";
           headers = {
             Authorization = "Bearer \${NTFY_TOKEN}";
             Title = "CrowdSec";
             Tags = "shield";
-            Priority = "high";
+            Priority = "low";
           };
           format = ''
             {{range . -}}
