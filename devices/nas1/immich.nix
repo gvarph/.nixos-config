@@ -90,13 +90,16 @@
           DB_HOSTNAME = "immich-database";
           REDIS_HOSTNAME = "immich-redis";
           TZ = "Europe/Prague";
+          # Prometheus metrics on 8081 (API) and 8082 (jobs), scraped by vmagent.
+          IMMICH_TELEMETRY_INCLUDE = "all";
         };
         # QSV transcoding; runs as root inside like the compose stack did, since
         # thumbs and backups are root-owned and the library is shared with gvarph.
         devices = ["/dev/dri"];
         networks = [networks.immich.ref];
         # Loopback only: the app and web go through nginx.
-        publishPorts = ["127.0.0.1:2283:2283"];
+        # Metrics on 1808x host-side: 8082 is crowdsec's LAPI.
+        publishPorts = ["127.0.0.1:2283:2283" "127.0.0.1:18081:8081" "127.0.0.1:18082:8082"];
         volumes = [
           "/tank/immich/library:/usr/src/app/upload"
           "/flash/immich/thumbs:/data/thumbs"

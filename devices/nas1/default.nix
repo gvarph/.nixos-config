@@ -33,6 +33,7 @@ in {
     ./logs.nix
     ./metrics.nix
     ./grafana.nix
+    ./db-exporters.nix
     ./podman.nix
     ./trek.nix
     ./9router.nix

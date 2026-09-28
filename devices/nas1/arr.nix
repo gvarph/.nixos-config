@@ -300,8 +300,10 @@ in {
       unitConfig =
         guard
         // {
-          After = guard.After ++ ["slskd.service"];
-          Wants = ["slskd.service"];
+          # Only pull slskd in while it is enabled; otherwise this would start
+          # the VPN container through slskd's Requires.
+          After = guard.After ++ lib.optional slskdVpn "slskd.service";
+          Wants = lib.optional slskdVpn "slskd.service";
         };
       containerConfig = {
         # `latest` tracks main; pinned to the build that was running on 2026-09-28.

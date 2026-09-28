@@ -39,6 +39,45 @@
       job = "ntfy";
       target = "127.0.0.1:8091";
     }
+    {
+      job = "immich-api";
+      target = "127.0.0.1:18081";
+    }
+    {
+      job = "immich-microservices";
+      target = "127.0.0.1:18082";
+    }
+    # Sidecars from db-exporters.nix; instance names the database container.
+    {
+      job = "postgres-exporter";
+      instance = "immich-database";
+      target = "127.0.0.1:9187";
+    }
+    {
+      job = "postgres-exporter";
+      instance = "paperless-db";
+      target = "127.0.0.1:9188";
+    }
+    {
+      job = "postgres-exporter";
+      instance = "sparkyfitness-db";
+      target = "127.0.0.1:9189";
+    }
+    {
+      job = "postgres-exporter";
+      instance = "jellystat-db";
+      target = "127.0.0.1:9190";
+    }
+    {
+      job = "redis-exporter";
+      instance = "immich-redis";
+      target = "127.0.0.1:9121";
+    }
+    {
+      job = "redis-exporter";
+      instance = "paperless-broker";
+      target = "127.0.0.1:9122";
+    }
   ];
 in {
   # Metrics store. State is the rpool/flash/victoriametrics dataset mounted at
@@ -63,11 +102,20 @@ in {
       global.scrape_interval = "30s";
       scrape_configs = map (t:
         {
-          job_name = t.job;
+          job_name =
+            t.job
+            + (
+              if t ? instance
+              then "/" + t.instance
+              else ""
+            );
           static_configs = [
             {
               targets = [t.target];
-              labels.instance = t.job;
+              labels = {
+                job = t.job;
+                instance = t.instance or t.job;
+              };
             }
           ];
         }

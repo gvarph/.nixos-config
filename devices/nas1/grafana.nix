@@ -36,6 +36,11 @@
         # Recreate by name: changing a persisted datasource's uid in place fails.
         deleteDatasources = [
           {
+            # Compose-era leftover pointing at the docker0 gateway.
+            name = "prometheus";
+            orgId = 1;
+          }
+          {
             name = "Victoria Metrics";
             orgId = 1;
           }
