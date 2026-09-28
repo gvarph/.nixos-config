@@ -22,6 +22,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Podman quadlets as NixOS options; imported per host (devices/nas1/podman.nix).
+    quadlet-nix.url = "github:SEIAROTg/quadlet-nix";
+
     # Pinned rather than tracking the default branch. Untagged main ships
     # breaking IPC changes that outpace downstream consumers:
     #

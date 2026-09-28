@@ -29,6 +29,7 @@ in {
     ./crowdsec.nix
     ./ddns.nix
     ./ntfy.nix
+    ./podman.nix
     ./restic.nix
     ./nfs.nix
 
