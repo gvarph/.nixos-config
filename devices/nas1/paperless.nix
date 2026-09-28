@@ -13,7 +13,11 @@
       ConditionPathIsMountPoint = ["/flash/paperless" "/tank/paperless"];
     };
   in {
-    networks.paperless = {};
+    # Fixed subnet so the gateway can be a trusted proxy (see immich.nix).
+    networks.paperless.networkConfig = {
+      subnets = ["10.90.2.0/24"];
+      gateways = ["10.90.2.1"];
+    };
 
     containers.paperless-broker = {
       autoStart = true;
@@ -63,6 +67,8 @@
         environments = {
           PAPERLESS_REDIS = "redis://paperless-broker:6379";
           PAPERLESS_DBHOST = "paperless-db";
+          # Real client IPs in "Login failed" lines (crowdsec reads them).
+          PAPERLESS_TRUSTED_PROXIES = "10.90.2.1";
         };
         networks = [networks.paperless.ref];
         publishPorts = ["127.0.0.1:13388:8000"];

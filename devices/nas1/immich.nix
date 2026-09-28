@@ -15,7 +15,12 @@
       ConditionPathIsMountPoint = ["/flash/immich" "/tank/immich" "/tank/storage"];
     };
   in {
-    networks.immich = {};
+    # Fixed subnet so the gateway (nginx's address inside the network) can be
+    # named as a trusted proxy; otherwise Immich logs it instead of the client.
+    networks.immich.networkConfig = {
+      subnets = ["10.90.1.0/24"];
+      gateways = ["10.90.1.1"];
+    };
     # ML model downloads; disposable.
     volumes.immich-model-cache = {};
 
@@ -92,6 +97,8 @@
           TZ = "Europe/Prague";
           # Prometheus metrics on 8081 (API) and 8082 (jobs), scraped by vmagent.
           IMMICH_TELEMETRY_INCLUDE = "all";
+          # Real client IPs in "Failed login attempt" lines (crowdsec reads them).
+          IMMICH_TRUSTED_PROXIES = "10.90.1.1";
         };
         # QSV transcoding; runs as root inside like the compose stack did, since
         # thumbs and backups are root-owned and the library is shared with gvarph.
