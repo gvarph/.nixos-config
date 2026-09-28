@@ -54,6 +54,9 @@ in {
   "ntfy_grafana_token.age".publicKeys = [nas1];
   # Grafana's database encryption key (datasource secrets, SSO settings).
   "grafana_secret_key.age".publicKeys = [nas1];
+  # CrowdSec's ntfy notification plugin: NTFY_TOKEN (the grafana user's token,
+  # same "alerts" topic), expanded into the plugin config by crowdsec itself.
+  "crowdsec_ntfy_env.age".publicKeys = [nas1];
   # crowdsec-web-ui: LAPI machine password (+ OIDC client once configured).
   "crowdsec-web-ui_env.age".publicKeys = [nas1];
 }

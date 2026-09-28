@@ -23,6 +23,27 @@
     })
     containerLogs;
 in {
+  age.secrets.crowdsec_ntfy_env.file = ../../secrets/crowdsec_ntfy_env.age;
+  systemd.services.crowdsec = {
+    serviceConfig.EnvironmentFile = [config.age.secrets.crowdsec_ntfy_env.path];
+    restartTriggers = [config.age.secrets.crowdsec_ntfy_env.file];
+  };
+  # The module leaves plugin_dir empty. crowdsec only runs plugins owned by
+  # its own user, so the binary is copied there (not linked from the store).
+  systemd.tmpfiles.settings."10-crowdsec"."/etc/crowdsec/plugins/notification-http" = {
+    "C+" = {
+      argument = "${config.services.crowdsec.package}/bin/notification-http";
+      user = "crowdsec";
+      group = "crowdsec";
+      mode = "0750";
+    };
+    z = {
+      user = "crowdsec";
+      group = "crowdsec";
+      mode = "0750";
+    };
+  };
+
   services.crowdsec = {
     enable = true;
     autoUpdateService = true;
@@ -44,6 +65,13 @@ in {
     settings = {
       # The module ships with the LAPI off and no credentials path; both are
       # required for a standalone engine. 8080 is taken by qbittorrent.
+      # Empty = plugins inherit the engine's user. Any value makes crowdsec
+      # setuid/setgid the child, which the unit's SystemCallFilter (~@privileged)
+      # kills with SIGSYS even when the target is its own uid.
+      general.plugin_config = {
+        user = "";
+        group = "";
+      };
       general.api.server = {
         enable = true;
         listen_uri = "127.0.0.1:8082";
@@ -121,6 +149,34 @@ in {
 
       # 4h for a first offense, +4h per prior decision, capped at 48h
       # (fail2ban's bantime-increment equivalent).
+      # Local decisions -> ntfy (topic "alerts", same token grafana uses). The
+      # token is a ${NTFY_TOKEN} placeholder here: crowdsec expands env vars in
+      # plugin configs, and the unit gets the secret as an EnvironmentFile.
+      notifications = [
+        {
+          type = "http";
+          name = "ntfy";
+          log_level = "info";
+          group_wait = "30s";
+          url = "http://127.0.0.1:8091/alerts";
+          method = "POST";
+          headers = {
+            Authorization = "Bearer \${NTFY_TOKEN}";
+            Title = "CrowdSec";
+            Tags = "shield";
+            Priority = "high";
+          };
+          format = ''
+            {{range . -}}
+            {{$a := . -}}
+            {{range .Decisions -}}
+            {{.Value}} banned {{.Duration}}: {{.Scenario}}{{if $a.Source.Cn}} ({{$a.Source.Cn}}{{if $a.Source.AsName}}, {{$a.Source.AsName}}{{end}}){{end}}
+            {{end -}}
+            {{end -}}
+          '';
+        }
+      ];
+
       profiles = [
         {
           name = "default_ip_remediation";
@@ -132,6 +188,7 @@ in {
             }
           ];
           duration_expr = "(GetDecisionsCount(Alert.GetValue()) + 1) * 4 > 48 ? '48h' : Sprintf('%dh', (GetDecisionsCount(Alert.GetValue()) + 1) * 4)";
+          notifications = ["ntfy"];
           on_success = "break";
         }
         {
@@ -143,6 +200,7 @@ in {
               duration = "4h";
             }
           ];
+          notifications = ["ntfy"];
           on_success = "break";
         }
       ];
