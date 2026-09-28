@@ -17,7 +17,7 @@ a `rpool/flash` child dataset if it is not one (see "Backup blind spot" below).
 - [x] cloudflare_ddns → native `services.cloudflare-ddns` (2026-09-28, `devices/nas1/ddns.nix`, reuses the ACME token)
 - [x] ntfy → native `services.ntfy-sh` (2026-09-28, `devices/nas1/ntfy.nix`; dataset rpool/flash/ntfy mounted at the DynamicUser state path, JSON logs feed crowdsec)
 - [x] obsidian (CouchDB): removed 2026-09-28, never used beyond a day
-- [ ] trek: one container, already hardened; maps 1:1 to quadlet keys
+- [x] trek: first quadlet (2026-09-28, `devices/nas1/trek.nix`); established `podman.nix` (quadlet-nix, `userns=auto` pool), agenix env files with inline comments stripped, `:U` volumes, loopback-only ports, ZFS mount guard
 - [ ] monitoring/grafana (down) → native `services.grafana` with the provisioning dir
 - [ ] music-assistant → native `services.music-assistant`; then close the 8000–65535 firewall hole
 

@@ -30,6 +30,7 @@ in {
     ./ddns.nix
     ./ntfy.nix
     ./podman.nix
+    ./trek.nix
     ./restic.nix
     ./nfs.nix
 

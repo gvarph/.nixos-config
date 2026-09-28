@@ -22,4 +22,6 @@ in {
   # Restic repository password. ALSO stored outside this machine — the
   # repo must be recoverable when nas1 is dead.
   "restic_hetzner_password.age".publicKeys = [nas1];
+  # Whole env file for the trek container (ENCRYPTION_KEY, OIDC client secret, ...).
+  "trek_env.age".publicKeys = [nas1];
 }
