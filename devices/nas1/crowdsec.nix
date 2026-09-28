@@ -13,7 +13,7 @@
     jellyfin = "jellyfin";
     jellyseerr = "jellyseerr";
     immich = "immich_server";
-    paperless-ngx = "paperless-webserver-1";
+    paperless-ngx = "paperless";
     grafana = "grafana";
   };
   containerAcquisitions =

@@ -28,4 +28,7 @@ in {
   "9router_env.age".publicKeys = [nas1];
   # Env file for the hevy2garmin container (Hevy API key, Garmin e-mail).
   "hevy2garmin_env.age".publicKeys = [nas1];
+  # Env file shared by paperless-ngx and paperless-gpt (Django secret, Gmail
+  # OAuth, paperless API token, 9router API key as OPENAI_API_KEY).
+  "paperless_env.age".publicKeys = [nas1];
 }

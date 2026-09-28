@@ -36,7 +36,7 @@ a `rpool/flash` child dataset if it is not one (see "Backup blind spot" below).
 - [ ] shelfarr: static IP on servarr network, `AddHost=host.containers.internal`; needs the servarr `.network` first
 - [ ] ble_scale_sync: `.build` from `~/ble-scale-sync` fork, custom entrypoint, writes its own config; check host BLE access needs
 - [ ] sparkyfitness: 4 containers, Postgres 18, internal nginx with rate limiting; no module; state not a dataset
-- [ ] paperless: 6 containers (Postgres 18, Redis, paperless-gpt, exporters); native `services.paperless` later via dump/restore
+- [x] paperless (2026-09-28, `devices/nas1/paperless.nix`): 4 quadlets on a private network (exporters dropped), images pinned; paperless-gpt joins the 9router network and uses `ds/deepseek-v4.1-flash` via 9router; its entrypoint needs `userns=auto:size=65536`
 - [ ] geocoding-throttle: lives on dawarich's network, unhealthy today; migrate with dawarich or drop
 
 ## 4. Hard (devices, privileges, cross-stack networks)

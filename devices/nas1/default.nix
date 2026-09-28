@@ -36,6 +36,7 @@ in {
     ./9router.nix
     ./hevy2garmin.nix
     ./audiobookshelf.nix
+    ./paperless.nix
     ./restic.nix
     ./nfs.nix
 
