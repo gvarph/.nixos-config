@@ -27,8 +27,8 @@ a `rpool/flash` child dataset if it is not one (see "Backup blind spot" below).
 - [ ] hevy2garmin: `.build` unit from `~/hevy2garmin`; env file must stay `$`-free
 - [ ] navidrome: `ND_EXTAUTH_TRUSTEDSOURCES` hardcodes two gateway IPs, must match the new network
 - [ ] monitoring/logs: mounts `/var/log/journal`; native `services.victorialogs` + fluent-bit is one step further
-- [ ] garage (down) → native `services.garage`, same `garage.toml`
-- [ ] photon (down): decide if still wanted; container-wise trivial, 180 GB index on rpool/root
+- [x] garage: removed 2026-09-28 (was down; vhost, dataset and stack deleted)
+- [x] photon: removed 2026-09-28 (was down; index dir already gone)
 
 ## 3. Medium (multi-container, a database, or a build from git)
 

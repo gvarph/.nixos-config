@@ -12,7 +12,6 @@
     "rpool/flash"
     "rpool/flash/9router"
     "rpool/flash/arr"
-    "rpool/flash/garage-s3"
     "rpool/flash/immich"
     "rpool/flash/jellyfin"
     "rpool/flash/monitoring"
