@@ -17,7 +17,6 @@
     "rpool/flash/monitoring"
     "rpool/flash/music-assistant"
     "rpool/flash/ntfy"
-    "rpool/flash/obsidian"
     "rpool/flash/paperless"
     "rpool/flash/pocket-id"
     "rpool/flash/dawarich"

@@ -108,17 +108,6 @@ in {
           '';
         };
       };
-      "obs-couchdb.gvarph.com" = {
-        forceSSL = true;
-        useACMEHost = "gvarph.com";
-        locations."/" = {
-          proxyPass = "http://localhost:5984";
-          proxyWebsockets = true;
-          extraConfig = ''
-            add_header Strict-Transport-Security "max-age=63072000; preload" always;
-          '';
-        };
-      };
       "s3.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";

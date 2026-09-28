@@ -16,7 +16,6 @@
     paperless-ngx = "paperless-webserver-1";
     grafana = "grafana";
     navidrome = "navidrome";
-    couchdb = "couchdb-for-obsidian";
   };
   containerAcquisitions =
     lib.mapAttrsToList (program: container: {
@@ -42,7 +41,6 @@ in {
       "LePresidente/grafana"
       "sdwilsh/navidrome"
       "Jgigantino31/ntfy"
-      "aidalinfo/couchdb"
     ];
 
     settings = {
