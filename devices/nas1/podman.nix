@@ -24,4 +24,8 @@
   users.groups.containers = {};
 
   virtualisation.podman.dockerCompat = false;
+
+  # Upstream Dockerfiles use short names like python:3.12-slim; NixOS ships no
+  # search registry, so builds fail without this. Our own quadlets stay fully qualified.
+  virtualisation.containers.registries.settings.unqualified-search-registries = ["docker.io"];
 }

@@ -26,4 +26,6 @@ in {
   "trek_env.age".publicKeys = [nas1];
   # Whole env file for the 9router container (JWT/API key secrets, initial password).
   "9router_env.age".publicKeys = [nas1];
+  # Env file for the hevy2garmin container (Hevy API key, Garmin e-mail).
+  "hevy2garmin_env.age".publicKeys = [nas1];
 }

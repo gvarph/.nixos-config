@@ -33,6 +33,7 @@ in {
     ./podman.nix
     ./trek.nix
     ./9router.nix
+    ./hevy2garmin.nix
     ./restic.nix
     ./nfs.nix
 
