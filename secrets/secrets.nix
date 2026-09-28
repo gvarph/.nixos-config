@@ -37,4 +37,7 @@ in {
   "sparkyfitness_db_env.age".publicKeys = [nas1];
   # Jellystat: Postgres credentials and JWT secret (were plaintext in the compose file).
   "jellystat_env.age".publicKeys = [nas1];
+  # Immich: app env (DB credentials, paths) and the POSTGRES_* subset for its database.
+  "immich_env.age".publicKeys = [nas1];
+  "immich_db_env.age".publicKeys = [nas1];
 }

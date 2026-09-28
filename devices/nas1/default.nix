@@ -39,6 +39,7 @@ in {
     ./paperless.nix
     ./sparkyfitness.nix
     ./jellyfin.nix
+    ./immich.nix
     ./restic.nix
     ./nfs.nix
 

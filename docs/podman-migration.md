@@ -44,7 +44,7 @@ a `rpool/flash` child dataset if it is not one (see "Backup blind spot" below).
 - [ ] create the servarr `.network` unit (172.39.0.0/24) before jellyfin, shelfarr, arr
 - [x] jellyfin + jellystat (2026-09-28, `devices/nas1/jellyfin.nix`): `/dev/dri` via AddDevice + GroupAdd render/video, runs as 1000:100, QSV verified with vainfo (iHD, H264/HEVC VLD+EncSlice); 8096 loopback only, discovery port dropped; jellystat creds moved to agenix, new vhost jellystat.gvarph.com behind oauth2-proxy
 - [ ] jellyseerr: still in `docker_storage/jellyfin` compose (pinned 172.39.0.10 on servarrnetwork); migrate with arr
-- [ ] immich: 7 containers; flatten the two `extends` hwaccel files, `/dev/dri`, `device_cgroup_rules` via `PodmanArgs`, replace autoheal with systemd `Restart=`; keep the custom Postgres 14 image (native later = riskiest data migration)
+- [x] immich (2026-09-28, `devices/nas1/immich.nix`): 4 quadlets (autoheal + exporters dropped; `HealthOnFailure=kill` + Restart replaces autoheal), pinned v3.2.2, custom Postgres 14 image kept, `/dev/dri` for QSV (verified with an in-container h264_qsv encode) and OpenVINO, USB passthrough dropped; 2283 loopback only; app deps are `Wants` not `Requires` after a transient registry pull failure cancelled the server's start
 - [ ] dawarich (down): decide if it comes back; PostGIS, `shm_size 1G`, health-gated deps, owns a network; native `services.dawarich` exists
 - [ ] arr: gluetun + plain qBittorrent with `Network=gluetun.container` (PIA port forward via `VPN_PORT_FORWARDING_UP_COMMAND`), keep 172.39.0.2 on gluetun, fix qbit-manager URL (no more 172.17.0.1), `.build` for qbit-manager, 11 mechanical conversions; do last
 

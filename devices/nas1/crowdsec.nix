@@ -12,7 +12,7 @@
   containerLogs = {
     jellyfin = "jellyfin";
     jellyseerr = "jellyseerr";
-    immich = "immich_server";
+    immich = "immich-server";
     paperless-ngx = "paperless";
     grafana = "grafana";
   };
