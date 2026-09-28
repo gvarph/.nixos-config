@@ -27,6 +27,7 @@ in {
     ./disko
     ./nginx.nix
     ./crowdsec.nix
+    ./ddns.nix
     ./restic.nix
     ./nfs.nix
 
