@@ -31,6 +31,7 @@ in {
     ./ntfy.nix
     ./podman.nix
     ./trek.nix
+    ./9router.nix
     ./restic.nix
     ./nfs.nix
 

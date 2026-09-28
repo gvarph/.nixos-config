@@ -23,7 +23,7 @@ a `rpool/flash` child dataset if it is not one (see "Backup blind spot" below).
 
 ## 2. Easy (one wrinkle each)
 
-- [ ] 9router: two containers, one named volume, loopback port
+- [x] 9router (2026-09-28, `devices/nas1/9router.nix`): first quadlet network + named volume + container dependency; images pinned (headroom by digest); dashboard password is INITIAL_PASSWORD until changed in-app
 - [ ] hevy2garmin: `.build` unit from `~/hevy2garmin`; env file must stay `$`-free
 - [ ] navidrome: `ND_EXTAUTH_TRUSTEDSOURCES` hardcodes two gateway IPs, must match the new network
 - [ ] monitoring/logs: mounts `/var/log/journal`; native `services.victorialogs` + fluent-bit is one step further

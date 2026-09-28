@@ -24,4 +24,6 @@ in {
   "restic_hetzner_password.age".publicKeys = [nas1];
   # Whole env file for the trek container (ENCRYPTION_KEY, OIDC client secret, ...).
   "trek_env.age".publicKeys = [nas1];
+  # Whole env file for the 9router container (JWT/API key secrets, initial password).
+  "9router_env.age".publicKeys = [nas1];
 }

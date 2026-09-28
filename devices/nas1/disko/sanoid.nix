@@ -10,6 +10,7 @@
   datasets = [
     # NVMe app data
     "rpool/flash"
+    "rpool/flash/9router"
     "rpool/flash/arr"
     "rpool/flash/garage-s3"
     "rpool/flash/immich"
