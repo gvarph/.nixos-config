@@ -19,7 +19,7 @@ a `rpool/flash` child dataset if it is not one (see "Backup blind spot" below).
 - [x] obsidian (CouchDB): removed 2026-09-28, never used beyond a day
 - [x] trek: first quadlet (2026-09-28, `devices/nas1/trek.nix`); established `podman.nix` (quadlet-nix, `userns=auto` pool), agenix env files with inline comments stripped, `:U` volumes, loopback-only ports, ZFS mount guard
 - [ ] monitoring/grafana (down) → native `services.grafana` with the provisioning dir
-- [ ] music-assistant → native `services.music-assistant`; then close the 8000–65535 firewall hole
+- [x] music-assistant → native `services.music-assistant` (2026-09-28, `devices/nas1/music-assistant.nix`, nixpkgs tracks upstream within days); dataset re-homed to the DynamicUser path; 8000–65535 firewall range replaced by an explicit list (module ports + 8095 for HA + sonarr/prowlarr/slskd until arr migrates)
 
 ## 2. Easy (one wrinkle each)
 

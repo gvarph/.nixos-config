@@ -41,6 +41,7 @@ in {
     ./jellyfin.nix
     ./immich.nix
     ./ble-scale-sync.nix
+    ./music-assistant.nix
     ./restic.nix
     ./nfs.nix
 
@@ -79,21 +80,17 @@ in {
       1400 # Sonos control API
       8008 # Chromecast HTTP control
       8009 # Chromecast HTTPS/control
+
+      # Music Assistant's own ports come from its module (openFirewall) and
+      # music-assistant.nix. These are docker-era UIs without a vhost; drop
+      # them as the arr stack migrates.
+      8989 # sonarr UI
+      9696 # prowlarr UI
+      50300 # slskd peer port (Soulseek needs inbound)
     ];
     allowedUDPPorts = [
       5353 # mDNS (multicast discovery for Chromecast, AirPlay, some Sonos features)
       1900 # SSDP/UPnP (Sonos discovery)
-    ];
-
-    # Wide open range needed for Sonos <-> Music Assistant connectivity
-    # (Sonos speakers connect back to arbitrary high ports). This bypasses
-    # nginx/oauth2-proxy for anything listening >= 8000 on the LAN — TODO:
-    # replace with an enumerated port list or a VLAN-scoped rule.
-    allowedTCPPortRanges = [
-      {
-        from = 8000;
-        to = 65535;
-      }
     ];
   };
 
