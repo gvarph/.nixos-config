@@ -16,6 +16,7 @@
     "rpool/flash/jellyfin"
     "rpool/flash/monitoring"
     "rpool/flash/music-assistant"
+    "rpool/flash/navidrome"
     "rpool/flash/ntfy"
     "rpool/flash/paperless"
     "rpool/flash/pocket-id"

@@ -25,7 +25,7 @@ a `rpool/flash` child dataset if it is not one (see "Backup blind spot" below).
 
 - [x] 9router (2026-09-28, `devices/nas1/9router.nix`): first quadlet network + named volume + container dependency; images pinned (headroom by digest); dashboard password is INITIAL_PASSWORD until changed in-app
 - [ ] hevy2garmin: `.build` unit from `~/hevy2garmin`; env file must stay `$`-free
-- [ ] navidrome: `ND_EXTAUTH_TRUSTEDSOURCES` hardcodes two gateway IPs, must match the new network
+- [x] navidrome → native `services.navidrome` (2026-09-28, `devices/nas1/navidrome.nix`); new dataset rpool/flash/navidrome; SSO header trusted from loopback only; library path re-synced from MusicFolder on first start
 - [ ] monitoring/logs: mounts `/var/log/journal`; native `services.victorialogs` + fluent-bit is one step further
 - [x] garage: removed 2026-09-28 (was down; vhost, dataset and stack deleted)
 - [x] photon: removed 2026-09-28 (was down; index dir already gone)

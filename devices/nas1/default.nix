@@ -29,6 +29,7 @@ in {
     ./crowdsec.nix
     ./ddns.nix
     ./ntfy.nix
+    ./navidrome.nix
     ./podman.nix
     ./trek.nix
     ./9router.nix

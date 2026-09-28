@@ -15,7 +15,6 @@
     immich = "immich_server";
     paperless-ngx = "paperless-webserver-1";
     grafana = "grafana";
-    navidrome = "navidrome";
   };
   containerAcquisitions =
     lib.mapAttrsToList (program: container: {
@@ -87,6 +86,11 @@ in {
             source = "journalctl";
             journalctl_filter = ["-o" "cat" "_SYSTEMD_UNIT=ntfy-sh.service"];
             labels.type = "ntfy";
+          }
+          {
+            source = "journalctl";
+            journalctl_filter = ["-o" "cat" "_SYSTEMD_UNIT=navidrome.service"];
+            labels.type = "navidrome";
           }
           # ABS's stdout is plain text, which its hub parser JSON-decodes with an
           # error per line; the daily files in its metadata volume are JSON lines.
