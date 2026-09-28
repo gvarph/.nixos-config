@@ -57,6 +57,9 @@ in {
   # CrowdSec's ntfy notification plugin: NTFY_TOKEN (the grafana user's token,
   # same "alerts" topic), expanded into the plugin config by crowdsec itself.
   "crowdsec_ntfy_env.age".publicKeys = [nas1];
+  # API key the nginx Lua bouncer authenticates to the LAPI with (registered
+  # by crowdsec-nginx-bouncer-register.service).
+  "crowdsec_nginx_bouncer_key.age".publicKeys = [nas1];
   # crowdsec-web-ui: LAPI machine password (+ OIDC client once configured).
   "crowdsec-web-ui_env.age".publicKeys = [nas1];
 }

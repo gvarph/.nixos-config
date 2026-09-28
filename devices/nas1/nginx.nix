@@ -10,6 +10,10 @@ in {
     enable = true;
 
     recommendedProxySettings = true;
+    # CrowdSec's Lua bouncer runs in the access phase (crowdsec.nix renders its
+    # config): the firewall bouncer cannot see attackers behind Cloudflare.
+    lua.enable = true;
+    lua.extraPackages = ps: [ps.lua-cjson ps.lua-resty-http ps.lua-resty-openssl pkgs.lua-resty-string pkgs.crowdsec-lua-bouncer];
     recommendedTlsSettings = true;
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
@@ -19,6 +23,32 @@ in {
     commonHttpConfig = ''
       real_ip_header CF-Connecting-IP;
       ${lib.concatMapStringsSep "\n" (r: "set_real_ip_from ${r};") cloudflareRanges}
+
+      # CrowdSec nginx bouncer (upstream crowdsec_nginx.conf minus the unix-socket
+      # map). Runs after real_ip, so remote_addr is the real client here.
+      lua_shared_dict crowdsec_cache 50m;
+      init_by_lua_block {
+        cs = require "crowdsec"
+        local ok, err = cs.init("/run/nginx/crowdsec-bouncer.conf", "crowdsec-nginx-bouncer/nixos-${pkgs.crowdsec-lua-bouncer.version}")
+        if ok == nil then
+          ngx.log(ngx.ERR, "[Crowdsec] " .. err)
+          error()
+        end
+        ngx.log(ngx.ALERT, "[Crowdsec] Initialisation done")
+      }
+      init_worker_by_lua_block {
+        cs = require "crowdsec"
+        if string.lower(cs.get_mode()) == "stream" then
+          cs.SetupStream()
+        end
+        if ngx.worker.id() == 0 then
+          cs.SetupMetrics()
+        end
+      }
+      access_by_lua_block {
+        local cs = require "crowdsec"
+        cs.Allow(ngx.var.remote_addr)
+      }
     '';
 
     # Single backend: never eject it on a transient failure (e.g. a stale

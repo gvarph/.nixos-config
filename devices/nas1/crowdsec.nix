@@ -24,6 +24,68 @@
     containerLogs;
 in {
   age.secrets.crowdsec_ntfy_env.file = ../../secrets/crowdsec_ntfy_env.age;
+  age.secrets.crowdsec_nginx_bouncer_key.file = ../../secrets/crowdsec_nginx_bouncer_key.age;
+
+  # nginx Lua bouncer (nginx.nix): registered as a LAPI bouncer with our own
+  # key, and its config rendered into nginx's runtime dir with the key filled
+  # in before nginx's config test runs init_by_lua.
+  systemd.services.crowdsec-nginx-bouncer-register = {
+    after = ["crowdsec.service"];
+    requires = ["crowdsec.service"];
+    path = [config.services.crowdsec.package];
+    serviceConfig.Type = "oneshot";
+    script = ''
+      key=$(cat ${config.age.secrets.crowdsec_nginx_bouncer_key.path})
+      for i in 1 2 3 4 5 6; do
+        cscli bouncers delete crowdsec-nginx --ignore-missing >/dev/null 2>&1 || true
+        cscli bouncers add crowdsec-nginx --key "$key" >/dev/null && exit 0
+        sleep 5
+      done
+      exit 1
+    '';
+  };
+  systemd.services.nginx = let
+    bouncerConf = pkgs.writeText "crowdsec-nginx-bouncer.conf" ''
+      ENABLED=true
+      API_URL=http://127.0.0.1:8082
+      API_KEY=@API_KEY@
+      USE_TLS_AUTH=false
+      CACHE_EXPIRATION=1
+      BOUNCING_ON_TYPE=all
+      FALLBACK_REMEDIATION=ban
+      REQUEST_TIMEOUT=3000
+      UPDATE_FREQUENCY=10
+      ENABLE_INTERNAL=false
+      MODE=stream
+      SCENARIOS_CONTAINING=
+      SCENARIOS_NOT_CONTAINING=
+      EXCLUDE_LOCATION=
+      BAN_TEMPLATE_PATH=${pkgs.crowdsec-lua-bouncer}/share/crowdsec-lua-bouncer/templates/ban.html
+      REDIRECT_LOCATION=
+      RET_CODE=
+      CAPTCHA_PROVIDER=
+      SECRET_KEY=
+      SITE_KEY=
+      CAPTCHA_TEMPLATE_PATH=${pkgs.crowdsec-lua-bouncer}/share/crowdsec-lua-bouncer/templates/captcha.html
+      CAPTCHA_EXPIRATION=3600
+      APPSEC_URL=
+      APPSEC_FAILURE_ACTION=passthrough
+      ALWAYS_SEND_TO_APPSEC=false
+      APPSEC_DROP_UNREADABLE_BODY=false
+      SSL_VERIFY=true
+    '';
+    render = pkgs.writeShellScript "render-crowdsec-nginx-bouncer-conf" ''
+      umask 077
+      sed "s|@API_KEY@|$(cat ${config.age.secrets.crowdsec_nginx_bouncer_key.path})|" ${bouncerConf} > /run/nginx/crowdsec-bouncer.conf
+      chown nginx:nginx /run/nginx/crowdsec-bouncer.conf
+    '';
+  in {
+    after = ["crowdsec-nginx-bouncer-register.service"];
+    wants = ["crowdsec-nginx-bouncer-register.service"];
+    # Root (+) and before the module's own pre-start, whose `nginx -t` already runs init_by_lua.
+    serviceConfig.ExecStartPre = lib.mkBefore ["+${render}"];
+    restartTriggers = [config.age.secrets.crowdsec_nginx_bouncer_key.file bouncerConf];
+  };
   systemd.services.crowdsec = {
     serviceConfig.EnvironmentFile = [config.age.secrets.crowdsec_ntfy_env.path];
     restartTriggers = [config.age.secrets.crowdsec_ntfy_env.file];

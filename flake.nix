@@ -98,6 +98,7 @@
     overlays = [
       (import ./overlays/awakened-poe-trade.nix)
       (import ./overlays/mcp-servers.nix)
+      (import ./overlays/crowdsec-lua-bouncer.nix)
 
       # waybar: workspace clicks are no-ops when Hyprland's configProvider is
       # "lua" (check with `hyprctl systeminfo | grep configProvider`), because
