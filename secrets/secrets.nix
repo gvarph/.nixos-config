@@ -46,4 +46,8 @@ in {
   # lidify's Last.fm keys + Lidarr API key.
   "qbittorrent_env.age".publicKeys = [nas1];
   "lidify_env.age".publicKeys = [nas1];
+  # Dawarich: app env (secret key base, OIDC client, DB password) and the
+  # POSTGRES_* subset for its PostGIS container.
+  "dawarich_env.age".publicKeys = [nas1];
+  "dawarich_db_env.age".publicKeys = [nas1];
 }

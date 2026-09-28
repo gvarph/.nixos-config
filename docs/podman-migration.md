@@ -36,7 +36,7 @@ a `rpool/flash` child dataset if it is not one (see "Backup blind spot" below).
 - [x] ble_scale_sync (2026-09-28, `devices/nas1/ble-scale-sync.nix`): upstream image 1.29.0 (both fork PRs shipped since 1.27.0), entrypoint override kept to skip the BT reset and pass --config, secrets via agenix (config.yaml only has `${VAR}` placeholders), state on rpool/flash/ble-scale-sync; `~/ble-scale-sync` no longer needed
 - [x] sparkyfitness (2026-09-28, `devices/nas1/sparkyfitness.nix`): 3 quadlets on a private network (exporter dropped), images pinned v1.7.3, POSTGRES_* split into its own secret; new dataset rpool/flash/sparkyfitness
 - [x] paperless (2026-09-28, `devices/nas1/paperless.nix`): 4 quadlets on a private network (exporters dropped), images pinned; paperless-gpt joins the 9router network and uses `ds/deepseek-v4.1-flash` via 9router; its entrypoint needs `userns=auto:size=65536`
-- [ ] geocoding-throttle: lives on dawarich's network, unhealthy today; migrate with dawarich or drop
+- [x] geocoding-throttle: folded into `devices/nas1/dawarich.nix` (nginx config from the nix store; health probe on 127.0.0.1 since busybox wget prefers ::1)
 
 ## 4. Hard (devices, privileges, cross-stack networks)
 
@@ -44,7 +44,7 @@ a `rpool/flash` child dataset if it is not one (see "Backup blind spot" below).
 - [x] jellyfin + jellystat (2026-09-28, `devices/nas1/jellyfin.nix`): `/dev/dri` via AddDevice + GroupAdd render/video, runs as 1000:100, QSV verified with vainfo (iHD, H264/HEVC VLD+EncSlice); 8096 loopback only, discovery port dropped; jellystat creds moved to agenix, new vhost jellystat.gvarph.com behind oauth2-proxy
 - [ ] jellyseerr: still in `docker_storage/jellyfin` compose (pinned 172.39.0.10 on servarrnetwork); migrate with arr
 - [x] immich (2026-09-28, `devices/nas1/immich.nix`): 4 quadlets (autoheal + exporters dropped; `HealthOnFailure=kill` + Restart replaces autoheal), pinned v3.2.2, custom Postgres 14 image kept, `/dev/dri` for QSV (verified with an in-container h264_qsv encode) and OpenVINO, USB passthrough dropped; 2283 loopback only; app deps are `Wants` not `Requires` after a transient registry pull failure cancelled the server's start
-- [ ] dawarich (down): decide if it comes back; PostGIS, `shm_size 1G`, health-gated deps, owns a network; native `services.dawarich` exists
+- [x] dawarich (2026-09-28, `devices/nas1/dawarich.nix`): 5 quadlets (exporters dropped), pinned 1.15.2, migrations applied on the existing PostGIS data, tested end to end; **import commented out in default.nix on purpose**, re-enable to bring it back
 - [x] arr (2026-09-28, `devices/nas1/arr.nix`): binhex qbittorrentvpn kept, unprivileged (NET_ADMIN + src_valid_mark sysctl + /dev/net/tun; gluetun has no native PIA WireGuard), qbit-manager built from `devices/nas1/qbit-manager/` and talking to `qbittorrent:8080`, lscr apps via a shared helper, images pinned; sonarr/radarr/prowlarr/bazarr vhosts behind oauth2-proxy, 8989/9696 out of the firewall
 - [x] jellyseerr (2026-09-28, `devices/nas1/jellyseerr.nix`): also on the jellyfin network so `jellyfin` resolves again; per-network `:ip=` since it joins two networks
 - [x] shelfarr (2026-09-28, `devices/nas1/shelfarr.nix`): new dataset rpool/flash/shelfarr; joins servarr + audiobookshelf networks (ABS URL → `http://audiobookshelf:13378` in its settings); needs `ip_unprivileged_port_start=0` to bind :80 as PUID (docker set that by default)
