@@ -50,4 +50,8 @@ in {
   # POSTGRES_* subset for its PostGIS container.
   "dawarich_env.age".publicKeys = [nas1];
   "dawarich_db_env.age".publicKeys = [nas1];
+  # ntfy access token for Grafana's alert contact point (ntfy user "grafana").
+  "ntfy_grafana_token.age".publicKeys = [nas1];
+  # Grafana's database encryption key (datasource secrets, SSO settings).
+  "grafana_secret_key.age".publicKeys = [nas1];
 }

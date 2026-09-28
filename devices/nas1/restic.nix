@@ -70,7 +70,7 @@ in {
     dynamicFilesFrom = ''
       ${zfs} list -H -o mountpoint -r ${datasetArgs} \
         | grep -v '^\(legacy\|none\|-\)$' \
-        | grep -v '^/var/lib/private/victorialogs$' \
+        | grep -v '^/var/lib/private/victoria\(logs\|metrics\)$' \
         | sed 's|$|/.zfs/snapshot/restic|'
     '';
 

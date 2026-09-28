@@ -31,6 +31,8 @@ in {
     ./ntfy.nix
     ./navidrome.nix
     ./logs.nix
+    ./metrics.nix
+    ./grafana.nix
     ./podman.nix
     ./trek.nix
     ./9router.nix

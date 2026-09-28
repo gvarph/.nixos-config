@@ -18,7 +18,7 @@ a `rpool/flash` child dataset if it is not one (see "Backup blind spot" below).
 - [x] ntfy → native `services.ntfy-sh` (2026-09-28, `devices/nas1/ntfy.nix`; dataset rpool/flash/ntfy mounted at the DynamicUser state path, JSON logs feed crowdsec)
 - [x] obsidian (CouchDB): removed 2026-09-28, never used beyond a day
 - [x] trek: first quadlet (2026-09-28, `devices/nas1/trek.nix`); established `podman.nix` (quadlet-nix, `userns=auto` pool), agenix env files with inline comments stripped, `:U` volumes, loopback-only ports, ZFS mount guard
-- [ ] monitoring/grafana (down) → native `services.grafana` with the provisioning dir
+- [x] monitoring/grafana → native `services.grafana` (2026-09-28, `devices/nas1/grafana.nix`): datasources, dashboards (`devices/nas1/grafana/dashboards/`), ntfy contact point, policies and rules provisioned from Nix; ntfy token and a new secret_key via agenix (`$__file{}`); dataset rpool/flash/grafana at /var/lib/grafana; crowdsec reads grafana.service from the journal
 - [x] music-assistant → native `services.music-assistant` (2026-09-28, `devices/nas1/music-assistant.nix`, nixpkgs tracks upstream within days); dataset re-homed to the DynamicUser path; 8000–65535 firewall range replaced by an explicit list (module ports + 8095 for HA + sonarr/prowlarr/slskd until arr migrates)
 
 ## 2. Easy (one wrinkle each)
@@ -51,11 +51,11 @@ a `rpool/flash` child dataset if it is not one (see "Backup blind spot" below).
 
 ## 5. Redesign, not migration
 
-- [ ] monitoring/metrics (off, resource cost): if it returns, native `services.vmagent` with static targets, node_exporter cgroup collectors, cadvisor only with slow housekeeping and reduced metric sets
+- [x] monitoring/metrics → native (2026-09-28, `devices/nas1/metrics.nix`): victoriametrics (dataset at the DynamicUser path, excluded from sanoid/syncoid/restic like victorialogs), vmagent with static loopback targets (job/instance keep the old container names), node + smartctl exporters, cadvisor in raw cgroup mode on `/system.slice/` (its podman factory can't read quadlet's split cgroups) with 30s housekeeping and `cpu,memory,network,oom_event` only, vmagent derives `name`/`unit` labels from the cgroup id; old VM data (last written 2026-08-31, 1-month retention) not carried over
 
 ## Cross-cutting
 
-- [ ] Backup blind spot: `/flash/{audiobookshelf,ntfy,navidrome,shelfarr,sparkyfitness,metrics,logs}` are plain dirs on rpool/root, not datasets → not snapshotted, not in restic. Docker named volumes likewise.
+- [x] Backup blind spot: every remaining state dir is a dataset now; `/flash/metrics` and `/flash/logs` are leftovers to delete
 - [ ] Every unit that touches `/flash/*` or `/tank`: `After=zfs-mount.service` + `ConditionPathIsMountPoint=`; Podman refuses missing bind sources, so a failed pool import fails loudly instead of writing into rpool/root
 - [ ] Rootful podman storage stays on rpool/root (`/var/lib/containers`), never under `/home` (restic would back up image layers)
 - [ ] Remove `virtualisation.docker` and the image-prune timer once the last stack is gone

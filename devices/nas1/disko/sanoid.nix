@@ -16,7 +16,6 @@
     "rpool/flash/ble-scale-sync"
     "rpool/flash/immich"
     "rpool/flash/jellyfin"
-    "rpool/flash/monitoring"
     "rpool/flash/music-assistant"
     "rpool/flash/navidrome"
     "rpool/flash/ntfy"
@@ -25,6 +24,7 @@
     "rpool/flash/shelfarr"
     "rpool/flash/sparkyfitness"
     "rpool/flash/dawarich"
+    "rpool/flash/grafana"
     "rpool/flash/trek"
     "rpool/flash/hevy2garmin"
 
@@ -70,8 +70,8 @@ in {
         recursive = true;
         sendOptions = "Pb";
         recvOptions = "u";
-        # Log store: disposable, and not in the sanoid list above either.
-        extraArgs = ["--exclude-datasets=victorialogs"];
+        # Log and metrics stores: disposable, and not in the sanoid list above either.
+        extraArgs = ["--exclude-datasets=victoria(logs|metrics)"];
       };
     };
   };

@@ -1,0 +1,440 @@
+{
+  "uid": "zfs-nodeexp",
+  "title": "ZFS (node-exporter)",
+  "description": "ZFS ARC, pool health, per-dataset IO, ZIL and write-throttle metrics from the node-exporter zfs collector.",
+  "tags": ["zfs", "storage", "node-exporter"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "editable": true,
+  "graphTooltip": 1,
+  "time": { "from": "now-6h", "to": "now" },
+  "refresh": "1m",
+  "templating": {
+    "list": [
+      {
+        "name": "pool",
+        "label": "Pool",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+        "definition": "label_values(node_zfs_zpool_state, zpool)",
+        "query": { "query": "label_values(node_zfs_zpool_state, zpool)", "refId": "pool" },
+        "refresh": 1,
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "sort": 1,
+        "current": { "text": ["All"], "value": ["$__all"] }
+      },
+      {
+        "name": "dataset",
+        "label": "Dataset",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+        "definition": "label_values(node_zfs_zpool_dataset_nread{zpool=~\"${pool:regex}\"}, dataset)",
+        "query": { "query": "label_values(node_zfs_zpool_dataset_nread{zpool=~\"${pool:regex}\"}, dataset)", "refId": "dataset" },
+        "refresh": 2,
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "sort": 1,
+        "current": { "text": ["All"], "value": ["$__all"] }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Pool Health",
+      "description": "1 = ONLINE. Anything else means the pool has left the online state.",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+          "expr": "sum by (zpool) (node_zfs_zpool_state{state=\"online\", zpool=~\"${pool:regex}\"})",
+          "legendFormat": "{{zpool}}",
+          "instant": true
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "value_and_name",
+        "justifyMode": "auto",
+        "orientation": "horizontal"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            { "type": "value", "options": { "1": { "text": "ONLINE", "color": "green", "index": 0 } } },
+            { "type": "value", "options": { "0": { "text": "NOT ONLINE", "color": "red", "index": 1 } } }
+          ],
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "green", "value": 1 } ] },
+          "unit": "none"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "ARC Size",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "targets": [
+        { "refId": "A", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_size", "legendFormat": "current", "instant": true },
+        { "refId": "B", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_c", "legendFormat": "target", "instant": true },
+        { "refId": "C", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_c_max", "legendFormat": "max", "instant": true }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value_and_name",
+        "orientation": "horizontal"
+      },
+      "fieldConfig": {
+        "defaults": { "unit": "bytes", "color": { "mode": "fixed", "fixedColor": "blue" }, "mappings": [] },
+        "overrides": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "ARC Hit Ratio",
+      "description": "Demand + prefetch, over the dashboard rate interval. Gaps mean the ARC was idle (ratio undefined).",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+          "expr": "sum(rate(node_zfs_arc_hits[$__rate_interval])) / (sum(rate(node_zfs_arc_hits[$__rate_interval])) + sum(rate(node_zfs_arc_misses[$__rate_interval]))) * 100",
+          "legendFormat": "hit %",
+          "instant": true
+        }
+      ],
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "colorMode": "background",
+        "graphMode": "area",
+        "textMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "orange", "value": 80 }, { "color": "green", "value": 95 } ] }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 4,
+      "type": "gauge",
+      "title": "ARC Fill (% of c_max)",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+      "targets": [
+        { "refId": "A", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_size / node_zfs_arc_c_max * 100", "legendFormat": "fill", "instant": true }
+      ],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "showThresholdLabels": false, "showThresholdMarkers": true },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent", "min": 0, "max": 100, "decimals": 1, "mappings": [],
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "blue", "value": null }, { "color": "green", "value": 50 } ] }
+        },
+        "overrides": []
+      }
+    },
+
+    {
+      "id": 10,
+      "type": "timeseries",
+      "title": "ARC Size vs Target vs Max",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "targets": [
+        { "refId": "A", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_size", "legendFormat": "size" },
+        { "refId": "B", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_c", "legendFormat": "target (c)" },
+        { "refId": "C", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_c_max", "legendFormat": "max (c_max)" },
+        { "refId": "D", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_c_min", "legendFormat": "min (c_min)" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes", "min": 0, "mappings": [],
+          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 8, "showPoints": "never", "spanNulls": true, "axisPlacement": "auto" }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "max (c_max)" }, "properties": [ { "id": "custom.lineStyle", "value": { "fill": "dash", "dash": [10, 10] } }, { "id": "custom.fillOpacity", "value": 0 }, { "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } } ] },
+          { "matcher": { "id": "byName", "options": "min (c_min)" }, "properties": [ { "id": "custom.lineStyle", "value": { "fill": "dash", "dash": [10, 10] } }, { "id": "custom.fillOpacity", "value": 0 }, { "id": "color", "value": { "mode": "fixed", "fixedColor": "yellow" } } ] },
+          { "matcher": { "id": "byName", "options": "target (c)" }, "properties": [ { "id": "custom.fillOpacity", "value": 0 }, { "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } } ] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["last", "max"], "showLegend": true }, "tooltip": { "mode": "multi", "sort": "desc" } }
+    },
+    {
+      "id": 11,
+      "type": "timeseries",
+      "title": "ARC Composition",
+      "description": "How the ARC is being spent: user data vs metadata and the various header/dnode overheads.",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "targets": [
+        { "refId": "A", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_data_size", "legendFormat": "data" },
+        { "refId": "B", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_metadata_size", "legendFormat": "metadata" },
+        { "refId": "C", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_hdr_size", "legendFormat": "headers" },
+        { "refId": "D", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_dbuf_size", "legendFormat": "dbuf" },
+        { "refId": "E", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_dnode_size", "legendFormat": "dnode" },
+        { "refId": "F", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_bonus_size", "legendFormat": "bonus" },
+        { "refId": "G", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_abd_chunk_waste_size", "legendFormat": "abd waste" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes", "min": 0, "mappings": [],
+          "custom": { "drawStyle": "line", "lineWidth": 1, "fillOpacity": 40, "showPoints": "never", "spanNulls": true, "stacking": { "mode": "normal", "group": "A" } }
+        },
+        "overrides": []
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["last"], "showLegend": true }, "tooltip": { "mode": "multi", "sort": "desc" } }
+    },
+
+    {
+      "id": 12,
+      "type": "timeseries",
+      "title": "ARC Hit Ratio by Access Type",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "targets": [
+        { "refId": "A", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "sum(rate(node_zfs_arc_hits[$__rate_interval])) / (sum(rate(node_zfs_arc_hits[$__rate_interval])) + sum(rate(node_zfs_arc_misses[$__rate_interval]))) * 100", "legendFormat": "overall" },
+        { "refId": "B", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_arc_demand_data_hits[$__rate_interval]) / (rate(node_zfs_arc_demand_data_hits[$__rate_interval]) + rate(node_zfs_arc_demand_data_misses[$__rate_interval])) * 100", "legendFormat": "demand data" },
+        { "refId": "C", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_arc_demand_metadata_hits[$__rate_interval]) / (rate(node_zfs_arc_demand_metadata_hits[$__rate_interval]) + rate(node_zfs_arc_demand_metadata_misses[$__rate_interval])) * 100", "legendFormat": "demand metadata" },
+        { "refId": "D", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_arc_prefetch_data_hits[$__rate_interval]) / (rate(node_zfs_arc_prefetch_data_hits[$__rate_interval]) + rate(node_zfs_arc_prefetch_data_misses[$__rate_interval])) * 100", "legendFormat": "prefetch data" },
+        { "refId": "E", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_arc_prefetch_metadata_hits[$__rate_interval]) / (rate(node_zfs_arc_prefetch_metadata_hits[$__rate_interval]) + rate(node_zfs_arc_prefetch_metadata_misses[$__rate_interval])) * 100", "legendFormat": "prefetch metadata" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent", "min": 0, "max": 100, "decimals": 2, "mappings": [],
+          "custom": { "drawStyle": "line", "lineWidth": 1, "fillOpacity": 0, "showPoints": "never", "spanNulls": false }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "overall" }, "properties": [ { "id": "custom.lineWidth", "value": 3 } ] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "min"], "showLegend": true }, "tooltip": { "mode": "multi", "sort": "desc" } }
+    },
+    {
+      "id": 13,
+      "type": "timeseries",
+      "title": "ARC Hits & Misses",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "targets": [
+        { "refId": "A", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_arc_hits[$__rate_interval])", "legendFormat": "hits" },
+        { "refId": "B", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_arc_misses[$__rate_interval])", "legendFormat": "misses" },
+        { "refId": "C", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_arc_iohits[$__rate_interval])", "legendFormat": "io hits (in flight)" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops", "min": 0, "mappings": [],
+          "custom": { "drawStyle": "line", "lineWidth": 1, "fillOpacity": 15, "showPoints": "never", "spanNulls": true }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "misses" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } } ] },
+          { "matcher": { "id": "byName", "options": "hits" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } } ] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"], "showLegend": true }, "tooltip": { "mode": "multi", "sort": "desc" } }
+    },
+
+    {
+      "id": 14,
+      "type": "timeseries",
+      "title": "MRU / MFU Balance",
+      "description": "Recently-used vs frequently-used split, with ghost lists. Rising ghost hits mean the ARC is too small for the working set.",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+      "targets": [
+        { "refId": "A", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_mru_size", "legendFormat": "MRU size" },
+        { "refId": "B", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_mfu_size", "legendFormat": "MFU size" },
+        { "refId": "C", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_mru_ghost_size", "legendFormat": "MRU ghost size" },
+        { "refId": "D", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_mfu_ghost_size", "legendFormat": "MFU ghost size" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes", "min": 0, "mappings": [],
+          "custom": { "drawStyle": "line", "lineWidth": 1, "fillOpacity": 10, "showPoints": "never", "spanNulls": true }
+        },
+        "overrides": []
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["last"], "showLegend": true }, "tooltip": { "mode": "multi", "sort": "desc" } }
+    },
+    {
+      "id": 15,
+      "type": "timeseries",
+      "title": "ARC Pressure",
+      "description": "Non-zero values here mean the ARC is fighting for memory or lock contention.",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+      "targets": [
+        { "refId": "A", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_arc_evict_skip[$__rate_interval])", "legendFormat": "evict skip" },
+        { "refId": "B", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_arc_mutex_miss[$__rate_interval])", "legendFormat": "mutex miss" },
+        { "refId": "C", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_arc_memory_throttle_count[$__rate_interval])", "legendFormat": "memory throttle" },
+        { "refId": "D", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_arc_arc_prune[$__rate_interval])", "legendFormat": "arc prune" },
+        { "refId": "E", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_arc_access_skip[$__rate_interval])", "legendFormat": "access skip" },
+        { "refId": "F", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_arc_mru_ghost_hits[$__rate_interval])", "legendFormat": "MRU ghost hits" },
+        { "refId": "G", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_arc_mfu_ghost_hits[$__rate_interval])", "legendFormat": "MFU ghost hits" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops", "min": 0, "mappings": [],
+          "custom": { "drawStyle": "line", "lineWidth": 1, "fillOpacity": 0, "showPoints": "never", "spanNulls": true }
+        },
+        "overrides": []
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"], "showLegend": true }, "tooltip": { "mode": "multi", "sort": "desc" } }
+    },
+
+    {
+      "id": 16,
+      "type": "timeseries",
+      "title": "Dataset Throughput",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 28 },
+      "targets": [
+        { "refId": "A", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_zpool_dataset_nread{zpool=~\"${pool:regex}\", dataset=~\"${dataset:regex}\"}[$__rate_interval])", "legendFormat": "read {{dataset}}" },
+        { "refId": "B", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "-rate(node_zfs_zpool_dataset_nwritten{zpool=~\"${pool:regex}\", dataset=~\"${dataset:regex}\"}[$__rate_interval])", "legendFormat": "write {{dataset}}" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps", "mappings": [],
+          "custom": { "drawStyle": "line", "lineWidth": 1, "fillOpacity": 20, "showPoints": "never", "spanNulls": true, "axisSoftMin": 0 }
+        },
+        "overrides": []
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"], "showLegend": true, "sortBy": "Max", "sortDesc": true }, "tooltip": { "mode": "multi", "sort": "desc" } }
+    },
+    {
+      "id": 17,
+      "type": "timeseries",
+      "title": "Dataset IOPS",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 28 },
+      "targets": [
+        { "refId": "A", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_zpool_dataset_reads{zpool=~\"${pool:regex}\", dataset=~\"${dataset:regex}\"}[$__rate_interval])", "legendFormat": "read {{dataset}}" },
+        { "refId": "B", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "-rate(node_zfs_zpool_dataset_writes{zpool=~\"${pool:regex}\", dataset=~\"${dataset:regex}\"}[$__rate_interval])", "legendFormat": "write {{dataset}}" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "iops", "mappings": [],
+          "custom": { "drawStyle": "line", "lineWidth": 1, "fillOpacity": 20, "showPoints": "never", "spanNulls": true, "axisSoftMin": 0 }
+        },
+        "overrides": []
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"], "showLegend": true, "sortBy": "Max", "sortDesc": true }, "tooltip": { "mode": "multi", "sort": "desc" } }
+    },
+
+    {
+      "id": 18,
+      "type": "timeseries",
+      "title": "ZIL Activity",
+      "description": "Synchronous write path. High commit counts with no SLOG means sync writes are hitting the pool directly.",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 37 },
+      "targets": [
+        { "refId": "A", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_zil_zil_commit_count[$__rate_interval])", "legendFormat": "commits/s" },
+        { "refId": "B", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_zil_zil_commit_writer_count[$__rate_interval])", "legendFormat": "commit writers/s" },
+        { "refId": "C", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_zil_zil_itx_count[$__rate_interval])", "legendFormat": "itx/s" },
+        { "refId": "D", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_zil_zil_itx_metaslab_normal_bytes[$__rate_interval])", "legendFormat": "itx bytes/s (pool)" },
+        { "refId": "E", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_zil_zil_itx_metaslab_slog_bytes[$__rate_interval])", "legendFormat": "itx bytes/s (slog)" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops", "min": 0, "mappings": [],
+          "custom": { "drawStyle": "line", "lineWidth": 1, "fillOpacity": 10, "showPoints": "never", "spanNulls": true }
+        },
+        "overrides": [
+          { "matcher": { "id": "byRegexp", "options": ".*bytes/s.*" }, "properties": [ { "id": "unit", "value": "Bps" }, { "id": "custom.axisPlacement", "value": "right" } ] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"], "showLegend": true }, "tooltip": { "mode": "multi", "sort": "desc" } }
+    },
+    {
+      "id": 19,
+      "type": "timeseries",
+      "title": "Write Throttle (DMU TX delays)",
+      "description": "Anything above zero on the delay/throttle series means writers are being slowed by ZFS.",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 37 },
+      "targets": [
+        { "refId": "A", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_dmu_tx_dmu_tx_delay[$__rate_interval])", "legendFormat": "tx delay" },
+        { "refId": "B", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_dmu_tx_dmu_tx_dirty_delay[$__rate_interval])", "legendFormat": "dirty delay" },
+        { "refId": "C", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_dmu_tx_dmu_tx_dirty_throttle[$__rate_interval])", "legendFormat": "dirty throttle" },
+        { "refId": "D", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_dmu_tx_dmu_tx_dirty_over_max[$__rate_interval])", "legendFormat": "dirty over max" },
+        { "refId": "E", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_dmu_tx_dmu_tx_memory_reclaim[$__rate_interval])", "legendFormat": "memory reclaim" },
+        { "refId": "F", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_dmu_tx_dmu_tx_assigned[$__rate_interval])", "legendFormat": "assigned (total tx)" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops", "min": 0, "mappings": [],
+          "custom": { "drawStyle": "line", "lineWidth": 1, "fillOpacity": 0, "showPoints": "never", "spanNulls": true }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "assigned (total tx)" }, "properties": [ { "id": "custom.axisPlacement", "value": "right" }, { "id": "color", "value": { "mode": "fixed", "fixedColor": "text" } }, { "id": "custom.lineStyle", "value": { "fill": "dot", "dash": [1, 4] } } ] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"], "showLegend": true }, "tooltip": { "mode": "multi", "sort": "desc" } }
+    },
+
+    {
+      "id": 20,
+      "type": "timeseries",
+      "title": "Prefetcher (zfetch) Hit Ratio",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 45 },
+      "targets": [
+        { "refId": "A", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_zfetch_hits[$__rate_interval]) / (rate(node_zfs_zfetch_hits[$__rate_interval]) + rate(node_zfs_zfetch_misses[$__rate_interval])) * 100", "legendFormat": "zfetch hit %" },
+        { "refId": "B", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "rate(node_zfs_zfetch_io_issued[$__rate_interval])", "legendFormat": "prefetch IOs issued/s" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent", "min": 0, "mappings": [],
+          "custom": { "drawStyle": "line", "lineWidth": 1, "fillOpacity": 0, "showPoints": "never", "spanNulls": false }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "prefetch IOs issued/s" }, "properties": [ { "id": "unit", "value": "ops" }, { "id": "custom.axisPlacement", "value": "right" }, { "id": "max", "value": null } ] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"], "showLegend": true }, "tooltip": { "mode": "multi", "sort": "desc" } }
+    },
+    {
+      "id": 21,
+      "type": "timeseries",
+      "title": "ARC Compression Ratio",
+      "description": "Uncompressed / compressed size of data held in ARC — how much extra cache you get from compression.",
+      "datasource": { "type": "prometheus", "uid": "victoriametrics" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 45 },
+      "targets": [
+        { "refId": "A", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_uncompressed_size / node_zfs_arc_compressed_size", "legendFormat": "ratio" },
+        { "refId": "B", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_compressed_size", "legendFormat": "compressed" },
+        { "refId": "C", "datasource": { "type": "prometheus", "uid": "victoriametrics" }, "expr": "node_zfs_arc_uncompressed_size", "legendFormat": "uncompressed" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes", "min": 0, "mappings": [],
+          "custom": { "drawStyle": "line", "lineWidth": 1, "fillOpacity": 10, "showPoints": "never", "spanNulls": true }
+        },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "ratio" }, "properties": [ { "id": "unit", "value": "none" }, { "id": "decimals", "value": 2 }, { "id": "custom.axisPlacement", "value": "right" }, { "id": "custom.lineWidth", "value": 2 }, { "id": "custom.fillOpacity", "value": 0 }, { "id": "color", "value": { "mode": "fixed", "fixedColor": "purple" } } ] }
+        ]
+      },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["last"], "showLegend": true }, "tooltip": { "mode": "multi", "sort": "desc" } }
+    }
+  ]
+}
