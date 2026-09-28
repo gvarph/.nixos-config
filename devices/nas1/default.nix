@@ -37,6 +37,7 @@ in {
     ./hevy2garmin.nix
     ./audiobookshelf.nix
     ./paperless.nix
+    ./sparkyfitness.nix
     ./restic.nix
     ./nfs.nix
 

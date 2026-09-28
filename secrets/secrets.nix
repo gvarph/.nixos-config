@@ -31,4 +31,8 @@ in {
   # Env file shared by paperless-ngx and paperless-gpt (Django secret, Gmail
   # OAuth, paperless API token, 9router API key as OPENAI_API_KEY).
   "paperless_env.age".publicKeys = [nas1];
+  # SparkyFitness: full app env (OIDC client, auth secrets, DB creds) and the
+  # POSTGRES_* subset its database container needs.
+  "sparkyfitness_env.age".publicKeys = [nas1];
+  "sparkyfitness_db_env.age".publicKeys = [nas1];
 }
