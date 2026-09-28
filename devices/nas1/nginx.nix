@@ -394,6 +394,52 @@ in {
           '';
         };
       };
+      # Sonarr/Radarr keep their own Forms login behind oauth2-proxy; Bazarr has
+      # no auth of its own, so the proxy is its only gate.
+      "sonarr.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:8989";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
+      "radarr.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:7878";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
+      "prowlarr.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:9696";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
+      "bazarr.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:6767";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
 
       # Shelfarr has native OIDC (Pocket ID client, callback
       # /auth/oidc/callback) and a public request/login page, so it is NOT
@@ -509,6 +555,10 @@ in {
       virtualHosts."lidarr.gvarph.com" = {};
       virtualHosts."slskd.gvarph.com" = {};
       virtualHosts."jellystat.gvarph.com" = {};
+      virtualHosts."sonarr.gvarph.com" = {};
+      virtualHosts."radarr.gvarph.com" = {};
+      virtualHosts."prowlarr.gvarph.com" = {};
+      virtualHosts."bazarr.gvarph.com" = {};
     };
   };
 

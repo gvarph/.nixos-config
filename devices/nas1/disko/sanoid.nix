@@ -22,6 +22,7 @@
     "rpool/flash/ntfy"
     "rpool/flash/paperless"
     "rpool/flash/pocket-id"
+    "rpool/flash/shelfarr"
     "rpool/flash/sparkyfitness"
     "rpool/flash/dawarich"
     "rpool/flash/trek"

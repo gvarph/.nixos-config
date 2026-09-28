@@ -42,4 +42,8 @@ in {
   "immich_db_env.age".publicKeys = [nas1];
   # ble-scale-sync: HA token, Xiaomi bind key, MQTT and Garmin credentials.
   "ble-scale-sync_env.age".publicKeys = [nas1];
+  # arr stack: PIA credentials for the binhex qbittorrent VPN container, and
+  # lidify's Last.fm keys + Lidarr API key.
+  "qbittorrent_env.age".publicKeys = [nas1];
+  "lidify_env.age".publicKeys = [nas1];
 }

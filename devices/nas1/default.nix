@@ -42,6 +42,9 @@ in {
     ./immich.nix
     ./ble-scale-sync.nix
     ./music-assistant.nix
+    ./arr.nix
+    ./jellyseerr.nix
+    ./shelfarr.nix
     ./restic.nix
     ./nfs.nix
 
@@ -82,10 +85,7 @@ in {
       8009 # Chromecast HTTPS/control
 
       # Music Assistant's own ports come from its module (openFirewall) and
-      # music-assistant.nix. These are docker-era UIs without a vhost; drop
-      # them as the arr stack migrates.
-      8989 # sonarr UI
-      9696 # prowlarr UI
+      # music-assistant.nix.
       50300 # slskd peer port (Soulseek needs inbound)
     ];
     allowedUDPPorts = [

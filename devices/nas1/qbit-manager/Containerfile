@@ -1,0 +1,13 @@
+FROM docker.io/library/python:3.14.7-slim
+
+# Install the official qBittorrent API wrapper
+RUN pip install --no-cache-dir qbittorrent-api
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy your Python script into the container
+COPY script.py .
+
+# Run the script with unbuffered output so logs print in real-time
+CMD ["python", "-u", "script.py"]
