@@ -26,7 +26,7 @@ in {
     ./hardware-configuration.nix
     ./disko
     ./nginx.nix
-    ./fail2ban.nix
+    ./crowdsec.nix
     ./restic.nix
     ./nfs.nix
 
