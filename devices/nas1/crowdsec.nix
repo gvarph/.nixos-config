@@ -88,8 +88,16 @@ in {
   };
   systemd.services.crowdsec = {
     serviceConfig.EnvironmentFile = [config.age.secrets.crowdsec_ntfy_env.path];
-    restartTriggers = [config.age.secrets.crowdsec_ntfy_env.file];
+    # localConfig files are linked in by tmpfiles, not referenced by the unit,
+    # so a change would otherwise leave the running engine on the old ones.
+    restartTriggers = [
+      config.age.secrets.crowdsec_ntfy_env.file
+      (builtins.toJSON config.services.crowdsec.localConfig)
+    ];
   };
+  # The module only adds links; stale ones from earlier generations would be
+  # loaded too (duplicate plugin names). Wipe the dir before it is repopulated.
+  systemd.tmpfiles.settings."10-crowdsec"."/etc/crowdsec/notifications/".R = {};
   # The module leaves plugin_dir empty. crowdsec only runs plugins owned by
   # its own user, so the binary is copied there (not linked from the store).
   systemd.tmpfiles.settings."10-crowdsec"."/etc/crowdsec/plugins/notification-http" = {
