@@ -35,6 +35,7 @@ in {
     ./trek.nix
     ./9router.nix
     ./hevy2garmin.nix
+    ./audiobookshelf.nix
     ./restic.nix
     ./nfs.nix
 

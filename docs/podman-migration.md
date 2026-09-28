@@ -32,7 +32,7 @@ a `rpool/flash` child dataset if it is not one (see "Backup blind spot" below).
 
 ## 3. Medium (multi-container, a database, or a build from git)
 
-- [ ] audiobookshelf: app + sidecar `.build` from a git URL at a pinned commit; state not a dataset
+- [x] audiobookshelf (2026-09-28, `devices/nas1/audiobookshelf.nix`): upstream image pinned, runs as 1000:100 (shares the media tree, so no userns); WatchShelf sidecar built from the pinned commit; new dataset rpool/flash/audiobookshelf; root-owned leftovers needed a chown
 - [ ] shelfarr: static IP on servarr network, `AddHost=host.containers.internal`; needs the servarr `.network` first
 - [ ] ble_scale_sync: `.build` from `~/ble-scale-sync` fork, custom entrypoint, writes its own config; check host BLE access needs
 - [ ] sparkyfitness: 4 containers, Postgres 18, internal nginx with rate limiting; no module; state not a dataset
