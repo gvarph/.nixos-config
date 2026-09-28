@@ -130,6 +130,18 @@ in {
           '';
         };
       };
+      # Jellystat has its own login; oauth2-proxy in front since it left the LAN port.
+      "jellystat.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:13000";
+          proxyWebsockets = true;
+          extraConfig = ''
+            add_header Strict-Transport-Security "max-age=63072000; preload" always;
+          '';
+        };
+      };
       "js.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";
@@ -496,6 +508,7 @@ in {
       virtualHosts."sab.gvarph.com" = {};
       virtualHosts."lidarr.gvarph.com" = {};
       virtualHosts."slskd.gvarph.com" = {};
+      virtualHosts."jellystat.gvarph.com" = {};
     };
   };
 

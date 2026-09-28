@@ -35,4 +35,6 @@ in {
   # POSTGRES_* subset its database container needs.
   "sparkyfitness_env.age".publicKeys = [nas1];
   "sparkyfitness_db_env.age".publicKeys = [nas1];
+  # Jellystat: Postgres credentials and JWT secret (were plaintext in the compose file).
+  "jellystat_env.age".publicKeys = [nas1];
 }

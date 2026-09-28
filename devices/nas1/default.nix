@@ -38,6 +38,7 @@ in {
     ./audiobookshelf.nix
     ./paperless.nix
     ./sparkyfitness.nix
+    ./jellyfin.nix
     ./restic.nix
     ./nfs.nix
 
