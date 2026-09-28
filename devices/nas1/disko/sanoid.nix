@@ -16,7 +16,6 @@
     "rpool/flash/jellyfin"
     "rpool/flash/monitoring"
     "rpool/flash/music-assistant"
-    "rpool/flash/nextcloud"
     "rpool/flash/obsidian"
     "rpool/flash/paperless"
     "rpool/flash/pocket-id"
