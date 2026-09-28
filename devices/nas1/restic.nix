@@ -66,10 +66,11 @@ in {
     '';
 
     # Emit the snapshot dir of every mounted dataset; unmounted/legacy
-    # datasets (the bare rpool/flash parent) are skipped.
+    # datasets (the bare rpool/flash parent) and the log store are skipped.
     dynamicFilesFrom = ''
       ${zfs} list -H -o mountpoint -r ${datasetArgs} \
         | grep -v '^\(legacy\|none\|-\)$' \
+        | grep -v '^/var/lib/private/victorialogs$' \
         | sed 's|$|/.zfs/snapshot/restic|'
     '';
 

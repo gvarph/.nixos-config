@@ -66,6 +66,8 @@ in {
         recursive = true;
         sendOptions = "Pb";
         recvOptions = "u";
+        # Log store: disposable, and not in the sanoid list above either.
+        extraArgs = ["--exclude-datasets=victorialogs"];
       };
     };
   };

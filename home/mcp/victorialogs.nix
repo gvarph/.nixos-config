@@ -3,8 +3,8 @@
   osConfig,
   ...
 }: {
-  # Throwaway stdio container so nothing stays resident; joins metrics_metrics to
-  # reach VictoriaLogs by container DNS. No auth on the instance.
+  # Throwaway stdio container so nothing stays resident. VictoriaLogs is a
+  # native service on loopback (devices/nas1/logs.nix), hence host networking.
   programs.mcp.servers = lib.mkIf (osConfig.networking.hostName == "nas1") {
     victorialogs = {
       command = "/run/current-system/sw/bin/docker";
@@ -13,9 +13,9 @@
         "-i"
         "--rm"
         "--network"
-        "metrics_metrics"
+        "host"
         "-e"
-        "VL_INSTANCE_ENTRYPOINT=http://victoria-logs:9428"
+        "VL_INSTANCE_ENTRYPOINT=http://127.0.0.1:9428"
         "ghcr.io/victoriametrics/mcp-victorialogs:v1.9.0"
       ];
     };

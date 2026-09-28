@@ -26,7 +26,7 @@ a `rpool/flash` child dataset if it is not one (see "Backup blind spot" below).
 - [x] 9router (2026-09-28, `devices/nas1/9router.nix`): first quadlet network + named volume + container dependency; images pinned (headroom by digest); dashboard password is INITIAL_PASSWORD until changed in-app
 - [x] hevy2garmin (2026-09-28, `devices/nas1/hevy2garmin.nix`): `.build` from the pinned upstream commit via fetchGit, so `~/hevy2garmin` is no longer needed; docker.io added as search registry for upstream Dockerfiles; podman needs an explicit HealthCmd for `Notify=healthy`
 - [x] navidrome → native `services.navidrome` (2026-09-28, `devices/nas1/navidrome.nix`); new dataset rpool/flash/navidrome; SSO header trusted from loopback only; library path re-synced from MusicFolder on first start
-- [ ] monitoring/logs: mounts `/var/log/journal`; native `services.victorialogs` + fluent-bit is one step further
+- [x] monitoring/logs → native `services.victorialogs` + `services.fluent-bit` (2026-09-28, `devices/nas1/logs.nix`); dataset rpool/flash/victorialogs without snapshots (excluded from sanoid, syncoid, restic); loopback only; MCP server uses host networking
 - [x] garage: removed 2026-09-28 (was down; vhost, dataset and stack deleted)
 - [x] photon: removed 2026-09-28 (was down; index dir already gone)
 

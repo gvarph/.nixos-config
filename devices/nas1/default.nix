@@ -30,6 +30,7 @@ in {
     ./ddns.nix
     ./ntfy.nix
     ./navidrome.nix
+    ./logs.nix
     ./podman.nix
     ./trek.nix
     ./9router.nix
