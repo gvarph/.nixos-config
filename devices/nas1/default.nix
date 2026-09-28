@@ -88,8 +88,7 @@ in {
       8009 # Chromecast HTTPS/control
 
       # Music Assistant's own ports come from its module (openFirewall) and
-      # music-assistant.nix.
-      50300 # slskd peer port (Soulseek needs inbound)
+      # music-assistant.nix. slskd's peer port now arrives through its VPN.
     ];
     allowedUDPPorts = [
       5353 # mDNS (multicast discovery for Chromecast, AirPlay, some Sonos features)

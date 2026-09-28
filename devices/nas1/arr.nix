@@ -1,11 +1,21 @@
-{config, ...}: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  # slskd behind its own PIA tunnel is built but off: see docs/podman-migration.md
+  # (PIA's primary token endpoint 504s and binhex never tries the fallback).
+  slskdVpn = false;
+in {
   age.secrets.qbittorrent_env.file = ../../secrets/qbittorrent_env.age;
   age.secrets.lidify_env.file = ../../secrets/lidify_env.age;
 
   # The *arr stack. The servarr network keeps the compose-era subnet and every
   # pinned address because the apps store each other by IP (download clients,
   # Prowlarr apps, Bazarr, lidify, soularr, shelfarr) or by container name
-  # (prowlarr, flaresolverr). Only qBittorrent's traffic goes through the VPN.
+  # (prowlarr, flaresolverr). qBittorrent and slskd each go through their own
+  # PIA WireGuard tunnel; everything else talks to the internet directly.
   virtualisation.quadlet = let
     inherit (config.virtualisation.quadlet) networks builds;
     guard = {
@@ -213,16 +223,64 @@
 
     # Soulseek client; nginx slskd.gvarph.com -> :5030. 50300 is the peer port
     # and stays open to the world (see default.nix firewall).
-    containers.slskd = {
-      autoStart = true;
+    # VPN-only binhex image (same base as the qbittorrent one) that slskd
+    # shares its network namespace with. It takes over slskd's servarr address
+    # so soularr's slskd URL still works; the API/web port comes in over eth0
+    # (VPN_INPUT_PORTS), peers over PIA's forwarded port (see slskd-port-sync).
+    containers.slskd-vpn = {
+      autoStart = slskdVpn;
       unitConfig = guard;
+      containerConfig = {
+        image = "docker.io/binhex/arch-privoxyvpn:4.2.0-1-01";
+        environmentFiles = [config.age.secrets.qbittorrent_env.path];
+        environments =
+          lscrEnv
+          // {
+            VPN_ENABLED = "yes";
+            VPN_PROV = "pia";
+            VPN_CLIENT = "wireguard";
+            STRICT_PORT_FORWARD = "yes";
+            ENABLE_PRIVOXY = "no";
+            ENABLE_SOCKS = "no";
+            LAN_NETWORK = "10.0.0.0/8,172.16.0.0/12,172.39.0.0/24";
+            NAME_SERVERS = "1.1.1.1,1.0.0.1";
+            VPN_INPUT_PORTS = "5030";
+            UMASK = "002";
+          };
+        addCapabilities = ["NET_ADMIN"];
+        sysctl."net.ipv4.conf.all.src_valid_mark" = "1";
+        devices = ["/dev/net/tun"];
+        networks = [networks.servarr.ref];
+        ip = "172.39.0.16";
+        publishPorts = ["127.0.0.1:5030:5030"];
+        volumes = ["/flash/arr/slskd-vpn:/config"];
+        noNewPrivileges = true;
+        # The forwarded port is only written once the tunnel is up.
+        healthCmd = "test -s /tmp/getvpnport";
+        healthInterval = "30s";
+        healthTimeout = "5s";
+        healthStartPeriod = "180s";
+        healthRetries = 3;
+        notify = "healthy";
+      };
+      serviceConfig.Restart = "on-failure";
+    };
+    containers.slskd = {
+      autoStart = slskdVpn;
+      unitConfig =
+        guard
+        // {
+          # Lives in the VPN container's netns, so it must follow its lifecycle.
+          After = guard.After ++ ["slskd-vpn.service"];
+          Requires = ["slskd-vpn.service"];
+          PartOf = ["slskd-vpn.service"];
+          Wants = ["slskd-port-sync.service"];
+        };
       containerConfig = {
         image = "docker.io/slskd/slskd:0.26.0";
         user = "1000:100";
         environments.TZ = "Europe/Prague";
-        networks = [networks.servarr.ref];
-        ip = "172.39.0.16";
-        publishPorts = ["127.0.0.1:5030:5030" "50300:50300"];
+        networks = ["container:slskd-vpn"];
         volumes = [
           "/flash/arr/slskd:/app"
           "/tank/media:/data"
@@ -237,8 +295,6 @@
       };
       serviceConfig.Restart = "on-failure";
     };
-
-    # Feeds Lidarr wanted albums to slskd.
     containers.soularr = {
       autoStart = true;
       unitConfig =
@@ -266,6 +322,37 @@
         noNewPrivileges = true;
       };
       serviceConfig.Restart = "on-failure";
+    };
+  };
+
+  # PIA hands out one forwarded port per tunnel (stable for months, but not
+  # fixed). Push it into slskd's runtime listen port after each start and
+  # every few minutes, logging in with the web credentials from slskd.yml.
+  systemd.services.slskd-port-sync = {
+    after = ["slskd.service"];
+    requisite = ["slskd.service"];
+    path = [config.virtualisation.podman.package] ++ (with pkgs; [yq-go curl jq]);
+    serviceConfig.Type = "oneshot";
+    script = ''
+      cfg=/flash/arr/slskd/slskd.yml
+      api=http://127.0.0.1:5030/api/v0
+      port=$(podman exec slskd-vpn cat /tmp/getvpnport)
+      [[ $port =~ ^[0-9]+$ ]] || { echo "no forwarded port yet"; exit 1; }
+      token=$(yq -o=json '{"username": .web.authentication.username, "password": .web.authentication.password}' "$cfg" \
+        | curl -fsS -H 'Content-Type: application/json' -d @- "$api/session" | jq -r .token)
+      current=$(curl -fsS -H "Authorization: Bearer $token" "$api/options" | jq -r .soulseek.listenPort)
+      if [ "$current" != "$port" ]; then
+        curl -fsS -X PATCH -H "Authorization: Bearer $token" -H 'Content-Type: application/json' \
+          -d "{\"soulseek\":{\"listenPort\":$port}}" "$api/options" >/dev/null
+        echo "slskd listen port $current -> $port"
+      fi
+    '';
+  };
+  systemd.timers.slskd-port-sync = {
+    wantedBy = lib.optional slskdVpn "timers.target";
+    timerConfig = {
+      OnBootSec = "5min";
+      OnUnitActiveSec = "5min";
     };
   };
 
