@@ -28,6 +28,7 @@ in {
     ./nginx.nix
     ./crowdsec.nix
     ./ddns.nix
+    ./ntfy.nix
     ./restic.nix
     ./nfs.nix
 

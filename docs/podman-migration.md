@@ -15,7 +15,7 @@ a `rpool/flash` child dataset if it is not one (see "Backup blind spot" below).
 ## 1. Trivial (single container, config bind, no coupling)
 
 - [x] cloudflare_ddns → native `services.cloudflare-ddns` (2026-09-28, `devices/nas1/ddns.nix`, reuses the ACME token)
-- [ ] ntfy → native `services.ntfy-sh` (state in `/flash/ntfy`, not a dataset)
+- [x] ntfy → native `services.ntfy-sh` (2026-09-28, `devices/nas1/ntfy.nix`; dataset rpool/flash/ntfy mounted at the DynamicUser state path, JSON logs feed crowdsec)
 - [ ] obsidian (CouchDB): one container, `custom.ini` bind, creds in `.env`
 - [ ] trek: one container, already hardened; maps 1:1 to quadlet keys
 - [ ] monitoring/grafana (down) → native `services.grafana` with the provisioning dir

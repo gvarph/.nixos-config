@@ -16,7 +16,6 @@
     paperless-ngx = "paperless-webserver-1";
     grafana = "grafana";
     navidrome = "navidrome";
-    ntfy = "ntfy";
     couchdb = "couchdb-for-obsidian";
   };
   containerAcquisitions =
@@ -84,6 +83,12 @@ in {
             source = "journalctl";
             journalctl_filter = ["_SYSTEMD_UNIT=sshd.service"];
             labels.type = "syslog";
+          }
+          # Native ntfy logs JSON to the journal; the parser matches program 'ntfy'.
+          {
+            source = "journalctl";
+            journalctl_filter = ["-o" "cat" "_SYSTEMD_UNIT=ntfy-sh.service"];
+            labels.type = "ntfy";
           }
           # ABS's stdout is plain text, which its hub parser JSON-decodes with an
           # error per line; the daily files in its metadata volume are JSON lines.
