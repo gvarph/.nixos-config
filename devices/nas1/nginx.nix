@@ -84,7 +84,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:13378";
+          proxyPass = "http://127.0.0.1:13378";
           proxyWebsockets = true;
           extraConfig = ''
             client_max_body_size 5G;
@@ -113,7 +113,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:8181";
+          proxyPass = "http://127.0.0.1:8181";
           proxyWebsockets = true;
         };
       };
@@ -122,7 +122,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:13388";
+          proxyPass = "http://127.0.0.1:13388";
           proxyWebsockets = true;
         };
       };
@@ -131,7 +131,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:8095";
+          proxyPass = "http://127.0.0.1:8095";
           proxyWebsockets = true;
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
@@ -142,7 +142,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:8096";
+          proxyPass = "http://127.0.0.1:8096";
           proxyWebsockets = true;
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
@@ -153,7 +153,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:8096";
+          proxyPass = "http://127.0.0.1:8096";
           proxyWebsockets = true;
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
@@ -176,7 +176,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:5055";
+          proxyPass = "http://127.0.0.1:5055";
           proxyWebsockets = true;
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
@@ -187,7 +187,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:3000";
+          proxyPass = "http://127.0.0.1:3000";
           proxyWebsockets = true;
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
@@ -198,7 +198,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:1411";
+          proxyPass = "http://127.0.0.1:1411";
           proxyWebsockets = true;
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
@@ -221,7 +221,7 @@ in {
         # Now gated by oauth2-proxy (services.oauth2-proxy.nginx.virtualHosts
         # below) instead of the old LAN-only allow/deny.
         locations."/" = {
-          proxyPass = "http://localhost:8080";
+          proxyPass = "http://127.0.0.1:8080";
           proxyWebsockets = true;
           extraConfig = ''
             client_max_body_size 100M;
@@ -234,7 +234,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:8090";
+          proxyPass = "http://127.0.0.1:8090";
           proxyWebsockets = true;
           extraConfig = ''
             client_max_body_size 100M;
@@ -291,7 +291,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:8091";
+          proxyPass = "http://127.0.0.1:8091";
           # Subscribers (phone app, HA) hold long-lived websocket/JSON streams.
           proxyWebsockets = true;
           extraConfig = ''
@@ -307,7 +307,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:3004";
+          proxyPass = "http://127.0.0.1:3004";
           proxyWebsockets = true;
           extraConfig = ''
             # Profile pictures, exercise images, and backup restore uploads.
@@ -324,7 +324,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:3005";
+          proxyPass = "http://127.0.0.1:3005";
           proxyWebsockets = true;
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
@@ -335,7 +335,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:3100";
+          proxyPass = "http://127.0.0.1:3100";
           # TREK uses a websocket at /ws for real-time collaboration.
           proxyWebsockets = true;
           extraConfig = ''
@@ -357,7 +357,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:4533";
+          proxyPass = "http://127.0.0.1:4533";
           proxyWebsockets = true;
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
@@ -366,14 +366,14 @@ in {
           '';
         };
         locations."/rest/" = {
-          proxyPass = "http://localhost:4533";
+          proxyPass = "http://127.0.0.1:4533";
           extraConfig = ''
             auth_request off;
             proxy_set_header X-Forwarded-User "";
           '';
         };
         locations."/share/" = {
-          proxyPass = "http://localhost:4533";
+          proxyPass = "http://127.0.0.1:4533";
           extraConfig = ''
             auth_request off;
             proxy_set_header X-Forwarded-User "";
@@ -386,7 +386,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:5000";
+          proxyPass = "http://127.0.0.1:5000";
           proxyWebsockets = true;
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
@@ -400,7 +400,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:5030";
+          proxyPass = "http://127.0.0.1:5030";
           # The UI streams search results and transfer progress over a
           # SignalR websocket.
           proxyWebsockets = true;
@@ -415,7 +415,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:8085";
+          proxyPass = "http://127.0.0.1:8085";
           proxyWebsockets = true;
           extraConfig = ''
             client_max_body_size 100M; # manual .nzb uploads
@@ -428,7 +428,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:8686";
+          proxyPass = "http://127.0.0.1:8686";
           proxyWebsockets = true;
           extraConfig = ''
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
@@ -489,7 +489,7 @@ in {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
-          proxyPass = "http://localhost:5056";
+          proxyPass = "http://127.0.0.1:5056";
           proxyWebsockets = true;
           extraConfig = ''
             client_max_body_size 500M; # manual ebook/audiobook uploads
