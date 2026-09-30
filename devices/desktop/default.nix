@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   inputs,
   ...
@@ -30,7 +31,14 @@ in {
     substituters = ["https://attic.xuyh0120.win/lantian"];
     trusted-substituters = ["https://attic.xuyh0120.win/lantian"];
     trusted-public-keys = ["lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="];
+    # Dedupe at build time instead of the nix-optimise timer (disabled below).
+    auto-optimise-store = true;
   };
+
+  # The optimise timer is Persistent, so on a desktop that's off at 03:45 it runs
+  # right after boot; the cgroup writeback inode switch it leaves behind pins
+  # kworkers at 100% and freezes the desktop for ~40 min.
+  nix.optimise.automatic = lib.mkForce false;
 
   # Framebuffer resolution for console (fixes small quadrant issue on 4K)
   boot.kernelParams = ["video=3840x2160@60"];
