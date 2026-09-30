@@ -88,6 +88,9 @@ in {
   };
   systemd.services.crowdsec = {
     serviceConfig.EnvironmentFile = [config.age.secrets.crowdsec_ntfy_env.path];
+    # The module sets RestartSec but no Restart: a crash (1.8.1 panicked in the
+    # bucket overflow code) otherwise leaves the LAPI down until someone notices.
+    serviceConfig.Restart = "on-failure";
     # localConfig files are linked in by tmpfiles, not referenced by the unit,
     # so a change would otherwise leave the running engine on the old ones.
     restartTriggers = [
@@ -98,6 +101,9 @@ in {
   # The module only adds links; stale ones from earlier generations would be
   # loaded too (duplicate plugin names). Wipe the dir before it is repopulated.
   systemd.tmpfiles.settings."10-crowdsec"."/etc/crowdsec/notifications/".R = {};
+  # The hub updater is a DynamicUser unit whose `systemctl reload crowdsec`
+  # is denied by polkit; run that one step as root.
+  systemd.services.crowdsec-update-hub.serviceConfig.ExecStartPost = lib.mkForce ["+${pkgs.systemd}/bin/systemctl reload crowdsec.service"];
   # The module leaves plugin_dir empty. crowdsec only runs plugins owned by
   # its own user, so the binary is copied there (not linked from the store).
   systemd.tmpfiles.settings."10-crowdsec"."/etc/crowdsec/plugins/notification-http" = {
