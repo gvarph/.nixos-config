@@ -60,6 +60,9 @@ in {
   # API key the nginx Lua bouncer authenticates to the LAPI with (registered
   # by crowdsec-nginx-bouncer-register.service).
   "crowdsec_nginx_bouncer_key.age".publicKeys = [nas1];
+  # htpasswd for logs.gvarph.com: Home Assistant's Alloy add-on pushes its
+  # journal into VictoriaLogs (Loki protocol) with these basic-auth credentials.
+  "vl_push_htpasswd.age".publicKeys = [nas1];
   # crowdsec-web-ui: LAPI machine password (+ OIDC client once configured).
   "crowdsec-web-ui_env.age".publicKeys = [nas1];
 }

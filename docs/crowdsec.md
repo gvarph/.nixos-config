@@ -25,6 +25,18 @@ re-encrypting the secret and switching.
 - AppSec/WAF is deliberately off (`APPSEC_URL=` empty); enabling it means the appsec
   acquisition + collections in `crowdsec.nix` and `APPSEC_URL=http://127.0.0.1:7422` here.
 
+## Remote logs via VictoriaLogs
+
+Home Assistant (HAOS on 10.0.30.117) ships its journal with the Vector add-on
+(github.com/twiebe/hassos-addons-vector, sink `victorialogs`) to
+`https://logs.gvarph.com/insert/elasticsearch/` with basic auth user `ha-vector`
+(`secrets/vl_push_htpasswd.age`; password in `~/.nixos-config/.env` as HA_VECTOR_VL_PASSWORD).
+Stream fields are the journald names `host,CONTAINER_NAME`, the same shape fluent-bit gives nas1's
+own journal. CrowdSec tails `{host="homeassistant",CONTAINER_NAME="homeassistant"}` back out of
+VictoriaLogs (`source: victorialogs`) for the hub's home-assistant collection.
+Local services stay on journalctl sources: no dependency on fluent-bit/VictoriaLogs being up.
+HA must have `http.use_x_forwarded_for` with nas1 in `trusted_proxies`, or its ban log shows nas1's IP.
+
 ## Checks
 
 ```

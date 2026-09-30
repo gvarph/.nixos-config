@@ -25,6 +25,10 @@
 in {
   age.secrets.crowdsec_ntfy_env.file = ../../secrets/crowdsec_ntfy_env.age;
   age.secrets.crowdsec_nginx_bouncer_key.file = ../../secrets/crowdsec_nginx_bouncer_key.age;
+  age.secrets.vl_push_htpasswd = {
+    file = ../../secrets/vl_push_htpasswd.age;
+    owner = "nginx";
+  };
 
   # nginx Lua bouncer (nginx.nix): registered as a LAPI bouncer with our own
   # key, and its config rendered into nginx's runtime dir with the key filled
@@ -136,6 +140,9 @@ in {
       "LePresidente/grafana"
       "sdwilsh/navidrome"
       "Jgigantino31/ntfy"
+      # Home Assistant runs on another host; its journal arrives via
+      # logs.gvarph.com into VictoriaLogs and is read back from there.
+      "crowdsecurity/home-assistant"
     ];
 
     settings = {
@@ -199,6 +206,16 @@ in {
             source = "journalctl";
             journalctl_filter = ["-o" "cat" "_SYSTEMD_UNIT=grafana.service"];
             labels.type = "grafana";
+          }
+          # Home Assistant core (container "homeassistant" on HAOS), tailed from
+          # VictoriaLogs where its Vector add-on ships the journal with journald
+          # field names as stream fields; the parser matches program home-assistant.
+          {
+            source = "victorialogs";
+            url = "http://127.0.0.1:9428";
+            query = ''{host="homeassistant",CONTAINER_NAME="homeassistant"}'';
+            since = "5m";
+            labels.type = "home-assistant";
           }
           # ABS's stdout is plain text, which its hub parser JSON-decodes with an
           # error per line; the daily files in its metadata volume are JSON lines.

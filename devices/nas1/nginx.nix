@@ -320,6 +320,22 @@ in {
         };
       };
 
+      # Log intake for other hosts: Home Assistant's Vector add-on pushes its
+      # journal here (VictoriaLogs' Elasticsearch bulk API) into VictoriaLogs,
+      # which itself only listens on loopback. Basic auth from
+      # secrets/vl_push_htpasswd.age; only the ingest paths are exposed.
+      "logs.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        basicAuthFile = config.age.secrets.vl_push_htpasswd.path;
+        locations."/insert/" = {
+          proxyPass = "http://127.0.0.1:9428/insert/";
+          extraConfig = ''
+            client_max_body_size 20M;
+          '';
+        };
+        locations."/".return = "404";
+      };
       "crowdsec.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";
