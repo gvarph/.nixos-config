@@ -28,7 +28,7 @@
     ./programs/ssh.nix
 
     ./programs/claude-code
-    ./programs/herdr
+    #./programs/herdr
 
     ./mcp
   ];
