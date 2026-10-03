@@ -135,9 +135,17 @@ in {
     openFirewall = true; # Opens the mDNS port (5353)
   };
 
-  hardware.graphics = {
+  # Mesa comes from Hyprland's pinned nixpkgs, not ours. Hyprland loads the
+  # system GBM driver from /run/opengl-driver; when our nixpkgs bumps glibc
+  # ahead of Hyprland's, that Mesa needs a newer glibc than Hyprland was built
+  # with and the compositor aborts at startup (CBackend::create() failed).
+  hardware.graphics = let
+    hyprlandPkgs = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  in {
     enable = true;
     enable32Bit = true;
+    package = hyprlandPkgs.mesa;
+    package32 = hyprlandPkgs.pkgsi686Linux.mesa;
   };
 
   services.lact.enable = true;
