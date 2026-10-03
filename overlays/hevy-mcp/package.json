@@ -1,0 +1,8 @@
+{
+  "name": "hevy-mcp-nix",
+  "version": "6.1.19",
+  "private": true,
+  "dependencies": {
+    "hevy-mcp": "6.1.19"
+  }
+}

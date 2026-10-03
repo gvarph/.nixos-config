@@ -139,8 +139,7 @@ in {
     # MCP servers: read tools only, each by explicit allowlist (write tools are
     # added only on request). Stdio servers run on the host as hermes.
     mcpServers = {
-      # One shared instance (mcp-victoriametrics unit below) instead of a stdio
-      # copy per Hermes process: its docs index costs ~465 MiB per copy.
+      # Shared HTTP instances (units below), not a stdio copy per Hermes process.
       victoriametrics = {
         url = "http://127.0.0.1:8430/mcp";
         # No alerts/rules: without vmalert they are always empty ("nothing firing").
@@ -154,14 +153,13 @@ in {
           "series"
           "metric_statistics"
           "tsdb_status"
-          "documentation"
           "prettify_query"
           "explain_query"
+          "documentation"
         ];
       };
       victorialogs = {
-        command = lib.getExe pkgs.mcp-victorialogs;
-        env.VL_INSTANCE_ENTRYPOINT = "http://127.0.0.1:9428";
+        url = "http://127.0.0.1:8431/mcp";
         tools.include = [
           "query"
           "hits"
@@ -222,19 +220,20 @@ in {
         };
       };
 
-      # Shared VictoriaMetrics MCP server for Hermes, Streamable HTTP on loopback.
-      mcp-victoriametrics = {
-        description = "VictoriaMetrics MCP server (Streamable HTTP, loopback)";
+    }
+    # Shared Victoria* MCP servers for Hermes, Streamable HTTP on loopback.
+    # INFO logs every full request/result (MBs per docs call), hence warn.
+    (lib.mapAttrs (name: s: {
+        description = "${name} (Streamable HTTP, loopback)";
         wantedBy = ["multi-user.target"];
-        after = ["victoriametrics.service"];
-        environment = {
-          VM_INSTANCE_ENTRYPOINT = "http://127.0.0.1:8428";
-          VM_INSTANCE_TYPE = "single";
+        after = [s.after];
+        environment = s.env // {
           MCP_SERVER_MODE = "http";
-          MCP_LISTEN_ADDR = "127.0.0.1:8430";
+          MCP_LISTEN_ADDR = "127.0.0.1:${toString s.port}";
+          MCP_LOG_LEVEL = "warn";
         };
         serviceConfig = {
-          ExecStart = lib.getExe pkgs.mcp-victoriametrics;
+          ExecStart = lib.getExe pkgs.${name};
           DynamicUser = true;
           Restart = "on-failure";
           ProtectSystem = "strict";
@@ -243,12 +242,27 @@ in {
           NoNewPrivileges = true;
           RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_UNIX"];
         };
-      };
-    }
+      }) {
+        mcp-victoriametrics = {
+          port = 8430;
+          after = "victoriametrics.service";
+          env = {
+            VM_INSTANCE_ENTRYPOINT = "http://127.0.0.1:8428";
+            VM_INSTANCE_TYPE = "single";
+            # Docs come back inline from the tool; as resources they are ~8 MB/session.
+            MCP_DISABLE_RESOURCES = "true";
+          };
+        };
+        mcp-victorialogs = {
+          port = 8431;
+          after = "victorialogs.service";
+          env.VL_INSTANCE_ENTRYPOINT = "http://127.0.0.1:9428";
+        };
+      })
     (lib.genAttrs ["hermes-agent" "hermes-backend"] (_: {
-      after = ["zfs-mount.service" "hermes-podman-pause.service" "mcp-victoriametrics.service"];
+      after = ["zfs-mount.service" "hermes-podman-pause.service" "mcp-victoriametrics.service" "mcp-victorialogs.service"];
       requires = ["hermes-podman-pause.service"];
-      wants = ["mcp-victoriametrics.service"];
+      wants = ["mcp-victoriametrics.service" "mcp-victorialogs.service"];
       unitConfig.ConditionPathIsMountPoint = stateDir;
       path = [pkgs.podman "/run/wrappers"];
       environment.XDG_RUNTIME_DIR = "/run/hermes";

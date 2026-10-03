@@ -1,0 +1,87 @@
+diff --git a/cmd/mcp-victoriametrics/resources/docs.go b/cmd/mcp-victoriametrics/resources/docs.go
+index f5459bb..f690a7b 100644
+--- a/cmd/mcp-victoriametrics/resources/docs.go
++++ b/cmd/mcp-victoriametrics/resources/docs.go
+@@ -1,15 +1,18 @@
+ package resources
+ 
+ import (
++	"cmp"
+ 	"context"
+ 	"embed"
+ 	"fmt"
+ 	"io/fs"
+ 	"log"
++	"os"
+ 	"path/filepath"
+ 	"strings"
+ 
+ 	"github.com/blevesearch/bleve/v2"
++	"github.com/blevesearch/bleve/v2/index/scorch"
+ 	"github.com/mark3labs/mcp-go/mcp"
+ 	"github.com/mark3labs/mcp-go/server"
+ 
+@@ -25,6 +28,9 @@ const (
+ 	maxMarkdownDescriptionSize = 4096
+ )
+ 
++// IndexDir is the default prebuilt index location, set via -ldflags -X.
++var IndexDir string
++
+ var (
+ 	searchIndex bleve.Index
+ 	resources   map[string]mcp.Resource
+@@ -33,10 +39,22 @@ var (
+ 
+ func RegisterDocsResources(s *server.MCPServer, cfg *config.Config) {
+ 	var err error
+-	mapping := bleve.NewIndexMapping()
+-	if searchIndex, err = bleve.NewMemOnly(mapping); err != nil {
+-		log.Fatal(fmt.Errorf("error creating index: %w", err))
++	// Compact scorch index, mmapped from disk (built there if missing), else in RAM.
++	dir := cmp.Or(os.Getenv("MCP_DOCS_INDEX_DIR"), IndexDir)
++	build := true
++	if dir != "" {
++		if searchIndex, err = bleve.OpenUsing(dir, map[string]interface{}{"read_only": true}); err == nil {
++			build = false
++		} else {
++			_ = os.RemoveAll(dir)
++		}
+ 	}
++	if build {
++		if searchIndex, err = bleve.NewUsing(dir, bleve.NewIndexMapping(), scorch.Name, scorch.Name, nil); err != nil {
++			log.Fatal(fmt.Errorf("error creating index: %w", err))
++		}
++	}
++	batch := searchIndex.NewBatch()
+ 
+ 	docFiles, err := ListDocFiles()
+ 	if err != nil {
+@@ -61,10 +79,26 @@ func RegisterDocsResources(s *server.MCPServer, cfg *config.Config) {
+ 			MIMEType: "text/markdown",
+ 			Text:     docFile.Content,
+ 		}
+-		if err = searchIndex.Index(resourceURI, docFile); err != nil {
++		if !build {
++			continue
++		}
++		if err = batch.Index(resourceURI, docFile); err != nil {
+ 			log.Fatal(fmt.Errorf("error indexing file %s: %w", docFile.Path, err))
+ 		}
+ 	}
++	if !build {
++		return
++	}
++	if err = searchIndex.Batch(batch); err != nil {
++		log.Fatal(fmt.Errorf("error indexing docs: %w", err))
++	}
++	if dir != "" {
++		// Reopen read-only so the persisted segments are mmapped, not held.
++		_ = searchIndex.Close()
++		if searchIndex, err = bleve.OpenUsing(dir, map[string]interface{}{"read_only": true}); err != nil {
++			log.Fatal(fmt.Errorf("error reopening index: %w", err))
++		}
++	}
+ }
+ 
+ func SearchDocResources(query string, limit int) ([]mcp.Resource, error) {
