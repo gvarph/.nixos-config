@@ -12,7 +12,7 @@
       ConditionPathIsMountPoint = "/flash/ble-scale-sync";
     };
     containerConfig = {
-      image = "ghcr.io/kristianp26/ble-scale-sync:1.29.0";
+      image = "ghcr.io/kristianp26/ble-scale-sync:1.30.0";
       # Skip the entrypoint's Bluetooth adapter reset (moot on ha-bluetooth) and
       # point at the config dir: the app writes last_known_weight back into it.
       entrypoint = "tini";
