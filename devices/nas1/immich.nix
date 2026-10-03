@@ -8,7 +8,7 @@
   # podman's health-on-failure plus systemd restarts replace autoheal.
   virtualisation.quadlet = let
     inherit (config.virtualisation.quadlet) networks volumes;
-    version = "v3.2.2";
+    version = "v3.2.4";
     guard = {
       After = ["zfs-mount.service"];
       # Never write state into rpool/root if the datasets are missing.
