@@ -14,7 +14,7 @@
 in {
   imports = [inputs.hermes-agent.nixosModules.default];
 
-  # 9router API key as OPENAI_API_KEY (custom OpenAI-compatible provider).
+  # DEEPSEEK_API_KEY: Hermes's own DeepSeek key (native provider, not 9router).
   age.secrets.hermes_env = {
     file = ../../secrets/hermes_env.age;
     owner = "hermes";
@@ -28,12 +28,58 @@ in {
     inherit stateDir;
     workingDirectory = "${stateDir}/workspace";
     environmentFiles = [config.age.secrets.hermes_env.path];
-    environment.HERMES_DOCKER_BINARY = "${pkgs.podman}/bin/podman";
+    environment = {
+      HERMES_DOCKER_BINARY = "${pkgs.podman}/bin/podman";
+      SEARXNG_URL = "http://127.0.0.1:8888";
+    };
     settings = {
+      # Native DeepSeek provider: it handles V4's thinking toggle / reasoning echo,
+      # which an anonymous OpenAI-compatible hop (9router) does not.
+      # config.yaml is deep-merged, so the old 9router keys are blanked explicitly.
       model = {
-        provider = "custom";
-        base_url = "http://127.0.0.1:20128/v1"; # 9router on loopback
-        default = "ds/deepseek-v4.1-flash";
+        provider = "deepseek";
+        default = "deepseek-flash"; # = DeepSeek-V4.1-Flash (vision, tools)
+        base_url = "";
+      };
+      # Photos go to the model natively (deepseek-flash reads images); side tasks
+      # follow the provider's default aux model (deepseek-flash).
+      agent.image_input_mode = "auto";
+      auxiliary = let
+        followMain = extra:
+          {
+            provider = "auto";
+            model = "";
+            base_url = "";
+            key_env = "";
+          }
+          // extra;
+      in {
+        vision = followMain {};
+        compression = followMain {max_concurrency = 2;};
+        title_generation = followMain {};
+      };
+      # Voice notes transcribed on nas1 (faster-whisper); nothing leaves the box.
+      stt = {
+        enabled = true;
+        provider = "local";
+        language = ""; # auto-detect (default would force English)
+        echo_transcripts = false; # don't post transcripts back into chats
+        local = {
+          model = "large-v3-turbo";
+          device = "cpu";
+          compute_type = "int8";
+        };
+      };
+      # Search via local SearXNG only; never fall back to public keyless APIs.
+      web = {
+        search_backend = "searxng";
+        keyless_fallback = false;
+        keyless_rescue = false;
+      };
+      # The browser tool would run on the host, outside the sandbox: keep it off.
+      browser = {
+        backend = "off";
+        allow_private_urls = false;
       };
       dashboard = {
         public_url = "https://hermes.gvarph.com";

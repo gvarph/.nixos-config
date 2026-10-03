@@ -28,6 +28,7 @@
     "rpool/flash/grafana"
     "rpool/flash/trek"
     "rpool/flash/hevy2garmin"
+    "rpool/flash/hermes"
 
     # HDD datasets
     "tank/immich"

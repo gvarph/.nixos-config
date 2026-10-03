@@ -63,7 +63,7 @@ in {
   # htpasswd for logs.gvarph.com: Home Assistant's Alloy add-on pushes its
   # journal into VictoriaLogs (Loki protocol) with these basic-auth credentials.
   "vl_push_htpasswd.age".publicKeys = [nas1];
-  # Hermes agent: OPENAI_API_KEY = its own 9router API key (+ messaging tokens).
+  # Hermes agent: DEEPSEEK_API_KEY, DEEPINFRA_API_KEY + messaging tokens.
   "hermes_env.age".publicKeys = [nas1];
   # SearXNG: SEARX_SECRET_KEY (server.secret_key).
   "searx_env.age".publicKeys = [nas1];

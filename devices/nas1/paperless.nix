@@ -104,9 +104,9 @@
           PAPERLESS_BASE_URL = "http://paperless:8000";
           LLM_PROVIDER = "openai";
           # V4.1 Flash is natively multimodal; the separate vision-exp model was retired 2026-09-10.
-          LLM_MODEL = "ds/deepseek-v4.1-flash";
+          LLM_MODEL = "ds/deepseek-flash";
           VISION_LLM_PROVIDER = "openai";
-          VISION_LLM_MODEL = "ds/deepseek-v4.1-flash";
+          VISION_LLM_MODEL = "ds/deepseek-flash";
           OPENAI_BASE_URL = "http://9router:20128/v1";
           OCR_PROVIDER = "llm";
           OCR_LIMIT_PAGES = "5";
