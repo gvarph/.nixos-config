@@ -139,12 +139,10 @@ in {
     # MCP servers: read tools only, each by explicit allowlist (write tools are
     # added only on request). Stdio servers run on the host as hermes.
     mcpServers = {
+      # One shared instance (mcp-victoriametrics unit below) instead of a stdio
+      # copy per Hermes process: its docs index costs ~465 MiB per copy.
       victoriametrics = {
-        command = lib.getExe pkgs.mcp-victoriametrics;
-        env = {
-          VM_INSTANCE_ENTRYPOINT = "http://127.0.0.1:8428";
-          VM_INSTANCE_TYPE = "single";
-        };
+        url = "http://127.0.0.1:8430/mcp";
         # No alerts/rules: without vmalert they are always empty ("nothing firing").
         tools.include = [
           "query"
@@ -223,10 +221,34 @@ in {
           ExecStart = "${pkgs.podman}/bin/podman unshare true";
         };
       };
+
+      # Shared VictoriaMetrics MCP server for Hermes, Streamable HTTP on loopback.
+      mcp-victoriametrics = {
+        description = "VictoriaMetrics MCP server (Streamable HTTP, loopback)";
+        wantedBy = ["multi-user.target"];
+        after = ["victoriametrics.service"];
+        environment = {
+          VM_INSTANCE_ENTRYPOINT = "http://127.0.0.1:8428";
+          VM_INSTANCE_TYPE = "single";
+          MCP_SERVER_MODE = "http";
+          MCP_LISTEN_ADDR = "127.0.0.1:8430";
+        };
+        serviceConfig = {
+          ExecStart = lib.getExe pkgs.mcp-victoriametrics;
+          DynamicUser = true;
+          Restart = "on-failure";
+          ProtectSystem = "strict";
+          ProtectHome = true;
+          PrivateTmp = true;
+          NoNewPrivileges = true;
+          RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_UNIX"];
+        };
+      };
     }
     (lib.genAttrs ["hermes-agent" "hermes-backend"] (_: {
-      after = ["zfs-mount.service" "hermes-podman-pause.service"];
+      after = ["zfs-mount.service" "hermes-podman-pause.service" "mcp-victoriametrics.service"];
       requires = ["hermes-podman-pause.service"];
+      wants = ["mcp-victoriametrics.service"];
       unitConfig.ConditionPathIsMountPoint = stateDir;
       path = [pkgs.podman "/run/wrappers"];
       environment.XDG_RUNTIME_DIR = "/run/hermes";
