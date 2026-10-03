@@ -13,7 +13,7 @@
       ConditionPathIsMountPoint = ["/flash/shelfarr" "/tank/media"];
     };
     containerConfig = {
-      image = "ghcr.io/pedro-revez-silva/shelfarr:2026.08.24.1";
+      image = "ghcr.io/pedro-revez-silva/shelfarr:2026.09.28.1";
       # Starts as root, chowns, drops to PUID; imports hardlinks into the
       # shared media tree as gvarph:users, so no private user namespace.
       environments = {
