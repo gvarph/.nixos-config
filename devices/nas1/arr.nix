@@ -68,7 +68,7 @@ in {
       autoStart = true;
       unitConfig = guard;
       containerConfig = {
-        image = "docker.io/binhex/arch-qbittorrentvpn:5.2.3-3-01";
+        image = "docker.io/binhex/arch-qbittorrentvpn:5.2.4-1-02";
         environmentFiles = [config.age.secrets.qbittorrent_env.path];
         environments =
           lscrEnv
@@ -138,31 +138,31 @@ in {
 
     containers.sonarr = lscr {
       name = "sonarr";
-      tag = "4.0.20.3014-ls325";
+      tag = "4.0.20.3014-ls326";
       ip = "172.39.0.3";
       port = "8989:8989";
     };
     containers.radarr = lscr {
       name = "radarr";
-      tag = "6.4.4.10685-ls317";
+      tag = "6.4.4.10685-ls318";
       ip = "172.39.0.4";
       port = "7878:7878";
     };
     containers.lidarr = lscr {
       name = "lidarr";
-      tag = "3.1.0.4875-ls41";
+      tag = "3.1.0.4875-ls42";
       ip = "172.39.0.5";
       port = "8686:8686";
     };
     containers.bazarr = lscr {
       name = "bazarr";
-      tag = "v1.6.1-ls364";
+      tag = "v1.6.2-ls366";
       ip = "172.39.0.6";
       port = "6767:6767";
     };
     containers.prowlarr = lscr {
       name = "prowlarr";
-      tag = "2.6.5.5623-ls161";
+      tag = "2.6.5.5623-ls162";
       ip = "172.39.0.11";
       port = "9696:9696";
       media = false;
@@ -170,7 +170,7 @@ in {
     # Usenet client (Newshosting); nginx sab.gvarph.com -> :8085.
     containers.sabnzbd = lscr {
       name = "sabnzbd";
-      tag = "5.1.3-ls273";
+      tag = "5.1.3-ls275";
       ip = "172.39.0.13";
       port = "8085:8080";
     };
