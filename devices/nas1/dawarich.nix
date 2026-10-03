@@ -12,7 +12,7 @@
   # geocoding. nginx fronts dawarich.gvarph.com -> :8090 (native OIDC).
   virtualisation.quadlet = let
     inherit (config.virtualisation.quadlet) networks;
-    image = "docker.io/freikin/dawarich:1.15.2";
+    image = "docker.io/freikin/dawarich:1.15.3";
     guard = {
       After = ["zfs-mount.service"];
       # Never write state into rpool/root if the dataset is missing.
