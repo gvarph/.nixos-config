@@ -336,6 +336,15 @@ in {
         };
         locations."/".return = "404";
       };
+      # Hermes agent dashboard; auth is oauth2-proxy -> Pocket ID (list below).
+      "hermes.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:9119";
+          proxyWebsockets = true;
+        };
+      };
       "crowdsec.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";
@@ -604,6 +613,7 @@ in {
     nginx = {
       domain = "auth.gvarph.com";
       virtualHosts."qbit.gvarph.com" = {};
+      virtualHosts."hermes.gvarph.com" = {};
       virtualHosts."hevy.gvarph.com" = {};
       virtualHosts."9router.gvarph.com" = {};
       virtualHosts."navidrome.gvarph.com" = {};

@@ -24,6 +24,9 @@
 
     # Podman quadlets as NixOS options; imported per host (devices/nas1/podman.nix).
     quadlet-nix.url = "github:SEIAROTg/quadlet-nix";
+    # Hermes agent: upstream NixOS module + package, pinned to a release tag.
+    # Not following nixpkgs: its uv2nix Python env is locked against upstream's own.
+    hermes-agent.url = "github:NousResearch/hermes-agent/v2026.9.24";
 
     # Tracks main. Only main revs build here, because hyprland.cachix.org serves
     # them prebuilt. Tagged releases don't build locally: CMakeLists wants
