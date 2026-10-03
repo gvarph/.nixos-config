@@ -17,4 +17,21 @@ final: prev: {
     doCheck = false;
     meta.mainProgram = "mcp-victorialogs";
   };
+
+  # VictoriaMetrics' MCP server, for Hermes (devices/nas1/hermes.nix); not in nixpkgs.
+  mcp-victoriametrics = prev.buildGoModule rec {
+    pname = "mcp-victoriametrics";
+    version = "1.20.2";
+    src = prev.fetchFromGitHub {
+      owner = "VictoriaMetrics";
+      repo = "mcp-victoriametrics";
+      tag = "v${version}";
+      hash = "sha256-7kN7qwsvTL0scfBxMO/nrvikiysUxPY8nSFkhJsgGDM=";
+    };
+    vendorHash = null; # dependencies are vendored upstream
+    subPackages = ["cmd/mcp-victoriametrics"];
+    ldflags = ["-s" "-w" "-X main.version=${version}"];
+    doCheck = false;
+    meta.mainProgram = "mcp-victoriametrics";
+  };
 }

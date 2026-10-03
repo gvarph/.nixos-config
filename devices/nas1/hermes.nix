@@ -14,6 +14,20 @@
 in {
   imports = [inputs.hermes-agent.nixosModules.default];
 
+  # `hermes …` and `hermes-shell` run the CLI / a shell as the hermes user with
+  # the gateway unit's exact environment (paths, sandbox runtime dir).
+  environment.systemPackages = let
+    asHermes = name: cmd:
+      pkgs.writeShellScriptBin name ''
+        env_args=$(systemctl show hermes-agent -p Environment --value)
+        exec sudo -u hermes env -i $env_args TERM="''${TERM:-xterm}" \
+          sh -c 'cd ${stateDir}/workspace && exec ${cmd} "$@"' ${name} "$@"
+      '';
+  in [
+    (asHermes "hermes" (lib.getExe' config.services.hermes-agent.package "hermes"))
+    (asHermes "hermes-shell" "bash")
+  ];
+
   # DEEPSEEK_API_KEY: Hermes's own DeepSeek key (native provider, not 9router).
   age.secrets.hermes_env = {
     file = ../../secrets/hermes_env.age;
@@ -39,11 +53,14 @@ in {
       model = {
         provider = "deepseek";
         default = "deepseek-flash"; # = DeepSeek-V4.1-Flash (vision, tools)
-        base_url = "";
+        # Explicit, so no leftover top-level base_url can fill a blank.
+        base_url = "https://api.deepseek.com/v1";
       };
-      # Photos go to the model natively (deepseek-flash reads images); side tasks
-      # follow the provider's default aux model (deepseek-flash).
-      agent.image_input_mode = "auto";
+      # Photos go to the model natively (deepseek-flash reads images, also inside
+      # tool results; tested). The vision fallback route is pinned to DeepSeek so
+      # other keys in the env (e.g. DeepInfra) never become a photo destination.
+      # Side tasks follow the provider's default aux model (deepseek-flash).
+      agent.image_input_mode = "native";
       auxiliary = let
         followMain = extra:
           {
@@ -54,7 +71,11 @@ in {
           }
           // extra;
       in {
-        vision = followMain {};
+        vision = followMain {
+          provider = "deepseek";
+          model = "deepseek-flash";
+          base_url = "https://api.deepseek.com/v1";
+        };
         compression = followMain {max_concurrency = 2;};
         title_generation = followMain {};
       };
@@ -81,6 +102,18 @@ in {
         backend = "off";
         allow_private_urls = false;
       };
+      # Trek: plain OAuth (dynamic client registration), all tools; the scopes
+      # approved on Trek's consent page decide what it may do. One-time login
+      # as hermes: `hermes mcp login trek`. Typed mcpServers has no oauth block.
+      mcp_servers.trek = {
+        url = "https://trek.gvarph.com/mcp";
+        auth = "oauth";
+        # Fixed loopback callback, so the login also works through an SSH tunnel.
+        oauth = {
+          redirect_host = "127.0.0.1";
+          redirect_port = 27899;
+        };
+      };
       dashboard = {
         public_url = "https://hermes.gvarph.com";
         oauth = {
@@ -103,6 +136,51 @@ in {
         container_persistent = true;
       };
     };
+    # MCP servers: read tools only, each by explicit allowlist (write tools are
+    # added only on request). Stdio servers run on the host as hermes.
+    mcpServers = {
+      victoriametrics = {
+        command = lib.getExe pkgs.mcp-victoriametrics;
+        env = {
+          VM_INSTANCE_ENTRYPOINT = "http://127.0.0.1:8428";
+          VM_INSTANCE_TYPE = "single";
+        };
+        # No alerts/rules: without vmalert they are always empty ("nothing firing").
+        tools.include = [
+          "query"
+          "query_range"
+          "metrics"
+          "metrics_metadata"
+          "labels"
+          "label_values"
+          "series"
+          "metric_statistics"
+          "tsdb_status"
+          "documentation"
+          "prettify_query"
+          "explain_query"
+        ];
+      };
+      victorialogs = {
+        command = lib.getExe pkgs.mcp-victorialogs;
+        env.VL_INSTANCE_ENTRYPOINT = "http://127.0.0.1:9428";
+        tools.include = [
+          "query"
+          "hits"
+          "facets"
+          "field_names"
+          "field_values"
+          "stats_query"
+          "stats_query_range"
+          "streams"
+          "stream_ids"
+          "stream_field_names"
+          "stream_field_values"
+          "documentation"
+        ];
+      };
+    };
+
     # Browser dashboard on loopback; nginx fronts hermes.gvarph.com behind oauth2-proxy.
     # A public_url is required for that Host header and turns on Hermes's own
     # login gate: OIDC against Pocket ID with a public PKCE client.
@@ -118,25 +196,55 @@ in {
   # agent itself; the sandbox containers keep it on), and a runtime dir that
   # ProtectSystem=strict leaves writable.
   users.users.hermes.autoSubUidGidRange = true;
-  systemd.services = lib.genAttrs ["hermes-agent" "hermes-backend"] (_: {
-    after = ["zfs-mount.service"];
-    unitConfig.ConditionPathIsMountPoint = stateDir;
-    path = [pkgs.podman "/run/wrappers"];
-    environment.XDG_RUNTIME_DIR = "/run/hermes";
-    serviceConfig = {
-      NoNewPrivileges = lib.mkForce false;
-      RuntimeDirectory = "hermes";
-      RuntimeDirectoryMode = "0700";
-      RuntimeDirectoryPreserve = true;
-    };
-    # config.yaml/.env are (re)written at activation, not referenced by the
-    # units, so changes would otherwise not restart the processes.
-    restartTriggers = [
-      config.age.secrets.hermes_env.file
-      (builtins.toJSON config.services.hermes-agent.settings)
-      (builtins.toJSON config.services.hermes-agent.environment)
-      (builtins.toJSON config.services.hermes-agent.mcpServers)
-    ];
-  });
+  # Rootless podman joins the mount namespace of its long-lived "pause" process.
+  # Created from inside a hardened unit (PrivateTmp etc.) that namespace goes
+  # stale on restart (no /tmp, /var/tmp -> exit 127). This unprivileged unit
+  # without private mounts creates it first, replacing any stale one.
+  systemd.services = lib.mkMerge [
+    {
+      hermes-podman-pause = {
+        description = "Rootless podman pause process for the Hermes sandbox";
+        after = ["zfs-mount.service"];
+        unitConfig.ConditionPathIsMountPoint = stateDir;
+        path = [pkgs.podman "/run/wrappers" pkgs.coreutils];
+        environment = {
+          HOME = stateDir;
+          XDG_RUNTIME_DIR = "/run/hermes";
+        };
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          User = "hermes";
+          Group = "hermes";
+          RuntimeDirectory = "hermes";
+          RuntimeDirectoryMode = "0700";
+          RuntimeDirectoryPreserve = true;
+          ExecStartPre = "-${pkgs.bash}/bin/sh -c 'kill $(cat /run/hermes/libpod/tmp/pause.pid) 2>/dev/null; true'";
+          ExecStart = "${pkgs.podman}/bin/podman unshare true";
+        };
+      };
+    }
+    (lib.genAttrs ["hermes-agent" "hermes-backend"] (_: {
+      after = ["zfs-mount.service" "hermes-podman-pause.service"];
+      requires = ["hermes-podman-pause.service"];
+      unitConfig.ConditionPathIsMountPoint = stateDir;
+      path = [pkgs.podman "/run/wrappers"];
+      environment.XDG_RUNTIME_DIR = "/run/hermes";
+      serviceConfig = {
+        NoNewPrivileges = lib.mkForce false;
+        RuntimeDirectory = "hermes";
+        RuntimeDirectoryMode = "0700";
+        RuntimeDirectoryPreserve = true;
+      };
+      # config.yaml/.env are (re)written at activation, not referenced by the
+      # units, so changes would otherwise not restart the processes.
+      restartTriggers = [
+        config.age.secrets.hermes_env.file
+        (builtins.toJSON config.services.hermes-agent.settings)
+        (builtins.toJSON config.services.hermes-agent.environment)
+        (builtins.toJSON config.services.hermes-agent.mcpServers)
+      ];
+    }))
+  ];
   systemd.tmpfiles.rules = ["d ${stateDir}/workspace 0750 hermes hermes -"];
 }
