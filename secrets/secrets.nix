@@ -65,6 +65,8 @@ in {
   "vl_push_htpasswd.age".publicKeys = [nas1];
   # Hermes agent: DEEPSEEK_API_KEY, DEEPINFRA_API_KEY + messaging tokens.
   "hermes_env.age".publicKeys = [nas1];
+  # Hermes browser: BROWSER_CDP_URL (the company Browserless, URL + token from .env).
+  "hermes_browser_env.age".publicKeys = [nas1];
   # SearXNG: SEARX_SECRET_KEY (server.secret_key).
   "searx_env.age".publicKeys = [nas1];
   # crowdsec-web-ui: LAPI machine password (+ OIDC client once configured).

@@ -42,6 +42,11 @@ in {
     file = ../../secrets/hermes_env.age;
     owner = "hermes";
   };
+  # BROWSER_CDP_URL: remote Browserless; only agent-browser (CDP client) runs here.
+  age.secrets.hermes_browser_env = {
+    file = ../../secrets/hermes_browser_env.age;
+    owner = "hermes";
+  };
 
   # The agent runs natively as the unprivileged `hermes` user; every shell /
   # Python command it executes runs in a rootless podman container (cap-drop
@@ -50,7 +55,7 @@ in {
     enable = true;
     inherit stateDir;
     workingDirectory = "${stateDir}/workspace";
-    environmentFiles = [config.age.secrets.hermes_env.path];
+    environmentFiles = [config.age.secrets.hermes_env.path config.age.secrets.hermes_browser_env.path];
     environment = {
       HERMES_DOCKER_BINARY = "${pkgs.podman}/bin/podman";
       SEARXNG_URL = "http://127.0.0.1:8888";
@@ -106,7 +111,8 @@ in {
         keyless_fallback = false;
         keyless_rescue = false;
       };
-      # The browser tool would run on the host, outside the sandbox: keep it off.
+      # Built-in browser tools ("off" = not the Browser Use CLI), driving the remote
+      # Browserless from BROWSER_CDP_URL; no Chromium runs on nas1.
       browser = {
         backend = "off";
         allow_private_urls = false;
@@ -270,7 +276,7 @@ in {
       requires = ["hermes-podman-pause.service"];
       wants = ["mcp-victoriametrics.service" "mcp-victorialogs.service"];
       unitConfig.ConditionPathIsMountPoint = stateDir;
-      path = [pkgs.podman "/run/wrappers"];
+      path = [pkgs.podman "/run/wrappers" pkgs.agent-browser];
       environment = podmanEnv;
       serviceConfig = {
         NoNewPrivileges = lib.mkForce false;
@@ -282,6 +288,7 @@ in {
       # units, so changes would otherwise not restart the processes.
       restartTriggers = [
         config.age.secrets.hermes_env.file
+        config.age.secrets.hermes_browser_env.file
         (builtins.toJSON config.services.hermes-agent.settings)
         (builtins.toJSON config.services.hermes-agent.environment)
         (builtins.toJSON config.services.hermes-agent.mcpServers)
