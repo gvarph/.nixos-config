@@ -6,6 +6,15 @@
   ...
 }: let
   stateDir = "/var/lib/hermes";
+  # No systemd user session for hermes, so podman would warn on every call (and
+  # Hermes merges that into tool output, breaking its write verifier).
+  podmanEnv = {
+    XDG_RUNTIME_DIR = "/run/hermes";
+    CONTAINERS_CONF_OVERRIDE = "${pkgs.writeText "hermes-containers.conf" ''
+      [engine]
+      cgroup_manager = "cgroupfs"
+    ''}";
+  };
   # Host paths the agent's sandbox may see, as "host:container[:ro]". Nothing
   # outside its own workspace is visible unless it is listed here.
   grants = [
@@ -203,10 +212,7 @@ in {
         after = ["zfs-mount.service"];
         unitConfig.ConditionPathIsMountPoint = stateDir;
         path = [pkgs.podman "/run/wrappers" pkgs.coreutils];
-        environment = {
-          HOME = stateDir;
-          XDG_RUNTIME_DIR = "/run/hermes";
-        };
+        environment = podmanEnv // {HOME = stateDir;};
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
@@ -265,7 +271,7 @@ in {
       wants = ["mcp-victoriametrics.service" "mcp-victorialogs.service"];
       unitConfig.ConditionPathIsMountPoint = stateDir;
       path = [pkgs.podman "/run/wrappers"];
-      environment.XDG_RUNTIME_DIR = "/run/hermes";
+      environment = podmanEnv;
       serviceConfig = {
         NoNewPrivileges = lib.mkForce false;
         RuntimeDirectory = "hermes";
