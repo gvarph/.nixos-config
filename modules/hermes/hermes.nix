@@ -18,7 +18,7 @@
   # Host paths the agent's sandbox may see, as "host:container[:ro]". Nothing
   # outside its own workspace is visible unless it is listed here.
   grants = [
-    # "/tank/media/ebooks:/grants/ebooks:ro"
+    "/home/gvarph/.nixos-config/modules/hermes:/grants/nixos-config:ro"
   ];
 in {
   imports = [inputs.hermes-agent.nixosModules.default];
@@ -42,11 +42,6 @@ in {
     file = ../../secrets/hermes_env.age;
     owner = "hermes";
   };
-  # BROWSER_CDP_URL: remote Browserless; only agent-browser (CDP client) runs here.
-  age.secrets.hermes_browser_env = {
-    file = ../../secrets/hermes_browser_env.age;
-    owner = "hermes";
-  };
 
   # The agent runs natively as the unprivileged `hermes` user; every shell /
   # Python command it executes runs in a rootless podman container (cap-drop
@@ -55,7 +50,7 @@ in {
     enable = true;
     inherit stateDir;
     workingDirectory = "${stateDir}/workspace";
-    environmentFiles = [config.age.secrets.hermes_env.path config.age.secrets.hermes_browser_env.path];
+    environmentFiles = [config.age.secrets.hermes_env.path];
     environment = {
       HERMES_DOCKER_BINARY = "${pkgs.podman}/bin/podman";
       SEARXNG_URL = "http://127.0.0.1:8888";
@@ -111,8 +106,8 @@ in {
         keyless_fallback = false;
         keyless_rescue = false;
       };
-      # Built-in browser tools ("off" = not the Browser Use CLI), driving the remote
-      # Browserless from BROWSER_CDP_URL; no Chromium runs on nas1.
+      # "off" = built-in tools, not the Browser Use CLI. With no Chromium or CDP
+      # endpoint on nas1 they stay unadvertised, so no browser runs outside the sandbox.
       browser = {
         backend = "off";
         allow_private_urls = false;
@@ -231,7 +226,6 @@ in {
           ExecStart = "${pkgs.podman}/bin/podman unshare true";
         };
       };
-
     }
     # Shared Victoria* MCP servers for Hermes, Streamable HTTP on loopback.
     # INFO logs every full request/result (MBs per docs call), hence warn.
@@ -239,11 +233,13 @@ in {
         description = "${name} (Streamable HTTP, loopback)";
         wantedBy = ["multi-user.target"];
         after = [s.after];
-        environment = s.env // {
-          MCP_SERVER_MODE = "http";
-          MCP_LISTEN_ADDR = "127.0.0.1:${toString s.port}";
-          MCP_LOG_LEVEL = "warn";
-        };
+        environment =
+          s.env
+          // {
+            MCP_SERVER_MODE = "http";
+            MCP_LISTEN_ADDR = "127.0.0.1:${toString s.port}";
+            MCP_LOG_LEVEL = "warn";
+          };
         serviceConfig = {
           ExecStart = lib.getExe pkgs.${name};
           DynamicUser = true;
@@ -276,7 +272,7 @@ in {
       requires = ["hermes-podman-pause.service"];
       wants = ["mcp-victoriametrics.service" "mcp-victorialogs.service"];
       unitConfig.ConditionPathIsMountPoint = stateDir;
-      path = [pkgs.podman "/run/wrappers" pkgs.agent-browser];
+      path = [pkgs.podman "/run/wrappers"];
       environment = podmanEnv;
       serviceConfig = {
         NoNewPrivileges = lib.mkForce false;
@@ -288,7 +284,6 @@ in {
       # units, so changes would otherwise not restart the processes.
       restartTriggers = [
         config.age.secrets.hermes_env.file
-        config.age.secrets.hermes_browser_env.file
         (builtins.toJSON config.services.hermes-agent.settings)
         (builtins.toJSON config.services.hermes-agent.environment)
         (builtins.toJSON config.services.hermes-agent.mcpServers)

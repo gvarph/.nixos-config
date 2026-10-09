@@ -49,13 +49,14 @@ in {
     ./arr.nix
     ./jellyseerr.nix
     ./shelfarr.nix
-    ./hermes.nix
     ./fitness-mcp.nix
     ./zram.nix
     ./searxng.nix
     # ./dawarich.nix # migrated and tested 2026-09-28; kept off until wanted
     ./restic.nix
     ./nfs.nix
+
+    ../../modules/hermes
 
     # ../../default.nix already imports docker.nix
     (import ../../default.nix {inherit config pkgs inputs username;})
