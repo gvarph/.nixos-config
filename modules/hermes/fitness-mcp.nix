@@ -125,7 +125,7 @@
     "get_workouts"
   ];
 in {
-  # Garmin and Hevy MCP servers for Hermes: one shared loopback HTTP instance
+  # Garmin and Hevy MCP servers for Hermes (wired up in mcp.nix): one shared loopback HTTP instance
   # each; credentials stay in these units, never in the hermes user's env.
 
   # One-time (and ~6-monthly) Garmin login with MFA: `garmin-mcp-auth`.
@@ -190,36 +190,5 @@ in {
         Environment = "HOME=/run/hevy-mcp";
       };
     restartTriggers = [config.age.secrets.hevy2garmin_env.file];
-  };
-
-  services.hermes-agent.mcpServers = {
-    # Read-only filter is enforced server-side (GARMIN_ENABLED_TOOLS above).
-    garmin.url = "http://127.0.0.1:8432/mcp";
-    hevy = {
-      url = "http://127.0.0.1:8433/mcp";
-      tools.include = [
-        "get-training-summary"
-        "get-workouts"
-        "get-workout"
-        "get-workout-events"
-        "get-routines"
-        "get-routine"
-        "search-routines"
-        "get-routine-folder"
-        "get-exercise-template"
-        "search-exercise-templates"
-        "get-exercise-history"
-        "get-body-measurements"
-        "get-body-measurement"
-      ];
-    };
-  };
-  systemd.services.hermes-agent = {
-    wants = ["garmin-mcp.service" "hevy-mcp.service"];
-    after = ["garmin-mcp.service" "hevy-mcp.service"];
-  };
-  systemd.services.hermes-backend = {
-    wants = ["garmin-mcp.service" "hevy-mcp.service"];
-    after = ["garmin-mcp.service" "hevy-mcp.service"];
   };
 }

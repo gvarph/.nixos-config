@@ -66,7 +66,12 @@ in {
 
   services.hermes-agent = {
     environment.CAMOFOX_URL = "http://127.0.0.1:9377";
-    settings.browser.cloud_provider = "camofox";
+    # Hermes's built-in browser tools, not the Browser Use CLI ("off").
+    settings.browser = {
+      backend = "off";
+      cloud_provider = "camofox";
+      allow_private_urls = false;
+    };
   };
   systemd.services.hermes-agent = {
     wants = ["camofox.service"];

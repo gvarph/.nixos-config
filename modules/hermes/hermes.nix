@@ -5,21 +5,8 @@
   pkgs,
   ...
 }: let
+  cfg = config.services.hermes-agent;
   stateDir = "/var/lib/hermes";
-  # No systemd user session for hermes, so podman would warn on every call (and
-  # Hermes merges that into tool output, breaking its write verifier).
-  podmanEnv = {
-    XDG_RUNTIME_DIR = "/run/hermes";
-    CONTAINERS_CONF_OVERRIDE = "${pkgs.writeText "hermes-containers.conf" ''
-      [engine]
-      cgroup_manager = "cgroupfs"
-    ''}";
-  };
-  # Host paths the agent's sandbox may see, as "host:container[:ro]". Nothing
-  # outside its own workspace is visible unless it is listed here.
-  grants = [
-    "/home/gvarph/.nixos-config/modules/hermes:/grants/nixos-config:ro"
-  ];
 in {
   imports = [inputs.hermes-agent.nixosModules.default];
 
@@ -33,7 +20,7 @@ in {
           sh -c 'cd ${stateDir}/workspace && exec ${cmd} "$@"' ${name} "$@"
       '';
   in [
-    (asHermes "hermes" (lib.getExe' config.services.hermes-agent.package "hermes"))
+    (asHermes "hermes" (lib.getExe' cfg.package "hermes"))
     (asHermes "hermes-shell" "bash")
   ];
 
@@ -43,18 +30,13 @@ in {
     owner = "hermes";
   };
 
-  # The agent runs natively as the unprivileged `hermes` user; every shell /
-  # Python command it executes runs in a rootless podman container (cap-drop
-  # ALL, no-new-privileges) that only sees /workspace plus `grants`.
+  # The agent runs natively as the unprivileged `hermes` user; its shell /
+  # Python commands run in the podman sandbox (sandbox.nix).
   services.hermes-agent = {
     enable = true;
     inherit stateDir;
     workingDirectory = "${stateDir}/workspace";
     environmentFiles = [config.age.secrets.hermes_env.path];
-    environment = {
-      HERMES_DOCKER_BINARY = "${pkgs.podman}/bin/podman";
-      SEARXNG_URL = "http://127.0.0.1:8888";
-    };
     settings = {
       # Native DeepSeek provider: it handles V4's thinking toggle / reasoning echo,
       # which an anonymous OpenAI-compatible hop (9router) does not.
@@ -100,30 +82,6 @@ in {
           compute_type = "int8";
         };
       };
-      # Search via local SearXNG only; never fall back to public keyless APIs.
-      web = {
-        search_backend = "searxng";
-        keyless_fallback = false;
-        keyless_rescue = false;
-      };
-      # "off" = built-in tools, not the Browser Use CLI. With no Chromium or CDP
-      # endpoint on nas1 they stay unadvertised, so no browser runs outside the sandbox.
-      browser = {
-        backend = "off";
-        allow_private_urls = false;
-      };
-      # Trek: plain OAuth (dynamic client registration), all tools; the scopes
-      # approved on Trek's consent page decide what it may do. One-time login
-      # as hermes: `hermes mcp login trek`. Typed mcpServers has no oauth block.
-      mcp_servers.trek = {
-        url = "https://trek.gvarph.com/mcp";
-        auth = "oauth";
-        # Fixed loopback callback, so the login also works through an SSH tunnel.
-        oauth = {
-          redirect_host = "127.0.0.1";
-          redirect_port = 27899;
-        };
-      };
       dashboard = {
         public_url = "https://hermes.gvarph.com";
         oauth = {
@@ -133,62 +91,6 @@ in {
             client_id = "eacb44bc-c76d-4fcb-a68d-fb2416ee68fb";
           };
         };
-      };
-      terminal = {
-        backend = "docker";
-        cwd = "/workspace";
-        docker_image = "docker.io/nousresearch/hermes-sandbox@sha256:725942c1d6aa17a76cdc5f7289c836e29563e99bf53f7c9f8b848d5c89d49f70";
-        docker_volumes = ["${stateDir}/workspace:/workspace"] ++ grants;
-        docker_network = true;
-        container_cpu = 2;
-        container_memory = 4096;
-        container_disk = 20480;
-        container_persistent = true;
-      };
-    };
-    # MCP servers: read tools only, each by explicit allowlist (write tools are
-    # added only on request), except Hermes's own AgentMail inbox (all tools).
-    # Stdio servers run on the host as hermes.
-    mcpServers = {
-      # Shared HTTP instances (units below), not a stdio copy per Hermes process.
-      victoriametrics = {
-        url = "http://127.0.0.1:8430/mcp";
-        # No alerts/rules: without vmalert they are always empty ("nothing firing").
-        tools.include = [
-          "query"
-          "query_range"
-          "metrics"
-          "metrics_metadata"
-          "labels"
-          "label_values"
-          "series"
-          "metric_statistics"
-          "tsdb_status"
-          "prettify_query"
-          "explain_query"
-          "documentation"
-        ];
-      };
-      victorialogs = {
-        url = "http://127.0.0.1:8431/mcp";
-        tools.include = [
-          "query"
-          "hits"
-          "facets"
-          "field_names"
-          "field_values"
-          "stats_query"
-          "stats_query_range"
-          "streams"
-          "stream_ids"
-          "stream_field_names"
-          "stream_field_values"
-          "documentation"
-        ];
-      };
-      agentmail = {
-        url = "https://mcp.agentmail.to/mcp";
-        headers.x-api-key = "\${AGENTMAIL_API_KEY}";
       };
     };
 
@@ -202,98 +104,17 @@ in {
     };
   };
 
-  # Rootless podman for the sandbox: subordinate ids for the user namespace,
-  # newuidmap from the setuid wrappers (hence NoNewPrivileges off for the
-  # agent itself; the sandbox containers keep it on), and a runtime dir that
-  # ProtectSystem=strict leaves writable.
-  users.users.hermes.autoSubUidGidRange = true;
-  # Rootless podman joins the mount namespace of its long-lived "pause" process.
-  # Created from inside a hardened unit (PrivateTmp etc.) that namespace goes
-  # stale on restart (no /tmp, /var/tmp -> exit 127). This unprivileged unit
-  # without private mounts creates it first, replacing any stale one.
-  systemd.services = lib.mkMerge [
-    {
-      hermes-podman-pause = {
-        description = "Rootless podman pause process for the Hermes sandbox";
-        after = ["zfs-mount.service"];
-        unitConfig.ConditionPathIsMountPoint = stateDir;
-        path = [pkgs.podman "/run/wrappers" pkgs.coreutils];
-        environment = podmanEnv // {HOME = stateDir;};
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          User = "hermes";
-          Group = "hermes";
-          RuntimeDirectory = "hermes";
-          RuntimeDirectoryMode = "0700";
-          RuntimeDirectoryPreserve = true;
-          ExecStartPre = "-${pkgs.bash}/bin/sh -c 'kill $(cat /run/hermes/libpod/tmp/pause.pid) 2>/dev/null; true'";
-          ExecStart = "${pkgs.podman}/bin/podman unshare true";
-        };
-      };
-    }
-    # Shared Victoria* MCP servers for Hermes, Streamable HTTP on loopback.
-    # INFO logs every full request/result (MBs per docs call), hence warn.
-    (lib.mapAttrs (name: s: {
-        description = "${name} (Streamable HTTP, loopback)";
-        wantedBy = ["multi-user.target"];
-        after = [s.after];
-        environment =
-          s.env
-          // {
-            MCP_SERVER_MODE = "http";
-            MCP_LISTEN_ADDR = "127.0.0.1:${toString s.port}";
-            MCP_LOG_LEVEL = "warn";
-          };
-        serviceConfig = {
-          ExecStart = lib.getExe pkgs.${name};
-          DynamicUser = true;
-          Restart = "on-failure";
-          ProtectSystem = "strict";
-          ProtectHome = true;
-          PrivateTmp = true;
-          NoNewPrivileges = true;
-          RestrictAddressFamilies = ["AF_INET" "AF_INET6" "AF_UNIX"];
-        };
-      }) {
-        mcp-victoriametrics = {
-          port = 8430;
-          after = "victoriametrics.service";
-          env = {
-            VM_INSTANCE_ENTRYPOINT = "http://127.0.0.1:8428";
-            VM_INSTANCE_TYPE = "single";
-            # Docs come back inline from the tool; as resources they are ~8 MB/session.
-            MCP_DISABLE_RESOURCES = "true";
-          };
-        };
-        mcp-victorialogs = {
-          port = 8431;
-          after = "victorialogs.service";
-          env.VL_INSTANCE_ENTRYPOINT = "http://127.0.0.1:9428";
-        };
-      })
-    (lib.genAttrs ["hermes-agent" "hermes-backend"] (_: {
-      after = ["zfs-mount.service" "hermes-podman-pause.service" "mcp-victoriametrics.service" "mcp-victorialogs.service"];
-      requires = ["hermes-podman-pause.service"];
-      wants = ["mcp-victoriametrics.service" "mcp-victorialogs.service"];
-      unitConfig.ConditionPathIsMountPoint = stateDir;
-      path = [pkgs.podman "/run/wrappers"];
-      environment = podmanEnv;
-      serviceConfig = {
-        NoNewPrivileges = lib.mkForce false;
-        RuntimeDirectory = "hermes";
-        RuntimeDirectoryMode = "0700";
-        RuntimeDirectoryPreserve = true;
-      };
-      # config.yaml/.env are (re)written at activation, not referenced by the
-      # units, so changes would otherwise not restart the processes.
-      restartTriggers = [
-        config.age.secrets.hermes_env.file
-        (builtins.toJSON config.services.hermes-agent.settings)
-        (builtins.toJSON config.services.hermes-agent.environment)
-        (builtins.toJSON config.services.hermes-agent.mcpServers)
-      ];
-    }))
-  ];
+  systemd.services = lib.genAttrs ["hermes-agent" "hermes-backend"] (_: {
+    after = ["zfs-mount.service"];
+    unitConfig.ConditionPathIsMountPoint = stateDir;
+    # config.yaml/.env are (re)written at activation, not referenced by the
+    # units, so changes would otherwise not restart the processes.
+    restartTriggers = [
+      config.age.secrets.hermes_env.file
+      (builtins.toJSON cfg.settings)
+      (builtins.toJSON cfg.environment)
+      (builtins.toJSON cfg.mcpServers)
+    ];
+  });
   systemd.tmpfiles.rules = ["d ${stateDir}/workspace 0750 hermes hermes -"];
 }

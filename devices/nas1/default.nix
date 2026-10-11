@@ -49,9 +49,7 @@ in {
     ./arr.nix
     ./jellyseerr.nix
     ./shelfarr.nix
-    ./fitness-mcp.nix
     ./zram.nix
-    ./searxng.nix
     # ./dawarich.nix # migrated and tested 2026-09-28; kept off until wanted
     ./restic.nix
     ./nfs.nix
