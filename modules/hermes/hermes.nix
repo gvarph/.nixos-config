@@ -147,7 +147,8 @@ in {
       };
     };
     # MCP servers: read tools only, each by explicit allowlist (write tools are
-    # added only on request). Stdio servers run on the host as hermes.
+    # added only on request), except Hermes's own AgentMail inbox (all tools).
+    # Stdio servers run on the host as hermes.
     mcpServers = {
       # Shared HTTP instances (units below), not a stdio copy per Hermes process.
       victoriametrics = {
@@ -184,6 +185,10 @@ in {
           "stream_field_values"
           "documentation"
         ];
+      };
+      agentmail = {
+        url = "https://mcp.agentmail.to/mcp";
+        headers.x-api-key = "\${AGENTMAIL_API_KEY}";
       };
     };
 
