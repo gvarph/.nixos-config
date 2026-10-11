@@ -48,6 +48,14 @@ in {
   # ProtectSystem=strict leaves writable.
   users.users.hermes.autoSubUidGidRange = true;
 
+  # The nixos-config grant needs hermes to traverse ~gvarph. User activation
+  # chmods homes to 700 on every switch, which zeroes the ACL mask, so re-apply.
+  system.activationScripts.hermesGrantAcl = lib.stringAfter ["users"] ''
+    ${pkgs.acl}/bin/setfacl -m user:hermes:x,mask::x /home/gvarph
+    ${pkgs.acl}/bin/setfacl -m user:hermes:x /home/gvarph/.nixos-config
+    ${pkgs.acl}/bin/setfacl -m user:hermes:rx,default:user:hermes:rx /home/gvarph/.nixos-config/modules/hermes
+  '';
+
   systemd.services =
     {
       # Rootless podman joins the mount namespace of its long-lived "pause" process.
