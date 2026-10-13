@@ -47,4 +47,16 @@ in {
   };
 
   networking.interfaces.enp0s31f6.wakeOnLan.enable = true;
+
+  # Hibernation. Resume needs boot.kernelParams resume_offset=<N> from
+  # `sudo filefrag -v /var/lib/swapfile` (first physical_offset), added after
+  # the swapfile exists; the offset changes if the file is recreated.
+  swapDevices = [
+    {
+      device = "/var/lib/swapfile";
+      size = 64 * 1024;
+    }
+  ];
+  boot.resumeDevice = "/dev/disk/by-uuid/1f4f533d-e209-4cde-ae13-ab6656a11cc2";
+  boot.kernelParams = ["resume_offset=16537600"];
 }
