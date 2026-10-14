@@ -323,5 +323,13 @@ in {
   systemd.services.crowdsec-firewall-bouncer-register.serviceConfig.DynamicUser = lib.mkForce false;
   # The bouncer only `requires` its register unit; without `after` it loads the
   # API key credential before the key has been written.
-  systemd.services.crowdsec-firewall-bouncer.after = ["crowdsec-firewall-bouncer-register.service"];
+  systemd.services.crowdsec-firewall-bouncer = {
+    after = ["crowdsec-firewall-bouncer-register.service"];
+    # crowdsec signals ready before the LAPI listens, so retry instead of dying at boot.
+    startLimitIntervalSec = 0;
+    serviceConfig = {
+      Restart = "on-failure";
+      RestartSec = "10s";
+    };
+  };
 }
