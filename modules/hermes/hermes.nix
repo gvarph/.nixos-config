@@ -24,7 +24,8 @@ in {
     (asHermes "hermes-shell" "bash")
   ];
 
-  # DEEPSEEK_API_KEY: Hermes's own DeepSeek key (native provider, not 9router).
+  # OPENCODE_GO_API_KEY (primary), DEEPSEEK_API_KEY + DEEPINFRA_API_KEY (fallbacks),
+  # AGENTMAIL_API_KEY, Discord.
   age.secrets.hermes_env = {
     file = ../../secrets/hermes_env.age;
     owner = "hermes";
@@ -38,19 +39,29 @@ in {
     workingDirectory = "${stateDir}/workspace";
     environmentFiles = [config.age.secrets.hermes_env.path];
     settings = {
-      # Native DeepSeek provider: it handles V4's thinking toggle / reasoning echo,
-      # which an anonymous OpenAI-compatible hop (9router) does not.
-      # config.yaml is deep-merged, so the old 9router keys are blanked explicitly.
+      # DeepSeek V4.1 Flash via the OpenCode Go subscription (needs "Global" regions
+      # in the OpenCode workspace). Native providers handle V4's thinking toggle.
+      # Explicit base_url, so no leftover value in the deep-merged config.yaml applies.
       model = {
-        provider = "deepseek";
-        default = "deepseek-flash"; # = DeepSeek-V4.1-Flash (vision, tools)
-        # Explicit, so no leftover top-level base_url can fill a blank.
-        base_url = "https://api.deepseek.com/v1";
+        provider = "opencode-go";
+        default = "deepseek-v4.1-flash";
+        base_url = "https://opencode.ai/inference/go/v1";
       };
-      # Photos go to the model natively (deepseek-flash reads images, also inside
-      # tool results; tested). The vision fallback route is pinned to DeepSeek so
-      # other keys in the env (e.g. DeepInfra) never become a photo destination.
-      # Side tasks follow the provider's default aux model (deepseek-flash).
+      # Same model when Go fails or hits its limits: own DeepSeek key, then DeepInfra.
+      fallback_providers = [
+        {
+          provider = "deepseek";
+          model = "deepseek-flash"; # = DeepSeek-V4.1-Flash
+          base_url = "https://api.deepseek.com/v1";
+        }
+        {
+          provider = "deepinfra";
+          model = "deepseek-ai/DeepSeek-V4.1-Flash";
+          base_url = "https://api.deepinfra.com/v1/openai";
+        }
+      ];
+      # Photos go to the model natively (V4.1 Flash reads images; tested on all
+      # three endpoints). Vision is pinned to Go, falling back along the chain above.
       agent.image_input_mode = "native";
       auxiliary = let
         followMain = extra:
@@ -63,9 +74,9 @@ in {
           // extra;
       in {
         vision = followMain {
-          provider = "deepseek";
-          model = "deepseek-flash";
-          base_url = "https://api.deepseek.com/v1";
+          provider = "opencode-go";
+          model = "deepseek-v4.1-flash";
+          base_url = "https://opencode.ai/inference/go/v1";
         };
         compression = followMain {max_concurrency = 2;};
         title_generation = followMain {};
