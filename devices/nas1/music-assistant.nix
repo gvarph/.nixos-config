@@ -28,5 +28,11 @@
     after = ["zfs-mount.service"];
     # Never write state into rpool/root if the dataset is missing.
     unitConfig.ConditionPathIsMountPoint = "/var/lib/private/music-assistant";
+    # zeroconf crashes if the NIC isn't up yet (slow DHCP after a power cut).
+    startLimitIntervalSec = 0;
+    serviceConfig = {
+      Restart = "on-failure";
+      RestartSec = "10s";
+    };
   };
 }
