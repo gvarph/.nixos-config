@@ -93,7 +93,9 @@
       autoStart = true;
       unitConfig = {
         After = ["paperless.service" "9router.service"];
-        Requires = ["paperless.service"];
+        # Wants, not Requires: a failed first paperless start would cancel this job for good.
+        Wants = ["paperless.service"];
+        StartLimitIntervalSec = 0;
       };
       containerConfig = {
         image = "docker.io/icereed/paperless-gpt:v0.28.0";
@@ -124,7 +126,10 @@
         userns = "auto:size=65536";
         noNewPrivileges = true;
       };
-      serviceConfig.Restart = "on-failure";
+      serviceConfig = {
+        Restart = "on-failure";
+        RestartSec = "10s";
+      };
     };
   };
 
