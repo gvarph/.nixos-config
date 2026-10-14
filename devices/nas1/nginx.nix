@@ -573,6 +573,12 @@ in {
   # Forward-auth gateway: puts a Pocket ID (OIDC) login in front of any service
   # that lacks decent built-in auth. Protect another service by adding its vhost
   # to `nginx.virtualHosts` below — nothing else needed.
+  # OIDC discovery fails without DNS at boot; retry slowly instead of hitting the start limit.
+  systemd.services.oauth2-proxy = {
+    startLimitIntervalSec = 0;
+    serviceConfig.RestartSec = "10s";
+  };
+
   services.oauth2-proxy = {
     enable = true;
     provider = "oidc";
