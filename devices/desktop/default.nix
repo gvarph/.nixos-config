@@ -154,13 +154,13 @@ in {
   # (home/ui/wayland/udiskie) drives it to auto-mount USB drives on insert.
   services.udisks2.enable = true;
 
-  services.sunshine = {
-    enable = true;
-    autoStart = true;
-    capSysAdmin = true;
-    openFirewall = true;
-  };
-  programs.kdeconnect.enable = true;
+  # services.sunshine = {
+  #   enable = true;
+  #   autoStart = true;
+  #   capSysAdmin = true;
+  #   openFirewall = true;
+  # };
+  # programs.kdeconnect.enable = true;
 
   programs.appimage.binfmt = true;
 }
