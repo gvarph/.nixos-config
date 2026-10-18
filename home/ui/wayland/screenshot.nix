@@ -7,9 +7,23 @@
   # of the frozen image; this only works with hardware cursors (see
   # cursor.no_hardware_cursors in hyprland/lua/input.lua): a software
   # cursor is baked into every screencopy frame.
+  #
+  # Hyprland's screencopy frames for a rotated output (HDMI-A-1, transform 3)
+  # arrive already rotated (1080x1920), but wayfreeze also tags the overlay
+  # buffer with the output transform, rotating it a second time. Neither
+  # --inverse-transform nor the default is right, so patch it to Normal.
+  wayfreeze = pkgs.wayfreeze.overrideAttrs (old: {
+    postPatch =
+      (old.postPatch or "")
+      + ''
+        substituteInPlace src/main.rs \
+          --replace-fail "set_buffer_transform(buffer_transform)" \
+                         "set_buffer_transform(wl_output::Transform::Normal)"
+      '';
+  });
   screenshot = pkgs.writeShellApplication {
     name = "screenshot";
-    runtimeInputs = with pkgs; [grim slurp wayfreeze wl-clipboard coreutils];
+    runtimeInputs = [wayfreeze] ++ (with pkgs; [grim slurp wl-clipboard coreutils]);
     text = ''
       mode=''${1:-region}
       dest=''${2:-clipboard}
