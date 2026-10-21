@@ -136,6 +136,28 @@ in {
       serviceConfig.Restart = "on-failure";
     };
 
+    # qBittorrent MCP for Hermes (modules/hermes/mcp.nix): SSE on loopback only, no vhost.
+    # No credentials: the WebUI whitelists the servarr subnet.
+    containers.qbittorrent-mcp = {
+      autoStart = true;
+      unitConfig = {
+        After = ["qbittorrent.service"];
+        Wants = ["qbittorrent.service"];
+      };
+      containerConfig = {
+        image = "docker.io/nicholaswilde/qbittorrent-mcp-rs:0.3.9";
+        exec = "--server-mode http --qbittorrent-host http://qbittorrent --qbittorrent-port 8080";
+        networks = [networks.servarr.ref];
+        ip = "172.39.0.19";
+        publishPorts = ["127.0.0.1:8434:3000"];
+        # Stateless, and PID 1 ignores SIGTERM.
+        stopSignal = "SIGKILL";
+        userns = "auto";
+        noNewPrivileges = true;
+      };
+      serviceConfig.Restart = "on-failure";
+    };
+
     containers.sonarr = lscr {
       name = "sonarr";
       tag = "4.0.20.3014-ls329";
