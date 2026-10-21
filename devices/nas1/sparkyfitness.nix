@@ -1,95 +1,104 @@
-{config, ...}: {
-  age.secrets.sparkyfitness_env.file = ../../secrets/sparkyfitness_env.age;
-  age.secrets.sparkyfitness_db_env.file = ../../secrets/sparkyfitness_db_env.age;
+{
+  config,
+  lib,
+  ...
+}: {
+  # Off: drops the units, vhost, exporter and scrape target; the dataset is kept.
+  options.nas1.sparkyfitness.enable = lib.mkEnableOption "SparkyFitness";
 
-  # SparkyFitness (server + frontend + Postgres). The frontend image runs its own
-  # nginx that proxies /api to the server; host nginx fronts fitness.gvarph.com.
-  # The compose stack's postgres exporter was dropped with the metrics stack.
-  virtualisation.quadlet = let
-    inherit (config.virtualisation.quadlet) networks;
-    guard = {
-      After = ["zfs-mount.service"];
-      # Never write state into rpool/root if the dataset is missing.
-      ConditionPathIsMountPoint = "/flash/sparkyfitness";
-    };
-  in {
-    networks.sparkyfitness = {};
+  config = lib.mkIf config.nas1.sparkyfitness.enable {
+    age.secrets.sparkyfitness_env.file = ../../secrets/sparkyfitness_env.age;
+    age.secrets.sparkyfitness_db_env.file = ../../secrets/sparkyfitness_db_env.age;
 
-    containers.sparkyfitness-db = {
-      autoStart = true;
-      unitConfig = guard;
-      containerConfig = {
-        image = "docker.io/library/postgres:18.6-alpine";
-        environmentFiles = [config.age.secrets.sparkyfitness_db_env.path];
-        networks = [networks.sparkyfitness.ref];
-        volumes = ["/flash/sparkyfitness/postgresql:/var/lib/postgresql:U"];
-        userns = "auto";
-        noNewPrivileges = true;
+    # SparkyFitness (server + frontend + Postgres). The frontend image runs its own
+    # nginx that proxies /api to the server; host nginx fronts fitness.gvarph.com.
+    # The compose stack's postgres exporter was dropped with the metrics stack.
+    virtualisation.quadlet = let
+      inherit (config.virtualisation.quadlet) networks;
+      guard = {
+        After = ["zfs-mount.service"];
+        # Never write state into rpool/root if the dataset is missing.
+        ConditionPathIsMountPoint = "/flash/sparkyfitness";
       };
-      serviceConfig.Restart = "on-failure";
-    };
+    in {
+      networks.sparkyfitness = {};
 
-    containers.sparkyfitness-server = {
-      autoStart = true;
-      unitConfig =
-        guard
-        // {
-          After = guard.After ++ ["sparkyfitness-db.service"];
+      containers.sparkyfitness-db = {
+        autoStart = true;
+        unitConfig = guard;
+        containerConfig = {
+          image = "docker.io/library/postgres:18.6-alpine";
+          environmentFiles = [config.age.secrets.sparkyfitness_db_env.path];
+          networks = [networks.sparkyfitness.ref];
+          volumes = ["/flash/sparkyfitness/postgresql:/var/lib/postgresql:U"];
+          userns = "auto";
+          noNewPrivileges = true;
+        };
+        serviceConfig.Restart = "on-failure";
+      };
+
+      containers.sparkyfitness-server = {
+        autoStart = true;
+        unitConfig =
+          guard
+          // {
+            After = guard.After ++ ["sparkyfitness-db.service"];
+            # Wants, not Requires: a failed first start of the dependency would cancel this for good.
+            Wants = ["sparkyfitness-db.service"];
+            StartLimitIntervalSec = 0;
+          };
+        containerConfig = {
+          image = "docker.io/codewithcj/sparkyfitness_server:v1.9.0";
+          environmentFiles = [config.age.secrets.sparkyfitness_env.path];
+          # Container-to-container only: never a host port.
+          environments = {
+            SPARKY_FITNESS_DB_HOST = "sparkyfitness-db";
+            SPARKY_FITNESS_DB_PORT = "5432";
+          };
+          networks = [networks.sparkyfitness.ref];
+          volumes = [
+            "/flash/sparkyfitness/backup:/app/SparkyFitnessServer/backup:U"
+            "/flash/sparkyfitness/uploads:/app/SparkyFitnessServer/uploads:U"
+          ];
+          userns = "auto";
+          noNewPrivileges = true;
+        };
+        serviceConfig = {
+          Restart = "on-failure";
+          RestartSec = "10s";
+        };
+      };
+
+      containers.sparkyfitness-frontend = {
+        autoStart = true;
+        unitConfig = {
+          After = ["sparkyfitness-server.service"];
           # Wants, not Requires: a failed first start of the dependency would cancel this for good.
-          Wants = ["sparkyfitness-db.service"];
+          Wants = ["sparkyfitness-server.service"];
           StartLimitIntervalSec = 0;
         };
-      containerConfig = {
-        image = "docker.io/codewithcj/sparkyfitness_server:v1.9.0";
-        environmentFiles = [config.age.secrets.sparkyfitness_env.path];
-        # Container-to-container only: never a host port.
-        environments = {
-          SPARKY_FITNESS_DB_HOST = "sparkyfitness-db";
-          SPARKY_FITNESS_DB_PORT = "5432";
+        containerConfig = {
+          image = "docker.io/codewithcj/sparkyfitness:v1.9.0";
+          environments = {
+            SPARKY_FITNESS_FRONTEND_URL = "https://fitness.gvarph.com";
+            SPARKY_FITNESS_SERVER_HOST = "sparkyfitness-server";
+            SPARKY_FITNESS_SERVER_PORT = "3010";
+          };
+          networks = [networks.sparkyfitness.ref];
+          publishPorts = ["127.0.0.1:3004:80"];
+          userns = "auto";
+          noNewPrivileges = true;
         };
-        networks = [networks.sparkyfitness.ref];
-        volumes = [
-          "/flash/sparkyfitness/backup:/app/SparkyFitnessServer/backup:U"
-          "/flash/sparkyfitness/uploads:/app/SparkyFitnessServer/uploads:U"
-        ];
-        userns = "auto";
-        noNewPrivileges = true;
-      };
-      serviceConfig = {
-        Restart = "on-failure";
-        RestartSec = "10s";
+        serviceConfig = {
+          Restart = "on-failure";
+          RestartSec = "10s";
+        };
       };
     };
 
-    containers.sparkyfitness-frontend = {
-      autoStart = true;
-      unitConfig = {
-        After = ["sparkyfitness-server.service"];
-        # Wants, not Requires: a failed first start of the dependency would cancel this for good.
-        Wants = ["sparkyfitness-server.service"];
-        StartLimitIntervalSec = 0;
-      };
-      containerConfig = {
-        image = "docker.io/codewithcj/sparkyfitness:v1.9.0";
-        environments = {
-          SPARKY_FITNESS_FRONTEND_URL = "https://fitness.gvarph.com";
-          SPARKY_FITNESS_SERVER_HOST = "sparkyfitness-server";
-          SPARKY_FITNESS_SERVER_PORT = "3010";
-        };
-        networks = [networks.sparkyfitness.ref];
-        publishPorts = ["127.0.0.1:3004:80"];
-        userns = "auto";
-        noNewPrivileges = true;
-      };
-      serviceConfig = {
-        Restart = "on-failure";
-        RestartSec = "10s";
-      };
+    systemd.services = {
+      sparkyfitness-db.restartTriggers = [config.age.secrets.sparkyfitness_db_env.file];
+      sparkyfitness-server.restartTriggers = [config.age.secrets.sparkyfitness_env.file];
     };
-  };
-
-  systemd.services = {
-    sparkyfitness-db.restartTriggers = [config.age.secrets.sparkyfitness_db_env.file];
-    sparkyfitness-server.restartTriggers = [config.age.secrets.sparkyfitness_env.file];
   };
 }

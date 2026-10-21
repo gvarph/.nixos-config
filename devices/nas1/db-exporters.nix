@@ -1,4 +1,8 @@
-{config, ...}: {
+{
+  config,
+  lib,
+  ...
+}: {
   # postgres_exporter / redis_exporter sidecars on each app's private network,
   # scraped by vmagent on loopback (see metrics.nix). The exporters connect to
   # the maintenance database, so pg_stat_database covers every database on
@@ -80,13 +84,13 @@
         DATA_SOURCE_PASS = "paperless";
       };
     };
-    containers.sparkyfitness-postgres-exporter = pgExporter {
+    containers.sparkyfitness-postgres-exporter = lib.mkIf config.nas1.sparkyfitness.enable (pgExporter {
       db = "sparkyfitness-db";
       network = networks.sparkyfitness;
       port = 9189;
       environmentFiles = [config.age.secrets.sparkyfitness_db_env.path];
       fromPostgresEnv = true;
-    };
+    });
     containers.jellystat-postgres-exporter = pgExporter {
       db = "jellystat-db";
       network = networks.jellyfin;

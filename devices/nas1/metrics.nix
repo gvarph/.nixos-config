@@ -1,88 +1,93 @@
-{config, ...}: let
+{
+  config,
+  lib,
+  ...
+}: let
   # Static scrape targets replace the compose stack's docker_sd; job and
   # instance keep the old container names so the provisioned dashboards match.
-  targets = [
-    {
-      job = "victoriametrics";
-      target = "127.0.0.1:8428";
-    }
-    {
-      job = "vmagent";
-      target = "127.0.0.1:8429";
-    }
-    {
-      job = "cadvisor";
-      target = "127.0.0.1:18080";
-    }
-    {
-      job = "node-exporter";
-      target = "127.0.0.1:9100";
-    }
-    {
-      job = "smartctl-exporter";
-      target = "127.0.0.1:9633";
-    }
-    {
-      job = "grafana";
-      target = "127.0.0.1:3000";
-    }
-    {
-      job = "victorialogs";
-      target = "127.0.0.1:9428";
-    }
-    {
-      job = "fluent-bit";
-      target = "127.0.0.1:2020";
-      path = "/api/v2/metrics/prometheus";
-    }
-    {
-      job = "ntfy";
-      target = "127.0.0.1:8091";
-    }
-    {
-      job = "crowdsec";
-      target = "127.0.0.1:6060";
-    }
-    {
-      job = "immich-api";
-      target = "127.0.0.1:18081";
-    }
-    {
-      job = "immich-microservices";
-      target = "127.0.0.1:18082";
-    }
-    # Sidecars from db-exporters.nix; instance names the database container.
-    {
-      job = "postgres-exporter";
-      instance = "immich-database";
-      target = "127.0.0.1:9187";
-    }
-    {
-      job = "postgres-exporter";
-      instance = "paperless-db";
-      target = "127.0.0.1:9188";
-    }
-    {
+  targets =
+    [
+      {
+        job = "victoriametrics";
+        target = "127.0.0.1:8428";
+      }
+      {
+        job = "vmagent";
+        target = "127.0.0.1:8429";
+      }
+      {
+        job = "cadvisor";
+        target = "127.0.0.1:18080";
+      }
+      {
+        job = "node-exporter";
+        target = "127.0.0.1:9100";
+      }
+      {
+        job = "smartctl-exporter";
+        target = "127.0.0.1:9633";
+      }
+      {
+        job = "grafana";
+        target = "127.0.0.1:3000";
+      }
+      {
+        job = "victorialogs";
+        target = "127.0.0.1:9428";
+      }
+      {
+        job = "fluent-bit";
+        target = "127.0.0.1:2020";
+        path = "/api/v2/metrics/prometheus";
+      }
+      {
+        job = "ntfy";
+        target = "127.0.0.1:8091";
+      }
+      {
+        job = "crowdsec";
+        target = "127.0.0.1:6060";
+      }
+      {
+        job = "immich-api";
+        target = "127.0.0.1:18081";
+      }
+      {
+        job = "immich-microservices";
+        target = "127.0.0.1:18082";
+      }
+      # Sidecars from db-exporters.nix; instance names the database container.
+      {
+        job = "postgres-exporter";
+        instance = "immich-database";
+        target = "127.0.0.1:9187";
+      }
+      {
+        job = "postgres-exporter";
+        instance = "paperless-db";
+        target = "127.0.0.1:9188";
+      }
+      {
+        job = "postgres-exporter";
+        instance = "jellystat-db";
+        target = "127.0.0.1:9190";
+      }
+      {
+        job = "redis-exporter";
+        instance = "immich-redis";
+        target = "127.0.0.1:9121";
+      }
+      {
+        job = "redis-exporter";
+        instance = "paperless-broker";
+        target = "127.0.0.1:9122";
+      }
+    ]
+    ++ lib.optional config.nas1.sparkyfitness.enable {
       job = "postgres-exporter";
       instance = "sparkyfitness-db";
       target = "127.0.0.1:9189";
-    }
-    {
-      job = "postgres-exporter";
-      instance = "jellystat-db";
-      target = "127.0.0.1:9190";
-    }
-    {
-      job = "redis-exporter";
-      instance = "immich-redis";
-      target = "127.0.0.1:9121";
-    }
-    {
-      job = "redis-exporter";
-      instance = "paperless-broker";
-      target = "127.0.0.1:9122";
-    }
-  ];
+    };
 in {
   # Metrics store. State is the rpool/flash/victoriametrics dataset mounted at
   # the module's DynamicUser path; like victorialogs it is kept out of sanoid,

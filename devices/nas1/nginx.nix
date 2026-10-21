@@ -303,7 +303,7 @@ in {
         };
       };
 
-      "fitness.gvarph.com" = {
+      "fitness.gvarph.com" = lib.mkIf config.nas1.sparkyfitness.enable {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
