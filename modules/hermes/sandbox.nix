@@ -24,6 +24,8 @@
   grants = [
     "/home/gvarph/.nixos-config/modules/hermes:/grants/nixos-config:ro"
   ];
+  # Hermes reattaches to its old container, which keeps the mounts it was created with.
+  volumesStamp = pkgs.writeText "hermes-sandbox-volumes" (lib.concatLines config.services.hermes-agent.settings.terminal.docker_volumes);
 in {
   # Every shell / Python command the agent executes runs in a rootless podman
   # container (cap-drop ALL, no-new-privileges) that only sees /workspace plus `grants`.
@@ -66,7 +68,7 @@ in {
         description = "Rootless podman pause process for the Hermes sandbox";
         after = ["zfs-mount.service"];
         unitConfig.ConditionPathIsMountPoint = stateDir;
-        path = [pkgs.podman "/run/wrappers" pkgs.coreutils];
+        path = [pkgs.podman "/run/wrappers" pkgs.coreutils pkgs.findutils];
         environment = podmanEnv // {HOME = stateDir;};
         serviceConfig =
           runtimeDir
@@ -77,6 +79,13 @@ in {
             Group = "hermes";
             ExecStartPre = "-${pkgs.bash}/bin/sh -c 'kill $(cat /run/hermes/libpod/tmp/pause.pid) 2>/dev/null; true'";
             ExecStart = "${pkgs.podman}/bin/podman unshare true";
+            # Grants changed: drop the sandbox so Hermes recreates it (/root and /workspace persist).
+            ExecStartPost = pkgs.writeShellScript "hermes-sandbox-refresh" ''
+              if [ "$(cat ${volumesStamp})" != "$(cat ${stateDir}/.sandbox-volumes 2>/dev/null)" ]; then
+                podman ps -aq --filter label=hermes-agent=1 | xargs -r podman rm -f
+                install -m 644 ${volumesStamp} ${stateDir}/.sandbox-volumes
+              fi
+            '';
           };
       };
     }
