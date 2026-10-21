@@ -24,6 +24,14 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # eMudhra CA keys were trivially weak (2026-10); browsers block them, system TLS doesn't.
+  security.pki.caCertificateBlacklist = [
+    "emSign Root CA - G1"
+    "emSign Root CA - C1"
+    "emSign ECC Root CA - G3"
+    "emSign ECC Root CA - C3"
+  ];
+
   # User password lives in an agenix secret so the hash isn't world-readable
   # via the nix store / git. To change it: mkpasswd -m sha-512, then re-encrypt
   # with agenix -e gvarph_password.age (recipients in secrets/secrets.nix).
