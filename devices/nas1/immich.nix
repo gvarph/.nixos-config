@@ -8,7 +8,7 @@
   # podman's health-on-failure plus systemd restarts replace autoheal.
   virtualisation.quadlet = let
     inherit (config.virtualisation.quadlet) networks volumes;
-    version = "v3.2.4";
+    version = "v3.3.5";
     guard = {
       After = ["zfs-mount.service"];
       # Never write state into rpool/root if the datasets are missing.
@@ -44,7 +44,7 @@
     containers.immich-redis = {
       autoStart = true;
       containerConfig = {
-        image = "docker.io/redis:6.2-alpine@sha256:905c4ee67b8e0aa955331960d2aa745781e6bd89afc44a8584bfd13bc890f0ae";
+        image = "docker.io/redis:6.2-alpine@sha256:b362b5dff9d14d961dc3352db4776aba6a8c53ca2661d7c74ad2c121f82cdaea";
         networks = [networks.immich.ref];
         userns = "auto";
         noNewPrivileges = true;
