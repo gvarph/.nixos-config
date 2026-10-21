@@ -1,8 +1,17 @@
-{config, ...}: {
+{
+  config,
+  lib,
+  ...
+}: let
+  wsEnable = config.nas1.watchshelf.enable;
+in {
+  # Off: drops the sidecar, its vhost and volume unit (the podman volume is kept).
+  options.nas1.watchshelf.enable = lib.mkEnableOption "the WatchShelf sidecar";
+
   # Audiobookshelf on the upstream image (the nixpkgs module lags releases), plus
   # the WatchShelf sidecar that transcodes for the Garmin watch app. nginx fronts
   # ab.gvarph.com (direct, not Cloudflare) and watchshelf.gvarph.com.
-  virtualisation.quadlet = let
+  config.virtualisation.quadlet = let
     inherit (config.virtualisation.quadlet) networks volumes builds;
     watchshelf = builtins.fetchGit {
       url = "https://github.com/JediBrooker/WatchShelf.git";
@@ -12,7 +21,7 @@
     # Private network so the sidecar reaches ABS as http://audiobookshelf:13378.
     networks.audiobookshelf = {};
     # Watch refresh tokens; a redeploy must not force a re-login on the watch.
-    volumes.watchshelf-data = {};
+    volumes.watchshelf-data = lib.mkIf wsEnable {};
 
     containers.audiobookshelf = {
       autoStart = true;
@@ -44,12 +53,12 @@
       serviceConfig.Restart = "on-failure";
     };
 
-    builds.watchshelf-sidecar.buildConfig = {
+    builds.watchshelf-sidecar.buildConfig = lib.mkIf wsEnable {
       tag = "localhost/watchshelf-sidecar:714fd3af";
       workdir = "${watchshelf}/sidecar";
     };
 
-    containers.watchshelf-sidecar = {
+    containers.watchshelf-sidecar = lib.mkIf wsEnable {
       autoStart = true;
       unitConfig = {
         After = ["audiobookshelf.service"];

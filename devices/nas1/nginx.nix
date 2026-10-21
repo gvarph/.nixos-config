@@ -506,8 +506,8 @@ in {
       };
 
       # WatchShelf sidecar (docker on 127.0.0.1:8081) for the Garmin app.
-      # Behind oauth2-proxy, which Connect IQ can't log into: the watch app is off until removed.
-      "watchshelf.gvarph.com" = {
+      # Off by default (nas1.watchshelf.enable); Connect IQ can't log in through oauth2-proxy.
+      "watchshelf.gvarph.com" = lib.mkIf config.nas1.watchshelf.enable {
         forceSSL = true;
         useACMEHost = "gvarph.com";
         locations."/" = {
@@ -616,7 +616,7 @@ in {
       virtualHosts."grafana.gvarph.com" = {};
       virtualHosts."js.gvarph.com" = {};
       virtualHosts."shelfarr.gvarph.com" = {};
-      virtualHosts."watchshelf.gvarph.com" = {};
+      virtualHosts."watchshelf.gvarph.com" = lib.mkIf config.nas1.watchshelf.enable {};
     };
   };
 
