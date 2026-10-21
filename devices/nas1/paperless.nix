@@ -57,7 +57,9 @@
         guard
         // {
           After = guard.After ++ ["paperless-db.service" "paperless-broker.service"];
-          Requires = ["paperless-db.service" "paperless-broker.service"];
+          # Wants, not Requires: a failed first start of the dependency would cancel this for good.
+          Wants = ["paperless-db.service" "paperless-broker.service"];
+          StartLimitIntervalSec = 0;
         };
       containerConfig = {
         image = "ghcr.io/paperless-ngx/paperless-ngx:3.3.3";
@@ -86,7 +88,10 @@
         healthRetries = 5;
         notify = "healthy";
       };
-      serviceConfig.Restart = "on-failure";
+      serviceConfig = {
+        Restart = "on-failure";
+        RestartSec = "10s";
+      };
     };
 
     containers.paperless-gpt = {

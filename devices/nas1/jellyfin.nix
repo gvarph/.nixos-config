@@ -65,7 +65,9 @@
         guard
         // {
           After = guard.After ++ ["jellystat-db.service" "jellyfin.service"];
-          Requires = ["jellystat-db.service"];
+          # Wants, not Requires: a failed first start of the dependency would cancel this for good.
+          Wants = ["jellystat-db.service"];
+          StartLimitIntervalSec = 0;
         };
       containerConfig = {
         image = "docker.io/cyfershepard/jellystat:1.1.12";
@@ -81,7 +83,10 @@
         userns = "auto";
         noNewPrivileges = true;
       };
-      serviceConfig.Restart = "on-failure";
+      serviceConfig = {
+        Restart = "on-failure";
+        RestartSec = "10s";
+      };
     };
   };
 

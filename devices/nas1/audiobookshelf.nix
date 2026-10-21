@@ -53,7 +53,9 @@
       autoStart = true;
       unitConfig = {
         After = ["audiobookshelf.service"];
-        Requires = ["audiobookshelf.service"];
+        # Wants, not Requires: a failed first start of the dependency would cancel this for good.
+        Wants = ["audiobookshelf.service"];
+        StartLimitIntervalSec = 0;
       };
       containerConfig = {
         image = builds.watchshelf-sidecar.ref;
@@ -75,7 +77,10 @@
         healthRetries = 3;
         notify = "healthy";
       };
-      serviceConfig.Restart = "on-failure";
+      serviceConfig = {
+        Restart = "on-failure";
+        RestartSec = "10s";
+      };
     };
   };
 }

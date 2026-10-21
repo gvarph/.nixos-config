@@ -35,7 +35,9 @@
         guard
         // {
           After = guard.After ++ ["sparkyfitness-db.service"];
-          Requires = ["sparkyfitness-db.service"];
+          # Wants, not Requires: a failed first start of the dependency would cancel this for good.
+          Wants = ["sparkyfitness-db.service"];
+          StartLimitIntervalSec = 0;
         };
       containerConfig = {
         image = "docker.io/codewithcj/sparkyfitness_server:v1.9.0";
@@ -53,14 +55,19 @@
         userns = "auto";
         noNewPrivileges = true;
       };
-      serviceConfig.Restart = "on-failure";
+      serviceConfig = {
+        Restart = "on-failure";
+        RestartSec = "10s";
+      };
     };
 
     containers.sparkyfitness-frontend = {
       autoStart = true;
       unitConfig = {
         After = ["sparkyfitness-server.service"];
-        Requires = ["sparkyfitness-server.service"];
+        # Wants, not Requires: a failed first start of the dependency would cancel this for good.
+        Wants = ["sparkyfitness-server.service"];
+        StartLimitIntervalSec = 0;
       };
       containerConfig = {
         image = "docker.io/codewithcj/sparkyfitness:v1.9.0";
@@ -74,7 +81,10 @@
         userns = "auto";
         noNewPrivileges = true;
       };
-      serviceConfig.Restart = "on-failure";
+      serviceConfig = {
+        Restart = "on-failure";
+        RestartSec = "10s";
+      };
     };
   };
 
