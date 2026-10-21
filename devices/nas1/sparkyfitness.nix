@@ -19,7 +19,7 @@
       autoStart = true;
       unitConfig = guard;
       containerConfig = {
-        image = "docker.io/library/postgres:18.3-alpine";
+        image = "docker.io/library/postgres:18.6-alpine";
         environmentFiles = [config.age.secrets.sparkyfitness_db_env.path];
         networks = [networks.sparkyfitness.ref];
         volumes = ["/flash/sparkyfitness/postgresql:/var/lib/postgresql:U"];
@@ -38,7 +38,7 @@
           Requires = ["sparkyfitness-db.service"];
         };
       containerConfig = {
-        image = "docker.io/codewithcj/sparkyfitness_server:v1.7.3";
+        image = "docker.io/codewithcj/sparkyfitness_server:v1.9.0";
         environmentFiles = [config.age.secrets.sparkyfitness_env.path];
         # Container-to-container only: never a host port.
         environments = {
@@ -63,7 +63,7 @@
         Requires = ["sparkyfitness-server.service"];
       };
       containerConfig = {
-        image = "docker.io/codewithcj/sparkyfitness:v1.7.3";
+        image = "docker.io/codewithcj/sparkyfitness:v1.9.0";
         environments = {
           SPARKY_FITNESS_FRONTEND_URL = "https://fitness.gvarph.com";
           SPARKY_FITNESS_SERVER_HOST = "sparkyfitness-server";
