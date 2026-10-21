@@ -231,7 +231,7 @@ in {
       autoStart = slskdVpn;
       unitConfig = guard;
       containerConfig = {
-        image = "docker.io/binhex/arch-privoxyvpn:4.2.0-1-01";
+        image = "docker.io/binhex/arch-privoxyvpn:4.2.0-1-02";
         environmentFiles = [config.age.secrets.qbittorrent_env.path];
         environments =
           lscrEnv
@@ -277,7 +277,7 @@ in {
           Wants = ["slskd-port-sync.service"];
         };
       containerConfig = {
-        image = "docker.io/slskd/slskd:0.26.0";
+        image = "docker.io/slskd/slskd:0.26.1";
         user = "1000:100";
         environments.TZ = "Europe/Prague";
         networks = ["container:slskd-vpn"];
@@ -307,7 +307,7 @@ in {
         };
       containerConfig = {
         # `latest` tracks main; pinned to the build that was running on 2026-09-28.
-        image = "docker.io/mrusse08/soularr@sha256:9d17bdc35108afd747c4862dc32a0c1cba821638d170e1374188a977ce255c76";
+        image = "docker.io/mrusse08/soularr@sha256:89b6809a169f6c78032c9a66abf5130e4877c46c0b95391818a38ab66cd71548";
         user = "1000:100";
         environments = {
           TZ = "Europe/Prague";
