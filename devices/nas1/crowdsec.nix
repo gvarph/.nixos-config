@@ -92,37 +92,16 @@ in {
   };
   systemd.services.crowdsec = {
     serviceConfig.EnvironmentFile = [config.age.secrets.crowdsec_ntfy_env.path];
-    # The module sets RestartSec but no Restart: a crash (1.8.1 panicked in the
-    # bucket overflow code) otherwise leaves the LAPI down until someone notices.
-    serviceConfig.Restart = "on-failure";
-    # localConfig files are linked in by tmpfiles, not referenced by the unit,
+    # Config files are linked in by tmpfiles, not referenced by the unit,
     # so a change would otherwise leave the running engine on the old ones.
     restartTriggers = [
       config.age.secrets.crowdsec_ntfy_env.file
-      (builtins.toJSON config.services.crowdsec.localConfig)
+      (builtins.toJSON config.services.crowdsec.settings)
     ];
   };
   # The module only adds links; stale ones from earlier generations would be
   # loaded too (duplicate plugin names). Wipe the dir before it is repopulated.
   systemd.tmpfiles.settings."10-crowdsec"."/etc/crowdsec/notifications/".R = {};
-  # The hub updater is a DynamicUser unit whose `systemctl reload crowdsec`
-  # is denied by polkit; run that one step as root.
-  systemd.services.crowdsec-update-hub.serviceConfig.ExecStartPost = lib.mkForce ["+${pkgs.systemd}/bin/systemctl reload crowdsec.service"];
-  # The module leaves plugin_dir empty. crowdsec only runs plugins owned by
-  # its own user, so the binary is copied there (not linked from the store).
-  systemd.tmpfiles.settings."10-crowdsec"."/etc/crowdsec/plugins/notification-http" = {
-    "C+" = {
-      argument = "${config.services.crowdsec.package}/bin/notification-http";
-      user = "crowdsec";
-      group = "crowdsec";
-      mode = "0750";
-    };
-    z = {
-      user = "crowdsec";
-      group = "crowdsec";
-      mode = "0750";
-    };
-  };
 
   services.crowdsec = {
     enable = true;
@@ -148,30 +127,26 @@ in {
     settings = {
       # The module ships with the LAPI off and no credentials path; both are
       # required for a standalone engine. 8080 is taken by qbittorrent.
-      # Empty = plugins inherit the engine's user. Any value makes crowdsec
-      # setuid/setgid the child, which the unit's SystemCallFilter (~@privileged)
-      # kills with SIGSYS even when the target is its own uid.
-      general.plugin_config = {
+      # Empty = plugins inherit the engine's user instead of a setuid/setgid
+      # that older unit SystemCallFilters killed with SIGSYS.
+      config.plugin_config = {
         user = "";
         group = "";
       };
-      general.api.server = {
-        enable = true;
-        listen_uri = "127.0.0.1:8082";
-      };
-      lapi.credentialsFile = "/var/lib/crowdsec/lapi.yaml";
+      # State from before the 2026-10 module rewrite (db, hub, credentials).
+      config.config_paths.data_dir = "/var/lib/crowdsec/state";
+      config.api.client.credentials_path = "/var/lib/crowdsec/lapi.yaml";
+      config.api.server.listen_uri = "127.0.0.1:8082";
       # Setting this makes the module run `cscli capi register` on first start:
       # community blocklist pulled in, local alerts shared back.
-      capi.credentialsFile = "/var/lib/crowdsec/capi.yaml";
+      config.api.server.online_client.credentials_path = "/var/lib/crowdsec/capi.yaml";
       # Immich/Jellyfin clients on mobile networks burst non-static API calls
       # and trip this scenario, so log it without enforcing.
       simulation = {
         simulation = false;
         exclusions = ["crowdsecurity/http-crawl-non_statics"];
       };
-    };
 
-    localConfig = {
       # journalctl output is syslog-shaped, so those sources go through the
       # syslog parser first; the access log is a plain file in combined format.
       acquisitions =
@@ -302,25 +277,11 @@ in {
   };
 
   # /var/log/nginx is 0750 nginx:nginx; the module only grants systemd-journal.
-  users.users.crowdsec.extraGroups = ["nginx"];
+  services.crowdsec.extraGroups = ["nginx"];
 
   # Registers itself against the local LAPI; iptables mode since nftables is off.
   services.crowdsec-firewall-bouncer.enable = true;
 
-  # Upstream module workarounds (nixpkgs as of 2026-09):
-  # The setup script runs `machines add` before `capi register`, and the former
-  # refuses to start if the CAPI file is missing; an empty one loads with a warning.
-  systemd.tmpfiles.settings."10-crowdsec"."/var/lib/crowdsec/capi.yaml".f = {
-    user = "crowdsec";
-    group = "crowdsec";
-    mode = "0600";
-  };
-  # The register unit calls the bare cscli, which only looks here for its config.
-  environment.etc."crowdsec/config.yaml".source =
-    (pkgs.formats.yaml {}).generate "crowdsec.yaml" config.services.crowdsec.settings.general;
-  # With DynamicUser the register unit moves /var/lib/crowdsec under the root-only
-  # /var/lib/private, which the engine and the cscli wrapper cannot traverse.
-  systemd.services.crowdsec-firewall-bouncer-register.serviceConfig.DynamicUser = lib.mkForce false;
   # The bouncer only `requires` its register unit; without `after` it loads the
   # API key credential before the key has been written.
   systemd.services.crowdsec-firewall-bouncer = {
