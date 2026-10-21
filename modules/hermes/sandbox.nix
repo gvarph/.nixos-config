@@ -23,6 +23,8 @@
   # outside its own workspace is visible unless it is listed here.
   grants = [
     "/home/gvarph/.nixos-config/modules/hermes:/grants/nixos-config:ro"
+    # Same path as the host so skills' paths work; one mount, since ln across mounts is EXDEV.
+    "/tank/media:/tank/media"
   ];
   # Hermes reattaches to its old container, which keeps the mounts it was created with.
   volumesStamp = pkgs.writeText "hermes-sandbox-volumes" (lib.concatLines config.services.hermes-agent.settings.terminal.docker_volumes);
@@ -56,6 +58,10 @@ in {
     ${pkgs.acl}/bin/setfacl -m user:hermes:x,mask::x /home/gvarph
     ${pkgs.acl}/bin/setfacl -m user:hermes:x /home/gvarph/.nixos-config
     ${pkgs.acl}/bin/setfacl -m user:hermes:rx,default:user:hermes:rx /home/gvarph/.nixos-config/modules/hermes
+    # Audiobook skill: mkdir in the library, and hardlinks need rw on the source file.
+    if ${pkgs.util-linux}/bin/mountpoint -q /tank/media; then
+      ${pkgs.acl}/bin/setfacl -R -m user:hermes:rwX,default:user:hermes:rwX /tank/media/downloads /tank/media/audiobooks
+    fi
   '';
 
   systemd.services =
