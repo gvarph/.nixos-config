@@ -109,15 +109,6 @@ in {
         };
       };
 
-      "npm.gvarph.com" = {
-        forceSSL = true;
-        useACMEHost = "gvarph.com";
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:8181";
-          proxyWebsockets = true;
-        };
-      };
-
       "paperless.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";
@@ -133,7 +124,10 @@ in {
         locations."/" = {
           proxyPass = "http://127.0.0.1:8095";
           proxyWebsockets = true;
+          # LAN only: just used at home to play Navidrome on the Sonos.
           extraConfig = ''
+            allow 10.0.0.0/8;
+            deny all;
             add_header Strict-Transport-Security "max-age=63072000; preload" always;
           '';
         };
@@ -222,19 +216,6 @@ in {
         # below) instead of the old LAN-only allow/deny.
         locations."/" = {
           proxyPass = "http://127.0.0.1:8080";
-          proxyWebsockets = true;
-          extraConfig = ''
-            client_max_body_size 100M;
-            add_header Strict-Transport-Security "max-age=63072000; preload" always;
-          '';
-        };
-      };
-
-      "dawarich.gvarph.com" = {
-        forceSSL = true;
-        useACMEHost = "gvarph.com";
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:8090";
           proxyWebsockets = true;
           extraConfig = ''
             client_max_body_size 100M;
@@ -510,9 +491,7 @@ in {
         };
       };
 
-      # Shelfarr has native OIDC (Pocket ID client, callback
-      # /auth/oidc/callback) and a public request/login page, so it is NOT
-      # behind oauth2-proxy.
+      # Shelfarr has native OIDC too, but oauth2-proxy keeps its public pages off the internet.
       "shelfarr.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";
@@ -636,6 +615,8 @@ in {
       virtualHosts."prowlarr.gvarph.com" = {};
       virtualHosts."bazarr.gvarph.com" = {};
       virtualHosts."grafana.gvarph.com" = {};
+      virtualHosts."js.gvarph.com" = {};
+      virtualHosts."shelfarr.gvarph.com" = {};
     };
   };
 

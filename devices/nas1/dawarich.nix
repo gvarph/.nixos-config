@@ -206,4 +206,17 @@
     dawarich-app.restartTriggers = [config.age.secrets.dawarich_env.file];
     dawarich-sidekiq.restartTriggers = [config.age.secrets.dawarich_env.file];
   };
+
+  services.nginx.virtualHosts."dawarich.gvarph.com" = {
+    forceSSL = true;
+    useACMEHost = "gvarph.com";
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:8090";
+      proxyWebsockets = true;
+      extraConfig = ''
+        client_max_body_size 100M;
+        add_header Strict-Transport-Security "max-age=63072000; preload" always;
+      '';
+    };
+  };
 }
