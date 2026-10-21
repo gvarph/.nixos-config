@@ -138,31 +138,31 @@ in {
 
     containers.sonarr = lscr {
       name = "sonarr";
-      tag = "4.0.20.3014-ls326";
+      tag = "4.0.20.3014-ls329";
       ip = "172.39.0.3";
       port = "8989:8989";
     };
     containers.radarr = lscr {
       name = "radarr";
-      tag = "6.4.4.10685-ls318";
+      tag = "6.4.4.10685-ls323";
       ip = "172.39.0.4";
       port = "7878:7878";
     };
     containers.lidarr = lscr {
       name = "lidarr";
-      tag = "3.1.0.4875-ls42";
+      tag = "3.1.0.4875-ls45";
       ip = "172.39.0.5";
       port = "8686:8686";
     };
     containers.bazarr = lscr {
       name = "bazarr";
-      tag = "v1.6.2-ls366";
+      tag = "v1.6.2-ls369";
       ip = "172.39.0.6";
       port = "6767:6767";
     };
     containers.prowlarr = lscr {
       name = "prowlarr";
-      tag = "2.6.5.5623-ls162";
+      tag = "2.6.5.5623-ls165";
       ip = "172.39.0.11";
       port = "9696:9696";
       media = false;
@@ -170,7 +170,7 @@ in {
     # Usenet client (Newshosting); nginx sab.gvarph.com -> :8085.
     containers.sabnzbd = lscr {
       name = "sabnzbd";
-      tag = "5.1.3-ls275";
+      tag = "5.1.3-ls277";
       ip = "172.39.0.13";
       port = "8085:8080";
     };
