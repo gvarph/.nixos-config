@@ -1,6 +1,6 @@
 {lib, ...}: let
   # Loopback MCP units (mcp-victoria.nix, fitness-mcp.nix) Hermes connects to.
-  localUnits = ["mcp-victoriametrics.service" "mcp-victorialogs.service" "garmin-mcp.service" "hevy-mcp.service"];
+  localUnits = ["mcp-victoriametrics.service" "mcp-victorialogs.service" "garmin-mcp.service" "hevy-mcp.service" "qbittorrent-mcp.service"];
 in {
   # All of Hermes's MCP servers. Read tools only, each by explicit allowlist
   # (write tools are added only on request), except Hermes's own AgentMail inbox.
@@ -62,6 +62,25 @@ in {
           "get-body-measurement"
         ];
       };
+      # Loopback-only container (devices/nas1/arr.nix); SSE is the only HTTP transport it serves.
+      qbittorrent = {
+        url = "http://127.0.0.1:8434/sse";
+        # add_torrent granted explicitly; everything else is read-only.
+        tools.include = [
+          "add_torrent"
+          "list_torrents"
+          "inspect_torrent"
+          "get_torrent_files"
+          "get_categories"
+          "find_duplicates"
+          "get_rss_feeds"
+          "get_rss_rules"
+          "get_search_plugins"
+          "get_main_log"
+          "get_peer_log"
+          "get_system_info"
+        ];
+      };
       # Trek: plain OAuth (dynamic client registration), all tools; the scopes
       # approved on Trek's consent page decide what it may do. One-time login
       # as hermes: `hermes mcp login trek`.
@@ -75,6 +94,8 @@ in {
         headers.x-api-key = "\${AGENTMAIL_API_KEY}";
       };
     };
+    # Typed mcpServers has no transport option.
+    settings.mcp_servers.qbittorrent.transport = "sse";
     # Typed mcpServers has no oauth block. Fixed loopback callback, so the
     # login also works through an SSH tunnel.
     settings.mcp_servers.trek.oauth = {
