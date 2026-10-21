@@ -102,6 +102,8 @@ in {
   # The module only adds links; stale ones from earlier generations would be
   # loaded too (duplicate plugin names). Wipe the dir before it is repopulated.
   systemd.tmpfiles.settings."10-crowdsec"."/etc/crowdsec/notifications/".R = {};
+  # Leftover link from the pre-rewrite module (duplicate gvarph/whitelist).
+  systemd.tmpfiles.settings."10-crowdsec"."/etc/crowdsec/parsers/s02-enrich/*-parsers-s02-enrich.yaml".r = {};
 
   services.crowdsec = {
     enable = true;
@@ -256,7 +258,8 @@ in {
               duration = "4h";
             }
           ];
-          duration_expr = "(GetDecisionsCount(Alert.GetValue()) + 1) * 4 > 48 ? '48h' : Sprintf('%dh', (GetDecisionsCount(Alert.GetValue()) + 1) * 4)";
+          # No Sprintf: the module writes this file through tmpfiles, where % is a specifier.
+          duration_expr = "(GetDecisionsCount(Alert.GetValue()) + 1) * 4 > 48 ? '48h' : string((GetDecisionsCount(Alert.GetValue()) + 1) * 4) + 'h'";
           notifications = ["ntfy"];
           on_success = "break";
         }
