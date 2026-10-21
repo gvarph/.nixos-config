@@ -330,7 +330,10 @@ in {
         basicAuthFile = config.age.secrets.vl_push_htpasswd.path;
         locations."/insert/" = {
           proxyPass = "http://127.0.0.1:9428/insert/";
+          # Only HA pushes here, over split DNS from its own VLAN; Cloudflare clients get their real IP.
           extraConfig = ''
+            allow 10.0.0.0/8;
+            deny all;
             client_max_body_size 20M;
           '';
         };
@@ -632,6 +635,7 @@ in {
       virtualHosts."radarr.gvarph.com" = {};
       virtualHosts."prowlarr.gvarph.com" = {};
       virtualHosts."bazarr.gvarph.com" = {};
+      virtualHosts."grafana.gvarph.com" = {};
     };
   };
 
