@@ -506,8 +506,7 @@ in {
       };
 
       # WatchShelf sidecar (docker on 127.0.0.1:8081) for the Garmin app.
-      # No oauth2-proxy: Connect IQ can't do interactive SSO, the sidecar
-      # auths against ABS itself.
+      # Behind oauth2-proxy, which Connect IQ can't log into: the watch app is off until removed.
       "watchshelf.gvarph.com" = {
         forceSSL = true;
         useACMEHost = "gvarph.com";
@@ -617,6 +616,7 @@ in {
       virtualHosts."grafana.gvarph.com" = {};
       virtualHosts."js.gvarph.com" = {};
       virtualHosts."shelfarr.gvarph.com" = {};
+      virtualHosts."watchshelf.gvarph.com" = {};
     };
   };
 
