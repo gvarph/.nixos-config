@@ -68,7 +68,7 @@ in {
       autoStart = true;
       unitConfig = guard;
       containerConfig = {
-        image = "docker.io/binhex/arch-qbittorrentvpn:5.2.4-1-02";
+        image = "docker.io/binhex/arch-qbittorrentvpn:5.3.0-1-01";
         environmentFiles = [config.age.secrets.qbittorrent_env.path];
         environments =
           lscrEnv
