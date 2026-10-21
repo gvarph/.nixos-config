@@ -60,7 +60,7 @@
           Requires = ["paperless-db.service" "paperless-broker.service"];
         };
       containerConfig = {
-        image = "ghcr.io/paperless-ngx/paperless-ngx:3.2.1";
+        image = "ghcr.io/paperless-ngx/paperless-ngx:3.3.3";
         # USERMAP_UID/GID=1000:100 in the env file: the image starts as root
         # and drops to that uid, which owns data/, consume/ and the media tree.
         environmentFiles = [envFile];
@@ -98,7 +98,7 @@
         StartLimitIntervalSec = 0;
       };
       containerConfig = {
-        image = "docker.io/icereed/paperless-gpt:v0.28.0";
+        image = "docker.io/icereed/paperless-gpt:v0.31.0";
         # Shares the env file for PAPERLESS_API_TOKEN and OPENAI_API_KEY (a 9router key).
         environmentFiles = [envFile];
         # LLM traffic goes to 9router on its own network, not to DeepSeek directly.
