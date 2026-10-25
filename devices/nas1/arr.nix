@@ -192,7 +192,7 @@ in {
     # Usenet client (Newshosting); nginx sab.gvarph.com -> :8085.
     containers.sabnzbd = lscr {
       name = "sabnzbd";
-      tag = "5.1.3-ls277";
+      tag = "5.1.3-ls278";
       ip = "172.39.0.13";
       port = "8085:8080";
     };
@@ -299,7 +299,7 @@ in {
           Wants = ["slskd-port-sync.service"];
         };
       containerConfig = {
-        image = "docker.io/slskd/slskd:0.26.1";
+        image = "docker.io/slskd/slskd:0.26.2";
         user = "1000:100";
         environments.TZ = "Europe/Prague";
         networks = ["container:slskd-vpn"];

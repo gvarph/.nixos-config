@@ -10,7 +10,7 @@
   virtualisation.quadlet = let
     inherit (config.virtualisation.quadlet) networks;
     pgImage = "quay.io/prometheuscommunity/postgres-exporter:v0.20.1";
-    redisImage = "docker.io/oliver006/redis_exporter:v1.95.0";
+    redisImage = "docker.io/oliver006/redis_exporter:v1.96.0";
     pgExporter = {
       db,
       network,

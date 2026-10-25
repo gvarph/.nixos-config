@@ -62,7 +62,7 @@
           StartLimitIntervalSec = 0;
         };
       containerConfig = {
-        image = "ghcr.io/paperless-ngx/paperless-ngx:3.3.3";
+        image = "ghcr.io/paperless-ngx/paperless-ngx:3.3.4";
         # USERMAP_UID/GID=1000:100 in the env file: the image starts as root
         # and drops to that uid, which owns data/, consume/ and the media tree.
         environmentFiles = [envFile];
