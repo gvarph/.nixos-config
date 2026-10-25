@@ -10,7 +10,7 @@
       ConditionPathIsMountPoint = "/flash/trek";
     };
     containerConfig = {
-      image = "docker.io/mauriceboe/trek:4.3.4";
+      image = "docker.io/mauriceboe/trek:5.0.0";
       environmentFiles = [config.age.secrets.trek_env.path];
       # Loopback only: nginx is the front door, and 3100 sits in the LAN-open range.
       publishPorts = ["127.0.0.1:3100:3000"];
