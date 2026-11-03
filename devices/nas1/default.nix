@@ -74,6 +74,8 @@ in {
     intel-gpu-tools
 
     nvtopPackages.intel
+
+    audible-rs # Audible library downloads, see overlays/audible-rs.nix
   ];
 
   powerManagement.powertop.enable = true;

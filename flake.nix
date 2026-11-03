@@ -90,6 +90,7 @@
       (import ./overlays/mcp-servers.nix)
       (import ./overlays/fitness-mcp.nix)
       (import ./overlays/crowdsec-lua-bouncer.nix)
+      (import ./overlays/audible-rs.nix)
 
       # waybar built from master, see the input above.
       inputs.waybar.overlays.default
