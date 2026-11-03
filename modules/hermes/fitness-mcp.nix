@@ -160,6 +160,17 @@ in {
     serviceConfig =
       hardening
       // {
+        # The server tries the Garmin login once at startup and never retries, and at
+        # boot network-online.target comes before DNS works. Wait (up to ~2 min) until
+        # Garmin answers; start anyway if it never does.
+        ExecStartPre = pkgs.writeShellScript "garmin-mcp-wait-online" ''
+          for _ in $(seq 60); do
+            ${lib.getExe pkgs.curl} -s -o /dev/null --max-time 5 https://connectapi.garmin.com/ && exit 0
+            sleep 2
+          done
+          echo "Garmin Connect unreachable; starting anyway" >&2
+        '';
+        TimeoutStartSec = 300;
         ExecStart = lib.getExe pkgs.garmin-mcp;
         User = "garmin-mcp";
         Group = "garmin-mcp";
