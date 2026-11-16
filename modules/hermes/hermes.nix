@@ -24,8 +24,7 @@ in {
     (asHermes "hermes-shell" "bash")
   ];
 
-  # OPENCODE_GO_API_KEY (primary), DEEPSEEK_API_KEY + DEEPINFRA_API_KEY (fallbacks),
-  # AGENTMAIL_API_KEY, Discord.
+  # DEEPSEEK_API_KEY (primary), DEEPINFRA_API_KEY (fallback), AGENTMAIL_API_KEY, Discord.
   age.secrets.hermes_env = {
     file = ../../secrets/hermes_env.age;
     owner = "hermes";
@@ -39,21 +38,16 @@ in {
     workingDirectory = "${stateDir}/workspace";
     environmentFiles = [config.age.secrets.hermes_env.path];
     settings = {
-      # DeepSeek V4.1 Flash via the OpenCode Go subscription (needs "Global" regions
-      # in the OpenCode workspace). Native providers handle V4's thinking toggle.
-      # Explicit base_url, so no leftover value in the deep-merged config.yaml applies.
+      # DeepSeek V4.1 Flash on DeepSeek's own API. Native providers handle V4's
+      # thinking toggle. Explicit base_url, so no leftover value in the
+      # deep-merged config.yaml applies.
       model = {
-        provider = "opencode-go";
-        default = "deepseek-v4.1-flash";
-        base_url = "https://opencode.ai/inference/go/v1";
+        provider = "deepseek";
+        default = "deepseek-flash"; # = DeepSeek-V4.1-Flash
+        base_url = "https://api.deepseek.com/v1";
       };
-      # Same model when Go fails or hits its limits: own DeepSeek key, then DeepInfra.
+      # Same model on DeepInfra when DeepSeek fails or hits its limits.
       fallback_providers = [
-        {
-          provider = "deepseek";
-          model = "deepseek-flash"; # = DeepSeek-V4.1-Flash
-          base_url = "https://api.deepseek.com/v1";
-        }
         {
           provider = "deepinfra";
           model = "deepseek-ai/DeepSeek-V4.1-Flash";
@@ -61,7 +55,7 @@ in {
         }
       ];
       # Photos go to the model natively (V4.1 Flash reads images; tested on all
-      # three endpoints). Vision is pinned to Go, falling back along the chain above.
+      # endpoints). Vision is pinned to DeepSeek, falling back along the chain above.
       agent.image_input_mode = "native";
       auxiliary = let
         followMain = extra:
@@ -74,9 +68,9 @@ in {
           // extra;
       in {
         vision = followMain {
-          provider = "opencode-go";
-          model = "deepseek-v4.1-flash";
-          base_url = "https://opencode.ai/inference/go/v1";
+          provider = "deepseek";
+          model = "deepseek-flash";
+          base_url = "https://api.deepseek.com/v1";
         };
         compression = followMain {max_concurrency = 2;};
         title_generation = followMain {};
