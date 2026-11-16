@@ -1,8 +1,27 @@
-{config, ...}: let
+{
+  config,
+  pkgs,
+  ...
+}: let
   subnet = "10.90.3.0/24";
   gateway = "10.90.3.1";
   # Never reachable from the browser: LAN, host, CGNAT/Tailscale, link-local/metadata.
   privateNets = ["10.0.0.0/8" "172.16.0.0/12" "192.168.0.0/16" "100.64.0.0/10" "169.254.0.0/16"];
+
+  # Hermes 0.23 moved its Camofox tools out of core into this official plugin.
+  # Pinned to the commit Hermes's own catalog lists (plugin-catalog/camofox.yaml).
+  camofoxPlugin =
+    pkgs.runCommand "camofox" {
+      src = pkgs.fetchFromGitHub {
+        owner = "NousResearch";
+        repo = "hermes-official-plugins";
+        rev = "e7a218f26db88426ab3e7376f0e000b6e356f5e7";
+        hash = "sha256-zDjiWUVmWUPAyasy74mUuh+d/dpBi1SBh7GZvuTjxcI=";
+      };
+    } ''
+      mkdir $out
+      cp $src/camofox/{plugin.yaml,LICENSE,*.py} $out/
+    '';
 in {
   # Camofox: anti-detect Firefox (Camoufox) behind a REST API, used by Hermes's
   # browser tools. No published image, so built from the pinned upstream commit.
@@ -66,11 +85,18 @@ in {
 
   services.hermes-agent = {
     environment.CAMOFOX_URL = "http://127.0.0.1:9377";
-    # Hermes's built-in browser tools, not the Browser Use CLI ("off").
-    settings.browser = {
-      backend = "off";
-      cloud_provider = "camofox";
-      allow_private_urls = false;
+    extraPlugins = [camofoxPlugin];
+    settings = {
+      browser = {
+        # Not "camofox": the plugin only needs CAMOFOX_URL, and Hermes's
+        # left-core check can't see a Nix-linked plugin, so it would keep
+        # reporting the plugin as missing.
+        cloud_provider = "local";
+        allow_private_urls = false;
+      };
+      # Core's own `browser` toolset is browser_exec: a Chromium on the host,
+      # outside the egress filter above. Camofox's tools are the `camofox` toolset.
+      agent.disabled_toolsets = ["browser"];
     };
   };
   systemd.services.hermes-agent = {

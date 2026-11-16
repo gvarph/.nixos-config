@@ -7,6 +7,9 @@
 }: let
   cfg = config.services.hermes-agent;
   stateDir = "/var/lib/hermes";
+  # The flake's package reports 0.0.0, which fails plugins' `requires_hermes`.
+  # Read from the pinned tag so the two can't drift.
+  version = lib.removePrefix "v" (lib.importJSON ../../flake.lock).nodes.hermes-agent.original.ref;
 in {
   imports = [inputs.hermes-agent.nixosModules.default];
 
@@ -34,10 +37,14 @@ in {
   # Python commands run in the podman sandbox (sandbox.nix).
   services.hermes-agent = {
     enable = true;
+    package = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default.override {inherit version;};
     inherit stateDir;
     workingDirectory = "${stateDir}/workspace";
     environmentFiles = [config.age.secrets.hermes_env.path];
     settings = {
+      # User plugins are opt-in. Each extraPlugins derivation is named after its
+      # plugin, so everything Nix links is enabled.
+      plugins.enabled = map lib.getName cfg.extraPlugins;
       # DeepSeek V4.1 Flash on DeepSeek's own API. Native providers handle V4's
       # thinking toggle. Explicit base_url, so no leftover value in the
       # deep-merged config.yaml applies.
@@ -112,10 +119,11 @@ in {
   systemd.services = lib.genAttrs ["hermes-agent" "hermes-backend"] (_: {
     after = ["zfs-mount.service"];
     unitConfig.ConditionPathIsMountPoint = stateDir;
-    # config.yaml/.env are (re)written at activation, not referenced by the
-    # units, so changes would otherwise not restart the processes.
+    # config.yaml/.env and plugin links are (re)written at activation, not
+    # referenced by the units, so changes would otherwise not restart the processes.
     restartTriggers = [
       config.age.secrets.hermes_env.file
+      cfg.extraPlugins
       (builtins.toJSON cfg.settings)
       (builtins.toJSON cfg.environment)
       (builtins.toJSON cfg.mcpServers)
