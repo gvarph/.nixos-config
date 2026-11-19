@@ -647,6 +647,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-master": {
+      "locked": {
+        "lastModified": 1795074495,
+        "narHash": "sha256-L3t+uYbz77i1AiEtwRZRqX7mJAbRQu28vxw8PQNJYV8=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "6640e3630124f6cfa6b3b2475fa418ae39a62450",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-stable": {
       "locked": {
         "lastModified": 1792503283,
@@ -842,6 +858,7 @@
         "nix-cachyos-kernel": "nix-cachyos-kernel",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs_6",
+        "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-stable": "nixpkgs-stable",
         "quadlet-nix": "quadlet-nix",
         "waybar": "waybar",
