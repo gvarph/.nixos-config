@@ -1,25 +1,13 @@
 {
   pkgs,
   config,
-  inputs,
   lib,
   ...
 }: let
   cloudflareRanges = import ./cloudflare-ips.nix;
-  # False once our own nixpkgs (nixos-unstable) ships the fixed nginx.
-  nginxNeedsPin = lib.versionOlder pkgs.nginxStable.version "1.30.7";
 in {
-  warnings = lib.optional (!nginxNeedsPin) "nginx.nix: nixpkgs now has nginx ${pkgs.nginxStable.version}; remove the nixpkgs-master pin (see the TODO there and in flake.nix).";
-
   services.nginx = {
     enable = true;
-    # TODO: switch back to nixos-unstable's nginx when it reaches 1.30.7.
-    # 1.30.7 fixes the HTTP/2 bugs CVE-2026-123007 and CVE-2026-123633, and
-    # nixos-unstable is still on 1.30.6, so nginx comes from nixpkgs master.
-    # After a flake update brings 1.30.7 the pin stops applying and a rebuild
-    # prints a warning. Then delete: this `package`, `nginxNeedsPin` and the
-    # warning above, `inputs` in the arguments, and `nixpkgs-master` in flake.nix.
-    package = lib.mkIf nginxNeedsPin inputs.nixpkgs-master.legacyPackages.${pkgs.stdenv.hostPlatform.system}.nginxStable;
 
     recommendedProxySettings = true;
     # CrowdSec's Lua bouncer runs in the access phase (crowdsec.nix renders its

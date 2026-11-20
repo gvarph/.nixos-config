@@ -12,10 +12,6 @@
     # 7.2 was removed five days later. Remove together with that pin.
     nixpkgs-linux-7-2.url = "github:nixos/nixpkgs/b0e061ddebd41ac364393a222098e5881baa3f6b";
 
-    # TODO: temporary, only for the nginx 1.30.7 pin in devices/nas1/nginx.nix.
-    # Remove together with that pin once nixos-unstable has nginx >= 1.30.7.
-    nixpkgs-master.url = "github:nixos/nixpkgs/master";
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
