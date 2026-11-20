@@ -17,9 +17,6 @@
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = [];
 
-  # Enable TPM2 support in initrd
-  boot.initrd.systemd.enable = true;
-
   fileSystems."/" = {
     device = "/dev/mapper/luks-10d76de3-6728-4947-9d50-923b9fca4ef7";
     fsType = "ext4";
