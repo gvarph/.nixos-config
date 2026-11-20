@@ -7,6 +7,11 @@
     # Stable nixpkgs for Azure CLI
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
 
+    # TODO: temporary, only for the Linux 7.2 pin in devices/nas1/default.nix.
+    # nixpkgs at the commit that brought linux_7_2 to its final release (7.2.15);
+    # 7.2 was removed five days later. Remove together with that pin.
+    nixpkgs-linux-7-2.url = "github:nixos/nixpkgs/b0e061ddebd41ac364393a222098e5881baa3f6b";
+
     # TODO: temporary, only for the nginx 1.30.7 pin in devices/nas1/nginx.nix.
     # Remove together with that pin once nixos-unstable has nginx >= 1.30.7.
     nixpkgs-master.url = "github:nixos/nixpkgs/master";

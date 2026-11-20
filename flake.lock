@@ -647,6 +647,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-linux-7-2": {
+      "locked": {
+        "lastModified": 1793568539,
+        "narHash": "sha256-+wsAfmP1ljGqHI4xcR1TlV80ZVFWKok7HbC+gwCqxcI=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "b0e061ddebd41ac364393a222098e5881baa3f6b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "b0e061ddebd41ac364393a222098e5881baa3f6b",
+        "type": "github"
+      }
+    },
     "nixpkgs-master": {
       "locked": {
         "lastModified": 1795074495,
@@ -858,6 +874,7 @@
         "nix-cachyos-kernel": "nix-cachyos-kernel",
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs_6",
+        "nixpkgs-linux-7-2": "nixpkgs-linux-7-2",
         "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-stable": "nixpkgs-stable",
         "quadlet-nix": "quadlet-nix",

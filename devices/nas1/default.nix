@@ -21,7 +21,21 @@
       builtins.attrValues zfsCompatibleKernelPackages
     )
   );
+
+  # TODO: drop the Linux 7.2 pin once ZFS supports a newer kernel.
+  # nixpkgs removed 7.2 (EOL upstream, final release 7.2.15) while ZFS 2.4.4
+  # still tops out at 7.2, so the rule above would fall back to the 6.18 LTS.
+  # 7.2 gets no more fixes, so this is only a bridge until ZFS 2.4.5 (7.3 support,
+  # openzfs/zfs#19838) reaches nixpkgs. Then the pin stops applying and a rebuild
+  # prints a warning. Then delete: `pinnedKernelPackage`, `kernelNeedsPin`, the
+  # warning below, and `nixpkgs-linux-7-2` in flake.nix; pass `latestKernelPackage`
+  # to boot-systemd.nix again.
+  pinnedKernelPackage = inputs.nixpkgs-linux-7-2.legacyPackages.${pkgs.stdenv.hostPlatform.system}.linuxPackages_7_2;
+  # False once our own nixpkgs has a ZFS-compatible kernel newer than the pin.
+  kernelNeedsPin = lib.versionOlder latestKernelPackage.kernel.version pinnedKernelPackage.kernel.version;
 in {
+  warnings = lib.optional (!kernelNeedsPin) "nas1: nixpkgs now has ZFS-compatible Linux ${latestKernelPackage.kernel.version}; remove the Linux 7.2 pin (see the TODO in devices/nas1/default.nix and flake.nix).";
+
   imports = [
     ./hardware-configuration.nix
     ./disko
@@ -59,7 +73,12 @@ in {
     # ../../default.nix already imports docker.nix
     (import ../../default.nix {inherit config pkgs inputs username;})
     ../../modules/nix-maintenance.nix
-    (import ../../modules/boot-systemd.nix {kernelPackages = latestKernelPackage;})
+    (import ../../modules/boot-systemd.nix {
+      kernelPackages =
+        if kernelNeedsPin
+        then pinnedKernelPackage
+        else latestKernelPackage;
+    })
     #../../linux/features/kubernetes.nix
   ];
 
