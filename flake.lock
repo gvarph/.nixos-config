@@ -142,22 +142,6 @@
         "type": "github"
       }
     },
-    "flake-compat_3": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1767039857,
-        "narHash": "sha256-vNpUSpF5Nuw8xvDLj2KCwwksIbjua2LZCqhV1LNRDns=",
-        "owner": "edolstra",
-        "repo": "flake-compat",
-        "rev": "5edf11c44bc78a0d334f6334cdaf7d60d732daab",
-        "type": "github"
-      },
-      "original": {
-        "owner": "edolstra",
-        "repo": "flake-compat",
-        "type": "github"
-      }
-    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": [
@@ -861,7 +845,6 @@
         "nixpkgs-linux-7-2": "nixpkgs-linux-7-2",
         "nixpkgs-stable": "nixpkgs-stable",
         "quadlet-nix": "quadlet-nix",
-        "waybar": "waybar",
         "zen-browser": "zen-browser"
       }
     },
@@ -917,27 +900,6 @@
       "original": {
         "owner": "pyproject-nix",
         "repo": "uv2nix",
-        "type": "github"
-      }
-    },
-    "waybar": {
-      "inputs": {
-        "flake-compat": "flake-compat_3",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1794988633,
-        "narHash": "sha256-wSW8BGSv+cM7ojPMThybFQzCBzG2IUmqYAXt/E0beb4=",
-        "owner": "Alexays",
-        "repo": "Waybar",
-        "rev": "11c771ef072c6c5f7114b4c4ab57147c9ed5aa18",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Alexays",
-        "repo": "Waybar",
         "type": "github"
       }
     },

@@ -41,18 +41,6 @@
     # the glaze bound and lives in cache.nixos.org.
     hyprland.url = "github:hyprwm/Hyprland";
 
-    # Waybar from master, because Hyprland main changes its IPC faster than
-    # waybar releases keep up. Needed for workspace clicks under
-    # configProvider = "lua", where `hyprctl dispatch` wraps hl.dispatch() and
-    # the legacy strings 0.15.0 sends are invalid Lua (fixed in
-    # https://github.com/Alexays/Waybar/pull/5013). The overlay is upstream's
-    # own: nixpkgs' waybar derivation with the master source swapped in.
-    # Drop this input and its overlay once a waybar release catches up.
-    waybar = {
-      url = "github:Alexays/Waybar";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs = {
@@ -96,9 +84,6 @@
       (import ./overlays/fitness-mcp.nix)
       (import ./overlays/crowdsec-lua-bouncer.nix)
       (import ./overlays/audible-rs.nix)
-
-      # waybar built from master, see the input above.
-      inputs.waybar.overlays.default
 
       claude-code.overlays.default
 
