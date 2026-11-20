@@ -25,11 +25,10 @@
   nixpkgs.config.allowUnfree = true;
 
   # eMudhra CA keys were trivially weak (2026-10); browsers block them, system TLS doesn't.
+  # NSS 3.131 dropped the C1, ECC G3 and ECC C3 roots itself; only G1 is still
+  # shipped. The build fails on names that aren't in the bundle.
   security.pki.caCertificateBlacklist = [
     "emSign Root CA - G1"
-    "emSign Root CA - C1"
-    "emSign ECC Root CA - G3"
-    "emSign ECC Root CA - C3"
   ];
 
   # User password lives in an agenix secret so the hash isn't world-readable
