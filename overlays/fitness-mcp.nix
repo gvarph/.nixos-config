@@ -12,7 +12,8 @@ final: prev: {
       hash = "sha256-ynW1rMzfSK3FqEnSNoU1jziJ8xQBKENP8GpT7edW50Q=";
     };
     build-system = [prev.python3Packages.hatchling];
-    dependencies = with prev.python3Packages; [python-dotenv garminconnect requests mcp fitparse];
+    # mcp_1: upstream imports mcp.server.fastmcp, which the v2 SDK removed.
+    dependencies = with prev.python3Packages; [python-dotenv garminconnect requests mcp_1 fitparse];
     # Exact pins upstream; nixpkgs has newer patch releases.
     pythonRelaxDeps = true;
     doCheck = false;
