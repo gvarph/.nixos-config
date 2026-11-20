@@ -10,7 +10,9 @@ final: prev: {
     };
     cargoHash = "sha256-ZM2yGVniIAOZsNB23sBPWxuPR+lin8HO1KSfNVcJXc4=";
     nativeBuildInputs = [prev.pkg-config];
-    buildInputs = [prev.openssl];
+    # cargoSetupHook links these from nixpkgs instead of the vendored copies
+    # (dontCargoUseSystemLibs opts out).
+    buildInputs = [prev.openssl prev.aws-lc prev.sqlite];
     env.AUDIBLE_RELEASE_TAG = "v${version}";
     preCheck = ''
       export SSL_CERT_FILE=${prev.cacert}/etc/ssl/certs/ca-bundle.crt
