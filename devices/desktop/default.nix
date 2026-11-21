@@ -24,6 +24,9 @@ in {
 
   networking.hostName = "desktop";
   networking.networkmanager.enable = true;
+  # Keep Wi-Fi adapters awake: power saving adds latency spikes to VR
+  # streaming over the Steam Frame wireless adapter.
+  networking.networkmanager.wifi.powersave = false;
 
   # Binary cache for the CachyOS kernel (nix-cachyos-kernel) so it isn't
   # compiled from source on every kernel bump.
