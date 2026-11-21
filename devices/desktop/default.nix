@@ -50,9 +50,13 @@ in {
     earlySetup = true;
   };
 
-  # Apple keyboard fn mode (2 = F-keys first)
+  # hid_apple: Apple keyboard fn mode (2 = F-keys first).
+  # cfg80211: Wi-Fi regulatory domain. Without a country the kernel stays on
+  # the world domain ("00"), where 6 GHz is disabled; the Steam Frame
+  # wireless adapter needs that band.
   boot.extraModprobeConfig = ''
     options hid_apple fnmode=2
+    options cfg80211 ieee80211_regdom=CZ
   '';
 
   networking.firewall = {
