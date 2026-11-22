@@ -9,6 +9,11 @@
     # beats DHCP, so autostarted containers bake in an empty resolver list and
     # their 127.0.0.11 stub SERVFAILs until manually restarted.
     daemon.settings.dns = ["10.0.1.1" "1.1.1.1"];
+    # The default journald driver leaves `docker logs` (and the logs API that
+    # testcontainers waits on) empty: since 2026-10 moby links
+    # systemd-minimal-libs, which has no zstd and skips every compressed
+    # journal file without an error.
+    logDriver = "local";
     extraOptions = ''
       --default-ulimit nofile=65535:65535
       --default-ulimit nproc=65535:65535
