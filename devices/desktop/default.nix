@@ -28,12 +28,7 @@ in {
   # streaming over the Steam Frame wireless adapter.
   networking.networkmanager.wifi.powersave = false;
 
-  # Binary cache for the CachyOS kernel (nix-cachyos-kernel) so it isn't
-  # compiled from source on every kernel bump.
   nix.settings = {
-    substituters = ["https://attic.xuyh0120.win/lantian"];
-    trusted-substituters = ["https://attic.xuyh0120.win/lantian"];
-    trusted-public-keys = ["lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="];
     # Dedupe at build time instead of the nix-optimise timer (disabled below).
     auto-optimise-store = true;
   };
