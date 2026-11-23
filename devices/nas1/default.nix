@@ -38,6 +38,7 @@ in {
 
   imports = [
     ./hardware-configuration.nix
+    ./afterg3.nix
     ./disko
     ./nginx.nix
     ./crowdsec.nix
@@ -98,6 +99,16 @@ in {
   ];
 
   powerManagement.powertop.enable = true;
+
+  # WoL on the 2.5G NIC; runs after powertop, whose auto-tune turns WoL off.
+  systemd.services.wake-on-lan = {
+    wantedBy = ["multi-user.target"];
+    after = ["powertop.service" "network.target"];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.ethtool}/bin/ethtool -s enp129s0 wol g";
+    };
+  };
   boot.supportedFilesystems = ["zfs"];
 
   nixpkgs.hostPlatform = "x86_64-linux";
