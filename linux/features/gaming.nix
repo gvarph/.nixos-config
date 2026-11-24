@@ -59,7 +59,7 @@
     apt_job=
     # Skip the sidecar if an APT instance already runs (Electron enforces a
     # single instance anyway; don't adopt or kill one we didn't start).
-    if ! pgrep -f 'awakened-poe-[t]rade.*app\.asar' >/dev/null 2>&1; then
+    if ! pgrep -f 'awakened-poe-[t]rade-[0-9.]*-extracted/awakened-poe-trade' >/dev/null 2>&1; then
       # setsid: own process group, so the whole Electron tree can be killed
       # as a group when the game exits.
       ${pkgs.util-linux}/bin/setsid bash -c '

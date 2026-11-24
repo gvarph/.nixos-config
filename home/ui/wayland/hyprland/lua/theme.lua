@@ -63,12 +63,16 @@ hl.window_rule({
 })
 
 -- Awakened PoE Trade: floating overlay with no chrome or effects.
--- Two effects here are load-bearing:
--- - no_focus: the overlay is an invisible window covering the whole
---   game monitor, and without it Hyprland gives it focus on click
---   (clicks pass through to the game, so playing feels normal) — then
---   APT's synthetic Ctrl+C lands on itself instead of the game and
---   price checking silently fails.
+-- Load-bearing effects:
+-- - no_initial_focus: the overlay is an invisible window covering the
+--   whole game monitor, mapped each time the game gains focus. Without
+--   this Hyprland focuses it on map, APT then thinks the game is not
+--   active and unregisters its hotkeys (Ctrl+D does nothing).
+-- - NOT no_focus: hold-mode price check needs no focus, but clicking
+--   into the popup or the Shift+Space menu must be able to focus APT,
+--   otherwise those widgets ignore input. APT's own focus calls are
+--   plain XSetInputFocus, which Hyprland reverts across PIDs, so the
+--   compositor's click focus is the only way in.
 -- - pin: fullscreen windows get exclusive rendering on their
 --   workspace, so the overlay is invisible over the fullscreen game
 --   unless pinned (pinned floats render above fullscreen).
@@ -78,13 +82,12 @@ hl.window_rule({
 	workspace = "2 silent",
 
 	float = true,
-	pin = false,
+	pin = true,
 	border_size = 0,
 	no_blur = true,
 	no_shadow = true,
 	no_anim = true,
-	no_focus = false,
-	-- might be unnecessary
+	no_initial_focus = true,
 	no_follow_mouse = true,
 })
 
