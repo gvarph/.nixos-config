@@ -86,6 +86,7 @@
       (import ./overlays/audible-rs.nix)
 
       claude-code.overlays.default
+      (import ./overlays/claude-code-node.nix)
 
       # CachyOS kernel packages (exposes pkgs.cachyosKernels.*)
       inputs.nix-cachyos-kernel.overlays.pinned
