@@ -9,8 +9,8 @@
   # the instance and the app's own credentials are enough.
   virtualisation.quadlet = let
     inherit (config.virtualisation.quadlet) networks;
-    pgImage = "quay.io/prometheuscommunity/postgres-exporter:v0.20.1";
-    redisImage = "docker.io/oliver006/redis_exporter:v1.96.0";
+    pgImage = "quay.io/prometheuscommunity/postgres-exporter:v0.21.1";
+    redisImage = "docker.io/oliver006/redis_exporter:v1.99.0";
     pgExporter = {
       db,
       network,
