@@ -166,7 +166,7 @@ in {
     };
     containers.radarr = lscr {
       name = "radarr";
-      tag = "6.4.4.10685-ls323";
+      tag = "7.0.3.10918-ls328";
       ip = "172.39.0.4";
       port = "7878:7878";
     };
