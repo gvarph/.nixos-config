@@ -27,7 +27,7 @@
         autoStart = true;
         unitConfig = guard;
         containerConfig = {
-          image = "docker.io/library/postgres:18.6-alpine";
+          image = "docker.io/library/postgres:18.7-alpine";
           environmentFiles = [config.age.secrets.sparkyfitness_db_env.path];
           networks = [networks.sparkyfitness.ref];
           volumes = ["/flash/sparkyfitness/postgresql:/var/lib/postgresql:U"];
@@ -48,7 +48,7 @@
             StartLimitIntervalSec = 0;
           };
         containerConfig = {
-          image = "docker.io/codewithcj/sparkyfitness_server:v1.9.0";
+          image = "docker.io/codewithcj/sparkyfitness_server:v1.12.1";
           environmentFiles = [config.age.secrets.sparkyfitness_env.path];
           # Container-to-container only: never a host port.
           environments = {
@@ -62,6 +62,8 @@
           ];
           userns = "auto";
           noNewPrivileges = true;
+          # Server drains for up to 15s on shutdown; podman's default is 10s.
+          stopTimeout = 20;
         };
         serviceConfig = {
           Restart = "on-failure";
@@ -78,7 +80,7 @@
           StartLimitIntervalSec = 0;
         };
         containerConfig = {
-          image = "docker.io/codewithcj/sparkyfitness:v1.9.0";
+          image = "docker.io/codewithcj/sparkyfitness:v1.12.1";
           environments = {
             SPARKY_FITNESS_FRONTEND_URL = "https://fitness.gvarph.com";
             SPARKY_FITNESS_SERVER_HOST = "sparkyfitness-server";
