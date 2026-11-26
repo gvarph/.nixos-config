@@ -10,7 +10,7 @@
       ConditionPathIsMountPoint = "/flash/trek";
     };
     containerConfig = {
-      image = "docker.io/mauriceboe/trek:5.0.0";
+      image = "docker.io/mauriceboe/trek:5.2.1";
       environmentFiles = [config.age.secrets.trek_env.path];
       # Loopback only: nginx is the front door, and 3100 sits in the LAN-open range.
       publishPorts = ["127.0.0.1:3100:3000"];
@@ -23,7 +23,8 @@
       readOnly = true;
       tmpfses = ["/tmp:noexec,nosuid,size=128m"];
       dropCapabilities = ["ALL"];
-      addCapabilities = ["CHOWN" "SETUID" "SETGID"];
+      # KILL: dumb-init (root) must signal the node process, else stops end in SIGKILL.
+      addCapabilities = ["CHOWN" "SETUID" "SETGID" "KILL"];
       noNewPrivileges = true;
       healthCmd = "wget -qO- http://localhost:3000/api/health";
       healthInterval = "30s";
