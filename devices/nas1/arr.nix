@@ -178,7 +178,7 @@ in {
     };
     containers.bazarr = lscr {
       name = "bazarr";
-      tag = "v1.6.2-ls369";
+      tag = "v1.6.2-ls374";
       ip = "172.39.0.6";
       port = "6767:6767";
     };
