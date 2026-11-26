@@ -9,6 +9,8 @@
   virtualisation.quadlet = let
     inherit (config.virtualisation.quadlet) networks volumes;
     version = "v3.4.2";
+    # No v3.4.2-openvino image was published; 3.4.1 ML works with the 3.4.2 server.
+    mlVersion = "v3.4.1";
     guard = {
       After = ["zfs-mount.service"];
       # Never write state into rpool/root if the datasets are missing.
@@ -58,7 +60,7 @@
     containers.immich-machine-learning = {
       autoStart = true;
       containerConfig = {
-        image = "ghcr.io/immich-app/immich-machine-learning:${version}-openvino";
+        image = "ghcr.io/immich-app/immich-machine-learning:${mlVersion}-openvino";
         environmentFiles = [config.age.secrets.immich_env.path];
         # v2 models: faster, and fixes wrong OpenVINO outputs (upstream default later).
         environments.MACHINE_LEARNING_MODEL_REVISION = "v2";
