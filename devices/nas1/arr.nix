@@ -184,7 +184,7 @@ in {
     };
     containers.prowlarr = lscr {
       name = "prowlarr";
-      tag = "2.6.5.5623-ls165";
+      tag = "3.1.0.5799-ls170";
       ip = "172.39.0.11";
       port = "9696:9696";
       media = false;
