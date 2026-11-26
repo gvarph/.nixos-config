@@ -172,7 +172,7 @@ in {
     };
     containers.lidarr = lscr {
       name = "lidarr";
-      tag = "3.1.0.4875-ls45";
+      tag = "3.1.6.5079-ls50";
       ip = "172.39.0.5";
       port = "8686:8686";
     };
