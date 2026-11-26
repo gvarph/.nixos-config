@@ -33,6 +33,12 @@ in {
   networking.networkmanager.wifi.powersave = false;
 
   nix.settings = {
+    # Binary cache for the CachyOS kernel (nix-cachyos-kernel's `release`
+    # branch only advances once the kernel is in it). It moved from
+    # attic.xuyh0120.win, which now answers 400 "Binary cache migrated":
+    # https://github.com/xddxdd/nix-cachyos-kernel/issues/110
+    extra-substituters = ["https://cache.lantian.pub/lantian"];
+    extra-trusted-public-keys = ["lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ="];
     # Dedupe at build time instead of the nix-optimise timer (disabled below).
     auto-optimise-store = true;
   };
