@@ -49,7 +49,7 @@
       autoStart = true;
       unitConfig = guard;
       containerConfig = {
-        image = "docker.io/library/postgres:17.11";
+        image = "docker.io/library/postgres:17.12";
         environmentFiles = [config.age.secrets.jellystat_env.path];
         networks = [networks.jellyfin.ref];
         volumes = ["/flash/jellyfin/jellystat/postgres:/var/lib/postgresql/data:U"];
