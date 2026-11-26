@@ -17,6 +17,10 @@ in {
     ../../linux/features/gaming.nix
     ../../modules/nix-maintenance.nix
     (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest;})
+    # The installer's encrypted swap partition (nvme0n1p3, ~34G > RAM).
+    (import ../../modules/hibernation.nix {
+      luksPartitionUuid = "5f00d327-44e5-4daf-8e76-7ca3f7b90516";
+    })
   ];
 
   # Default shader cache is 1G, which thrashes with big Vulkan titles.

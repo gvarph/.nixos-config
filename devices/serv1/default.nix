@@ -14,6 +14,13 @@ in {
     ../../modules/nix-maintenance.nix
     (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.linuxPackages_latest;})
     ../../linux/features/kubernetes.nix
+    (import ../../modules/hibernation.nix {
+      swapfile = {
+        sizeGiB = 64;
+        resumeDevice = "/dev/disk/by-uuid/1f4f533d-e209-4cde-ae13-ab6656a11cc2";
+        resumeOffset = 16537600;
+      };
+    })
   ];
 
   environment.systemPackages = [
@@ -47,16 +54,4 @@ in {
   };
 
   networking.interfaces.enp0s31f6.wakeOnLan.enable = true;
-
-  # Hibernation. Resume needs boot.kernelParams resume_offset=<N> from
-  # `sudo filefrag -v /var/lib/swapfile` (first physical_offset), added after
-  # the swapfile exists; the offset changes if the file is recreated.
-  swapDevices = [
-    {
-      device = "/var/lib/swapfile";
-      size = 64 * 1024;
-    }
-  ];
-  boot.resumeDevice = "/dev/disk/by-uuid/1f4f533d-e209-4cde-ae13-ab6656a11cc2";
-  boot.kernelParams = ["resume_offset=16537600"];
 }
