@@ -31,7 +31,7 @@ in {
         ConditionPathIsMountPoint = "/flash/audiobookshelf";
       };
       containerConfig = {
-        image = "ghcr.io/advplyr/audiobookshelf:2.37.2";
+        image = "ghcr.io/advplyr/audiobookshelf:2.38.0";
         # Shares the media tree with other containers as gvarph:users, so it
         # runs as that uid instead of in a private user namespace.
         user = "1000:100";
