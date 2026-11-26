@@ -59,6 +59,20 @@ in {
             User = user;
           };
 
+        # Steam Frame headset, as Frame Control's "Set Up Connection" writes it
+        # (the keys are the ones it generates). Declared here because the app
+        # rewrites ~/.ssh/config in place, replacing Home Manager's symlink
+        # with a plain file, and the next activation then refuses to clobber
+        # it. Re-running Set Up Connection or editing headsets in its Devices
+        # tab does that again: move ~/.ssh/config aside and switch.
+        frame = {
+          HostName = "frame.local";
+          User = "steamos";
+          IdentityFile = ["~/.ssh/id_ed25519_frame" "~/.ssh/id_rsa_frame_devkit"];
+          IdentitiesOnly = "yes";
+          ServerAliveInterval = 30;
+        };
+
         # Rendered last, after every specific block, so the entries above win
         # where they overlap.
         "*" = {
