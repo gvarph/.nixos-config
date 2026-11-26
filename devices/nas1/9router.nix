@@ -14,7 +14,7 @@
       ConditionPathIsMountPoint = "/flash/9router";
     };
     containerConfig = {
-      image = "docker.io/decolua/9router:0.5.109";
+      image = "docker.io/decolua/9router:0.5.123";
       environmentFiles = [config.age.secrets."9router_env".path];
       environments = {
         DATA_DIR = "/app/data";
