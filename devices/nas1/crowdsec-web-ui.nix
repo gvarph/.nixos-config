@@ -14,7 +14,7 @@
       ConditionPathIsMountPoint = "/flash/crowdsec-web-ui";
     };
     containerConfig = {
-      image = "ghcr.io/theduffman85/crowdsec-web-ui:2026.10.10";
+      image = "ghcr.io/theduffman85/crowdsec-web-ui:2026.11.12";
       environmentFiles = [config.age.secrets.crowdsec-web-ui_env.path];
       environments = {
         CONFIG_SERVER_PORT = "3005"; # 3000 is grafana
