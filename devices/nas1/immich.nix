@@ -8,7 +8,7 @@
   # podman's health-on-failure plus systemd restarts replace autoheal.
   virtualisation.quadlet = let
     inherit (config.virtualisation.quadlet) networks volumes;
-    version = "v3.3.5";
+    version = "v3.4.2";
     guard = {
       After = ["zfs-mount.service"];
       # Never write state into rpool/root if the datasets are missing.
@@ -60,6 +60,8 @@
       containerConfig = {
         image = "ghcr.io/immich-app/immich-machine-learning:${version}-openvino";
         environmentFiles = [config.age.secrets.immich_env.path];
+        # v2 models: faster, and fixes wrong OpenVINO outputs (upstream default later).
+        environments.MACHINE_LEARNING_MODEL_REVISION = "v2";
         # OpenVINO on the iGPU only needs the render node; the USB passthrough
         # from the compose override was for Movidius sticks.
         devices = ["/dev/dri"];
