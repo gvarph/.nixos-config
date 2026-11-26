@@ -12,7 +12,7 @@
   # geocoding. nginx fronts dawarich.gvarph.com -> :8090 (native OIDC).
   virtualisation.quadlet = let
     inherit (config.virtualisation.quadlet) networks;
-    image = "docker.io/freikin/dawarich:1.15.3";
+    image = "docker.io/freikin/dawarich:1.23.0";
     guard = {
       After = ["zfs-mount.service"];
       # Never write state into rpool/root if the dataset is missing.
@@ -33,6 +33,8 @@
       RAILS_LOG_TO_STDOUT = "true";
       SELF_HOSTED = "true";
       STORE_GEODATA = "true";
+      # Geocoding is uncapped since 1.17; match the nginx 1r/s Nominatim throttle.
+      REVERSE_GEOCODING_RPS = "1";
       PHOTON_API_HOST = "";
       NOMINATIM_API_HOST = "geocoding-throttle:8080";
       NOMINATIM_API_USE_HTTPS = "false";
@@ -83,7 +85,7 @@
       autoStart = true;
       unitConfig = guard;
       containerConfig = {
-        image = "docker.io/valkey/valkey:8.1.10-alpine";
+        image = "docker.io/valkey/valkey:8.1.12-alpine";
         exec = "valkey-server --save 900 1 --save 300 10 --appendonly no";
         networks = [networks.dawarich.ref];
         volumes = ["/flash/dawarich/shared:/data:U"];
@@ -103,7 +105,7 @@
       autoStart = true;
       unitConfig = guard;
       containerConfig = {
-        image = "docker.io/postgis/postgis:17-3.5-alpine";
+        image = "docker.io/postgis/postgis:17-3.7-alpine";
         environmentFiles = [config.age.secrets.dawarich_db_env.path];
         networks = [networks.dawarich.ref];
         volumes = [
@@ -126,7 +128,7 @@
     containers.geocoding-throttle = {
       autoStart = true;
       containerConfig = {
-        image = "docker.io/library/nginx:1.31.6-alpine";
+        image = "docker.io/library/nginx:1.31.10-alpine";
         networks = [networks.dawarich.ref];
         volumes = ["${throttleConf}:/etc/nginx/nginx.conf:ro"];
         userns = "auto";
