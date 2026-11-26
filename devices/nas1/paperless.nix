@@ -23,7 +23,7 @@
       autoStart = true;
       unitConfig = guard;
       containerConfig = {
-        image = "docker.io/library/redis:8.10.2";
+        image = "docker.io/library/redis:8.12.0";
         networks = [networks.paperless.ref];
         volumes = ["/flash/paperless/redis:/data:U"];
         userns = "auto";
@@ -36,7 +36,7 @@
       autoStart = true;
       unitConfig = guard;
       containerConfig = {
-        image = "docker.io/library/postgres:18.6";
+        image = "docker.io/library/postgres:18.7";
         # Only reachable on the private network; same value the compose stack used.
         environments = {
           POSTGRES_DB = "paperless";
@@ -62,7 +62,7 @@
           StartLimitIntervalSec = 0;
         };
       containerConfig = {
-        image = "ghcr.io/paperless-ngx/paperless-ngx:3.3.4";
+        image = "ghcr.io/paperless-ngx/paperless-ngx:3.5.1";
         # USERMAP_UID/GID=1000:100 in the env file: the image starts as root
         # and drops to that uid, which owns data/, consume/ and the media tree.
         environmentFiles = [envFile];
@@ -71,6 +71,8 @@
           PAPERLESS_DBHOST = "paperless-db";
           # Real client IPs in "Login failed" lines (crowdsec reads them).
           PAPERLESS_TRUSTED_PROXIES = "10.90.2.1";
+          # 3.5 only accepts PAPERLESS_URL's host and localhost; paperless-gpt uses this name.
+          PAPERLESS_ALLOWED_HOSTS = "paperless";
         };
         networks = [networks.paperless.ref];
         publishPorts = ["127.0.0.1:13388:8000"];
