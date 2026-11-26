@@ -13,7 +13,7 @@
       ConditionPathIsMountPoint = ["/flash/shelfarr" "/tank/media"];
     };
     containerConfig = {
-      image = "ghcr.io/pedro-revez-silva/shelfarr:2026.10.19.1";
+      image = "ghcr.io/pedro-revez-silva/shelfarr:2026.11.16.1";
       # Starts as root, chowns, drops to PUID; imports hardlinks into the
       # shared media tree as gvarph:users, so no private user namespace.
       environments = {
@@ -21,6 +21,8 @@
         PUID = "1000";
         PGID = "100";
         CHOWN_ON_START = "auto";
+        # Pins the host used to build the OIDC callback URL.
+        SHELFARR_ALLOWED_HOSTS = "shelfarr.gvarph.com";
       };
       # With two networks the static address must be given per network.
       networks = ["${networks.servarr.ref}:ip=172.39.0.15" networks.audiobookshelf.ref];
