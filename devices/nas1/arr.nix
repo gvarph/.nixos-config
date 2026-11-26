@@ -192,7 +192,7 @@ in {
     # Usenet client (Newshosting); nginx sab.gvarph.com -> :8085.
     containers.sabnzbd = lscr {
       name = "sabnzbd";
-      tag = "5.1.3-ls278";
+      tag = "5.1.3-ls283";
       ip = "172.39.0.13";
       port = "8085:8080";
     };
