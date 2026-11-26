@@ -84,6 +84,7 @@
       (import ./overlays/fitness-mcp.nix)
       (import ./overlays/crowdsec-lua-bouncer.nix)
       (import ./overlays/audible-rs.nix)
+      (import ./overlays/frame-control.nix)
 
       claude-code.overlays.default
       (import ./overlays/claude-code-node.nix)

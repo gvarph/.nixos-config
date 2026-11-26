@@ -121,6 +121,7 @@ in {
 
     rocmPackages.clr
     awakened-poe-trade
+    frame-control
 
     android-tools
   ];
