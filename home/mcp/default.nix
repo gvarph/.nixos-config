@@ -10,6 +10,7 @@
     ./grafana.nix
     ./victorialogs.nix
     ./home-assistant.nix
+    ./unifi.nix
   ];
 
   programs.mcp = {

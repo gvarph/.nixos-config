@@ -194,6 +194,11 @@ in {
     file = ../../secrets/ha_mcp_token.age;
     owner = "gvarph";
   };
+  # Read by the unifi MCP server, which runs as user gvarph.
+  age.secrets.unifi_mcp_password = {
+    file = ../../secrets/unifi_mcp_password.age;
+    owner = "gvarph";
+  };
   # Read by the personal-gmail MCP server, which runs as user gvarph.
   age.secrets."personal-gmail-oauth-keys" = {
     file = ../../secrets/personal-gmail-oauth-keys.age;

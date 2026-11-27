@@ -15,6 +15,8 @@ in {
   # HA's OAuth is unusable here (see home/mcp/home-assistant.nix), so this is
   # the only way that server authenticates.
   "ha_mcp_token.age".publicKeys = [nas1];
+  # Password of the View Only local UniFi account used by the unifi MCP server.
+  "unifi_mcp_password.age".publicKeys = [nas1];
   # gcp-oauth.keys.json (OAuth client id + secret) for the personal-gmail MCP.
   "personal-gmail-oauth-keys.age".publicKeys = [nas1];
   # Dedicated SSH key for the Hetzner Storage Box (restic offsite backup).
