@@ -101,6 +101,8 @@
           TZ = "Europe/Prague";
           # Prometheus metrics on 8081 (API) and 8082 (jobs), scraped by vmagent.
           IMMICH_TELEMETRY_INCLUDE = "all";
+          # 3.4.2: default host "::" makes the metrics ports 400 every request (immich#33466).
+          IMMICH_HOST = "0.0.0.0";
           # Real client IPs in "Failed login attempt" lines (crowdsec reads them).
           IMMICH_TRUSTED_PROXIES = "10.90.1.1";
         };
