@@ -160,6 +160,13 @@ in {
   };
   systemd.services.vmagent.after = ["victoriametrics.service"];
 
+  # Basic auth for pushes into VictoriaMetrics via metrics.gvarph.com (nginx.nix);
+  # pushed series carry their own job/instance labels instead of a scrape target.
+  age.secrets.vm_push_htpasswd = {
+    file = ../../secrets/vm_push_htpasswd.age;
+    owner = "nginx";
+  };
+
   # Per-cgroup CPU/memory/network for everything under system.slice: native
   # services and the quadlets' libpod-payload cgroups (vmagent turns those into
   # a `name` label above). cadvisor's podman factory expects libpod-<id>.scope

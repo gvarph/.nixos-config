@@ -320,6 +320,24 @@ in {
         };
         locations."/".return = "404";
       };
+      # Metrics intake for other hosts, same shape as logs.gvarph.com: the
+      # desktop's steamvr-exporter pushes Prometheus text into VictoriaMetrics
+      # (loopback only). Basic auth from secrets/vm_push_htpasswd.age; only
+      # the import path is exposed.
+      "metrics.gvarph.com" = {
+        forceSSL = true;
+        useACMEHost = "gvarph.com";
+        basicAuthFile = config.age.secrets.vm_push_htpasswd.path;
+        locations."= /api/v1/import/prometheus" = {
+          proxyPass = "http://127.0.0.1:8428";
+          extraConfig = ''
+            allow 10.0.0.0/8;
+            deny all;
+            client_max_body_size 10M;
+          '';
+        };
+        locations."/".return = "404";
+      };
       # Hermes agent dashboard; auth is oauth2-proxy -> Pocket ID (list below).
       "hermes.gvarph.com" = {
         forceSSL = true;

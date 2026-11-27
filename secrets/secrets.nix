@@ -63,6 +63,11 @@ in {
   # htpasswd for logs.gvarph.com: Home Assistant's Alloy add-on pushes its
   # journal into VictoriaLogs (Loki protocol) with these basic-auth credentials.
   "vl_push_htpasswd.age".publicKeys = [nas1];
+  # metrics.gvarph.com: steamvr-exporter on the desktop pushes into
+  # VictoriaMetrics. vm_push_auth is its "steamvr:<password>" basic-auth
+  # line; vm_push_htpasswd is the matching bcrypt entry for nginx.
+  "vm_push_auth.age".publicKeys = [desktop];
+  "vm_push_htpasswd.age".publicKeys = [nas1];
   # Hermes agent: DEEPSEEK_API_KEY, DEEPINFRA_API_KEY,
   # AGENTMAIL_API_KEY + messaging tokens.
   "hermes_env.age".publicKeys = [nas1];
