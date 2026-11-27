@@ -122,6 +122,19 @@ in {
     dedicatedServer.openFirewall = true;
   };
 
+  # SteamVR as the OpenXR runtime (wiki.nixos.org/wiki/VR); without it OpenXR games exit at launch.
+  # Absolute library_path: SteamVR's own manifest uses a relative one that breaks when symlinked.
+  home-manager.users.${username} = {config, ...}: {
+    xdg.configFile."openxr/1/active_runtime.json".text = builtins.toJSON {
+      file_format_version = "1.0.0";
+      runtime = {
+        VALVE_runtime_is_steamvr = true;
+        name = "SteamVR";
+        library_path = "${config.home.homeDirectory}/.local/share/Steam/steamapps/common/SteamVR/bin/linux64/vrclient.so";
+      };
+    };
+  };
+
   environment.systemPackages = with pkgs; [
     nvtopPackages.amd
     vulkan-tools
