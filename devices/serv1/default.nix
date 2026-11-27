@@ -14,6 +14,8 @@ in {
     ../../modules/nix-maintenance.nix
     (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.linuxPackages_latest;})
     ../../linux/features/kubernetes.nix
+    # 9100 is taken by the k3s victoria-metrics stack's hostNetwork node exporter.
+    (import ../../modules/push-metrics.nix {port = 9101;})
     (import ../../modules/hibernation.nix {
       swapfile = {
         sizeGiB = 64;
