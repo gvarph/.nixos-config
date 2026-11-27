@@ -15,6 +15,7 @@ in {
     (import ../../home/ui {inherit pkgs username;})
     ../../linux/fonts.nix
     ../../linux/features/gaming.nix
+    (import ./steamvr-exporter.nix {inherit username;})
     ../../modules/nix-maintenance.nix
     (import ../../modules/boot-systemd.nix {kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest;})
     # The installer's encrypted swap partition (nvme0n1p3, ~34G > RAM).
