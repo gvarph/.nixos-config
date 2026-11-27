@@ -14,7 +14,7 @@
         "datasource": { "type": "prometheus", "uid": "victoriametrics" },
         "query": { "query": "label_values(node_uname_info, instance)", "refId": "instance" },
         "definition": "label_values(node_uname_info, instance)",
-        "current": { "text": "node-exporter", "value": "node-exporter" },
+        "current": { "text": "nas1", "value": "nas1" },
         "refresh": 2, "sort": 1
       }
     ]

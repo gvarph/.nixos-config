@@ -3,8 +3,10 @@
   lib,
   ...
 }: let
-  # Static scrape targets replace the compose stack's docker_sd; job and
-  # instance keep the old container names so the provisioned dashboards match.
+  # Static scrape targets replace the compose stack's docker_sd; job keeps the
+  # old container names so the provisioned dashboards match. instance is the
+  # host, like the desktop and serv1 push with (modules/push-metrics.nix),
+  # unless a target sets its own (one exporter per database container).
   targets =
     [
       {
@@ -123,7 +125,7 @@ in {
               targets = [t.target];
               labels = {
                 job = t.job;
-                instance = t.instance or t.job;
+                instance = t.instance or config.networking.hostName;
               };
             }
           ];
