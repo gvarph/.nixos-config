@@ -9,7 +9,7 @@ final: prev: let
     url = "https://github.com/saphid/frame-control/releases/download/v${version}/Frame-Control-linux-x86_64.AppImage";
     hash = "sha256-/RV3XTQyXbD7t7QS4TWzjVLbZCx3kItkYeXH9ac4gio=";
   };
-  contents = final.appimageTools.extractType2 {inherit pname version src;};
+  contents = final.appimageTools.extract {inherit pname version src;};
 in {
   frame-control = final.appimageTools.wrapType2 {
     inherit pname version src;
