@@ -242,15 +242,19 @@ def follow_log(path):
 # --- push ------------------------------------------------------------------------
 
 
-def push_loop(url, labels, auth, interval):
+def push_loop(url, labels, auth_file, interval):
     query = urllib.parse.urlencode([("extra_label", f"{k}={v}") for k, v in labels.items()])
     target = f"{url}?{query}"
-    headers = {"Content-Type": "text/plain"}
-    if auth:
-        headers["Authorization"] = "Basic " + base64.b64encode(auth.encode()).decode()
     failing = False
     while True:
         time.sleep(interval)
+        headers = {"Content-Type": "text/plain"}
+        if auth_file:
+            # Re-read every push so a rotated agenix secret takes effect
+            # without restarting the service.
+            with open(auth_file) as f:
+                auth = f.read().strip()
+            headers["Authorization"] = "Basic " + base64.b64encode(auth.encode()).decode()
         req = urllib.request.Request(target, data=generate_latest(registry), headers=headers, method="POST")
         try:
             with urllib.request.urlopen(req, timeout=10) as resp:
@@ -258,7 +262,7 @@ def push_loop(url, labels, auth, interval):
             if failing:
                 log.info("push recovered")
             failing = False
-        except (urllib.error.URLError, TimeoutError) as e:
+        except (urllib.error.URLError, TimeoutError, OSError) as e:
             if not failing:
                 log.warning("push to %s failed: %s", url, e)
             failing = True
@@ -280,15 +284,10 @@ def main():
     args = p.parse_args()
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO, format="%(levelname)s %(message)s")
 
-    auth = None
-    if args.auth_file:
-        with open(args.auth_file) as f:
-            auth = f.read().strip()
-
     up.set(0)
     threading.Thread(target=CompositorPoller(args.poll_interval).run, daemon=True).start()
     threading.Thread(target=follow_log, args=(args.log,), daemon=True).start()
-    push_loop(args.url, {"job": "steamvr", "instance": args.instance}, auth, args.push_interval)
+    push_loop(args.url, {"job": "steamvr", "instance": args.instance}, args.auth_file, args.push_interval)
 
 
 if __name__ == "__main__":
