@@ -223,7 +223,7 @@
                 noDataState = "NoData";
                 execErrState = "Error";
                 labels.severity = "warning";
-                annotations.summary = ''Host has {{ printf "%.1f" $values.A.Value }}% memory available'';
+                annotations.summary = ''{{ $labels.instance }} has {{ printf "%.1f" $values.A.Value }}% memory available'';
                 data = [
                   (query "100 * node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes")
                   (threshold "lt" 5)
